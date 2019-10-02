@@ -28,7 +28,7 @@ build/main.o: Src/main.c Inc/main.h \
  Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
  Inc/usbd_conf.h Inc/gpio.h Inc/BlinkLed.h u8g2/csrc/u8g2.h \
  u8g2/csrc/u8x8.h Inc/key.h Inc/logo.h Inc/user_bitmap.h \
- Inc/main_screen.h Inc/info_screen.h Inc/output.h Inc/spi.h
+ Inc/main_screen.h Inc/info_screen.h Inc/output.h Inc/buzzer.h Inc/spi.h
 
 Inc/main.h:
 
@@ -119,5 +119,7 @@ Inc/main_screen.h:
 Inc/info_screen.h:
 
 Inc/output.h:
+
+Inc/buzzer.h:
 
 Inc/spi.h:

@@ -37,6 +37,7 @@
 #include "main_screen.h"
 #include "info_screen.h"
 #include "output.h"
+#include "buzzer.h"
 #include "spi.h"
 
 int _write(int file, char *data, int len);
@@ -50,6 +51,7 @@ void SystemClock_Config(void);
 uint8_t u8g2_gpio_and_delay_stm32(U8X8_UNUSED u8x8_t *u8x8, U8X8_UNUSED uint8_t msg, U8X8_UNUSED uint8_t arg_int, U8X8_UNUSED void *arg_ptr);
 uint8_t u8x8_byte_4wire_hw_spi(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 void MX_GPIO_Init(void);
+// void key_toggle(void);
 /*Variable for interface monitor*/
 
 u8g2_t u8g2;
@@ -83,6 +85,7 @@ int main(void)
   Info_Screen_Init();
   Led_Init();
   Output_Init();
+  buzzer_init();
   uint32_t timeRefesh = HAL_GetTick();
   uint32_t tick = HAL_GetTick();
   uint32_t timeSend;
@@ -91,7 +94,6 @@ int main(void)
     /* timeSend = HAL_GetTick();
     u8g2_SendBuffer(&u8g2);
     printf("Time Send Buff: %d \n", HAL_GetTick() - timeSend);*/
-
     if (HAL_GetTick() - tick > 10000)
     {
       toggle = !toggle;
@@ -110,6 +112,8 @@ int main(void)
     KeyManage();
     Blink();
     Output_Manage();
+    buzzer_manage();
+
     if (HAL_GetTick() - timeRefesh > 100)
     {
       u8g2_SendBuffer(&u8g2);
@@ -328,5 +332,24 @@ int _write(int file, char *data, int len)
   uint8_t status = CDC_Transmit_FS((uint8_t *)data, len);
   return status;
 }
+
+/*void key_toggle(void)
+{
+  if (HAL_GetTick() - tick > 10000)
+  {
+    toggle = !toggle;
+    tick = HAL_GetTick();
+  }
+  if (toggle)
+  {
+    u8g2_ClearBuffer(&u8g2);
+    Main_Screen_Manage();
+  }
+  else
+  {
+    u8g2_ClearBuffer(&u8g2);
+    Info_Screen_Manage();
+  }
+}*/
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

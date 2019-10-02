@@ -67,6 +67,7 @@ Src/logo.c \
 Src/main_screen.c \
 Src/info_screen.c \
 Src/output.c \
+Src/buzzer.c \
 Src/i2c.c \
 Src/spi.c \
 Src/iwdg.c \

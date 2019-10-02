@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 1
 
 
    1              		.cpu cortex-m3
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
   43 0008 6370     		strb	r3, [r4, #1]
   14:Src/main_screen.c ****     main_scr.fanStatus = 0;
   44              		.loc 1 14 5 is_stmt 1 view .LVU5
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 2
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 2
 
 
   45              		.loc 1 14 24 is_stmt 0 view .LVU6
@@ -118,17 +118,17 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
   93              		.cfi_offset 14, -4
   94 0002 82B0     		sub	sp, sp, #8
   95              	.LCFI2:
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 3
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 3
 
 
   96              		.cfi_def_cfa_offset 16
-  23:Src/main_screen.c ****     if(lampStatus)
+  23:Src/main_screen.c ****     if (lampStatus)
   97              		.loc 1 23 5 is_stmt 1 view .LVU18
-  98              		.loc 1 23 7 is_stmt 0 view .LVU19
+  98              		.loc 1 23 8 is_stmt 0 view .LVU19
   99 0004 C0B1     		cbz	r0, .L6
   24:Src/main_screen.c ****     {
   25:Src/main_screen.c ****         // u8g2_ClearBuffer(&u8g2);
-  26:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 0, 33, bmp_neon_on.width/8, bmp_neon_on.height, bmp_neon_on.data);
+  26:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 0, 33, bmp_neon_on.width / 8, bmp_neon_on.height, bmp_neon_on.data);
  100              		.loc 1 26 9 is_stmt 1 view .LVU20
  101              		.loc 1 26 50 is_stmt 0 view .LVU21
  102 0006 184A     		ldr	r2, .L9
@@ -147,7 +147,7 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  115              		.loc 1 26 9 view .LVU23
  116 001c FFF7FEFF 		bl	u8g2_DrawBitmap
  117              	.LVL4:
-  27:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
+  27:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
  118              		.loc 1 27 9 is_stmt 1 view .LVU24
  119 0020 1349     		ldr	r1, .L9+8
  120 0022 2046     		mov	r0, r4
@@ -167,18 +167,18 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
   31:Src/main_screen.c ****     else
   32:Src/main_screen.c ****     {
   33:Src/main_screen.c ****         // u8g2_ClearBuffer(&u8g2);
-  34:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 0, 33, bmp_neon_off.width/8, bmp_neon_off.height, bmp_neon_off.data)
-  35:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
+  34:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 0, 33, bmp_neon_off.width / 8, bmp_neon_off.height, bmp_neon_off.dat
+  35:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
   36:Src/main_screen.c ****         // u8g2_SetDrawColor(&u8g2, ~lampStatus);
   37:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 9, 33, "NEON");
-  38:Src/main_screen.c ****     }  
+  38:Src/main_screen.c ****     }
   39:Src/main_screen.c **** }
  131              		.loc 1 39 1 is_stmt 0 view .LVU26
  132 0034 02B0     		add	sp, sp, #8
  133              	.LCFI3:
  134              		.cfi_remember_state
  135              		.cfi_def_cfa_offset 8
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 4
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 4
 
 
  136              		@ sp needed
@@ -187,13 +187,13 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  139              	.L6:
  140              	.LCFI4:
  141              		.cfi_restore_state
-  34:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
+  34:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
  142              		.loc 1 34 9 is_stmt 1 view .LVU27
-  34:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
+  34:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
  143              		.loc 1 34 51 is_stmt 0 view .LVU28
  144 0038 0F4A     		ldr	r2, .L9+16
  145 003a 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
-  34:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
+  34:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
  146              		.loc 1 34 9 view .LVU29
  147 003c 0B4C     		ldr	r4, .L9+4
  148 003e 5168     		ldr	r1, [r2, #4]
@@ -205,7 +205,7 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  154 004a 0021     		movs	r1, #0
  155 004c 2046     		mov	r0, r4
  156              	.LVL8:
-  34:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
+  34:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
  157              		.loc 1 34 9 view .LVU30
  158 004e FFF7FEFF 		bl	u8g2_DrawBitmap
  159              	.LVL9:
@@ -215,7 +215,7 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  162 0054 2046     		mov	r0, r4
  163 0056 FFF7FEFF 		bl	u8g2_SetFont
  164              	.LVL10:
-  37:Src/main_screen.c ****     }  
+  37:Src/main_screen.c ****     }
  165              		.loc 1 37 9 view .LVU32
  166 005a 064B     		ldr	r3, .L9+12
  167 005c 2122     		movs	r2, #33
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  185              		.section	.text.UV_Status,"ax",%progbits
  186              		.align	1
  187              		.global	UV_Status
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 5
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 5
 
 
  188              		.syntax unified
@@ -263,12 +263,12 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  206 0002 82B0     		sub	sp, sp, #8
  207              	.LCFI6:
  208              		.cfi_def_cfa_offset 16
-  42:Src/main_screen.c ****     if(uvStatus)
+  42:Src/main_screen.c ****     if (uvStatus)
  209              		.loc 1 42 5 is_stmt 1 view .LVU36
- 210              		.loc 1 42 7 is_stmt 0 view .LVU37
+ 210              		.loc 1 42 8 is_stmt 0 view .LVU37
  211 0004 C0B1     		cbz	r0, .L12
   43:Src/main_screen.c ****     {
-  44:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 32, 33, bmp_uv_on.width/8, bmp_uv_on.height, bmp_uv_on.data);
+  44:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 32, 33, bmp_uv_on.width / 8, bmp_uv_on.height, bmp_uv_on.data);
  212              		.loc 1 44 9 is_stmt 1 view .LVU38
  213              		.loc 1 44 49 is_stmt 0 view .LVU39
  214 0006 184A     		ldr	r2, .L15
@@ -287,7 +287,7 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  227              		.loc 1 44 9 view .LVU41
  228 001c FFF7FEFF 		bl	u8g2_DrawBitmap
  229              	.LVL14:
-  45:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
+  45:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
  230              		.loc 1 45 9 is_stmt 1 view .LVU42
  231 0020 1349     		ldr	r1, .L15+8
  232 0022 2046     		mov	r0, r4
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  235              		.loc 1 47 9 view .LVU43
  236 0028 124B     		ldr	r3, .L15+12
  237 002a 2122     		movs	r2, #33
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 6
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 6
 
 
  238 002c 2D21     		movs	r1, #45
@@ -309,11 +309,11 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
   48:Src/main_screen.c ****     }
   49:Src/main_screen.c ****     else
   50:Src/main_screen.c ****     {
-  51:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 32, 33, bmp_uv_off.width/8, bmp_uv_off.height, bmp_uv_off.data);
-  52:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
+  51:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 32, 33, bmp_uv_off.width / 8, bmp_uv_off.height, bmp_uv_off.data);
+  52:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
   53:Src/main_screen.c ****         // u8g2_SetDrawColor(&u8g2, ~uvStatus);
   54:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 45, 33, "UV");
-  55:Src/main_screen.c ****     }  
+  55:Src/main_screen.c ****     }
   56:Src/main_screen.c **** }
  243              		.loc 1 56 1 is_stmt 0 view .LVU44
  244 0034 02B0     		add	sp, sp, #8
@@ -326,13 +326,13 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  251              	.L12:
  252              	.LCFI8:
  253              		.cfi_restore_state
-  51:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
+  51:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
  254              		.loc 1 51 9 is_stmt 1 view .LVU45
-  51:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
+  51:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
  255              		.loc 1 51 50 is_stmt 0 view .LVU46
  256 0038 0F4A     		ldr	r2, .L15+16
  257 003a 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
-  51:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
+  51:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
  258              		.loc 1 51 9 view .LVU47
  259 003c 0B4C     		ldr	r4, .L15+4
  260 003e 5168     		ldr	r1, [r2, #4]
@@ -344,7 +344,7 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  266 004a 2021     		movs	r1, #32
  267 004c 2046     		mov	r0, r4
  268              	.LVL18:
-  51:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
+  51:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
  269              		.loc 1 51 9 view .LVU48
  270 004e FFF7FEFF 		bl	u8g2_DrawBitmap
  271              	.LVL19:
@@ -354,11 +354,11 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  274 0054 2046     		mov	r0, r4
  275 0056 FFF7FEFF 		bl	u8g2_SetFont
  276              	.LVL20:
-  54:Src/main_screen.c ****     }  
+  54:Src/main_screen.c ****     }
  277              		.loc 1 54 9 view .LVU50
  278 005a 064B     		ldr	r3, .L15+12
  279 005c 2122     		movs	r2, #33
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 7
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 7
 
 
  280 005e 2D21     		movs	r1, #45
@@ -403,41 +403,41 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  318 0002 82B0     		sub	sp, sp, #8
  319              	.LCFI10:
  320              		.cfi_def_cfa_offset 16
-  60:Src/main_screen.c ****     if((HAL_GetTick() - main_scr.tick > 200) && main_scr.fanStatus)
+  60:Src/main_screen.c ****     if ((HAL_GetTick() - main_scr.tick > 200) && main_scr.fanStatus)
  321              		.loc 1 60 5 is_stmt 1 view .LVU54
- 322              		.loc 1 60 9 is_stmt 0 view .LVU55
+ 322              		.loc 1 60 10 is_stmt 0 view .LVU55
  323 0004 FFF7FEFF 		bl	HAL_GetTick
  324              	.LVL23:
- 325              		.loc 1 60 33 view .LVU56
+ 325              		.loc 1 60 34 view .LVU56
  326 0008 224B     		ldr	r3, .L23
  327 000a 9B68     		ldr	r3, [r3, #8]
- 328              		.loc 1 60 23 view .LVU57
+ 328              		.loc 1 60 24 view .LVU57
  329 000c C01A     		subs	r0, r0, r3
- 330              		.loc 1 60 7 view .LVU58
+ 330              		.loc 1 60 8 view .LVU58
  331 000e C828     		cmp	r0, #200
  332 0010 02D9     		bls	.L18
- 333              		.loc 1 60 57 discriminator 1 view .LVU59
+ 333              		.loc 1 60 58 discriminator 1 view .LVU59
  334 0012 204B     		ldr	r3, .L23
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 8
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 8
 
 
  335 0014 9B78     		ldrb	r3, [r3, #2]	@ zero_extendqisi2
- 336              		.loc 1 60 46 discriminator 1 view .LVU60
+ 336              		.loc 1 60 47 discriminator 1 view .LVU60
  337 0016 E3B9     		cbnz	r3, .L22
  338              	.L18:
   61:Src/main_screen.c ****     {
-  62:Src/main_screen.c ****       main_scr.fanRotate = ~main_scr.fanRotate;
-  63:Src/main_screen.c ****       main_scr.tick = HAL_GetTick();
+  62:Src/main_screen.c ****         main_scr.fanRotate = ~main_scr.fanRotate;
+  63:Src/main_screen.c ****         main_scr.tick = HAL_GetTick();
   64:Src/main_screen.c ****     }
-  65:Src/main_screen.c ****     if(main_scr.fanRotate)
+  65:Src/main_screen.c ****     if (main_scr.fanRotate)
  339              		.loc 1 65 5 is_stmt 1 view .LVU61
- 340              		.loc 1 65 16 is_stmt 0 view .LVU62
+ 340              		.loc 1 65 17 is_stmt 0 view .LVU62
  341 0018 1E4B     		ldr	r3, .L23
  342 001a 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
- 343              		.loc 1 65 7 view .LVU63
+ 343              		.loc 1 65 8 view .LVU63
  344 001c 0BB3     		cbz	r3, .L19
   66:Src/main_screen.c ****     {
-  67:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
+  67:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
  345              		.loc 1 67 9 is_stmt 1 view .LVU64
  346 001e 1E4C     		ldr	r4, .L23+4
  347 0020 1E49     		ldr	r1, .L23+8
@@ -453,7 +453,7 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  355 002e 2046     		mov	r0, r4
  356 0030 FFF7FEFF 		bl	u8g2_DrawStr
  357              	.LVL25:
-  70:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_origin.width/8, bmp_fan_rotate.height, bmp_fan_rotat
+  70:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_origin.width / 8, bmp_fan_rotate.height, bmp_fan_rot
  358              		.loc 1 70 9 view .LVU66
  359              		.loc 1 70 54 is_stmt 0 view .LVU67
  360 0034 1B4B     		ldr	r3, .L23+16
@@ -474,14 +474,14 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
   71:Src/main_screen.c ****     }
   72:Src/main_screen.c ****     else
   73:Src/main_screen.c ****     {
-  74:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
+  74:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
   75:Src/main_screen.c ****         // u8g2_SetDrawColor(&u8g2, ~fanStatus);
   76:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 75, 33, "FAN");
-  77:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_origin.width/8, bmp_fan_origin.height, bmp_fan_origi
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 9
+  77:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_origin.width / 8, bmp_fan_origin.height, bmp_fan_ori
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 9
 
 
-  78:Src/main_screen.c ****     }  
+  78:Src/main_screen.c ****     }
   79:Src/main_screen.c **** }
  375              		.loc 1 79 1 view .LVU69
  376 004e 02B0     		add	sp, sp, #8
@@ -493,24 +493,24 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  382              	.L22:
  383              	.LCFI12:
  384              		.cfi_restore_state
-  62:Src/main_screen.c ****       main_scr.tick = HAL_GetTick();
- 385              		.loc 1 62 7 is_stmt 1 view .LVU70
-  62:Src/main_screen.c ****       main_scr.tick = HAL_GetTick();
- 386              		.loc 1 62 37 is_stmt 0 view .LVU71
+  62:Src/main_screen.c ****         main_scr.tick = HAL_GetTick();
+ 385              		.loc 1 62 9 is_stmt 1 view .LVU70
+  62:Src/main_screen.c ****         main_scr.tick = HAL_GetTick();
+ 386              		.loc 1 62 39 is_stmt 0 view .LVU71
  387 0052 104C     		ldr	r4, .L23
  388 0054 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
-  62:Src/main_screen.c ****       main_scr.tick = HAL_GetTick();
- 389              		.loc 1 62 26 view .LVU72
+  62:Src/main_screen.c ****         main_scr.tick = HAL_GetTick();
+ 389              		.loc 1 62 28 view .LVU72
  390 0056 DB43     		mvns	r3, r3
  391 0058 2371     		strb	r3, [r4, #4]
   63:Src/main_screen.c ****     }
- 392              		.loc 1 63 7 is_stmt 1 view .LVU73
+ 392              		.loc 1 63 9 is_stmt 1 view .LVU73
   63:Src/main_screen.c ****     }
- 393              		.loc 1 63 23 is_stmt 0 view .LVU74
+ 393              		.loc 1 63 25 is_stmt 0 view .LVU74
  394 005a FFF7FEFF 		bl	HAL_GetTick
  395              	.LVL27:
   63:Src/main_screen.c ****     }
- 396              		.loc 1 63 21 view .LVU75
+ 396              		.loc 1 63 23 view .LVU75
  397 005e A060     		str	r0, [r4, #8]
  398 0060 DAE7     		b	.L18
  399              	.L19:
@@ -521,7 +521,7 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  403 0066 2046     		mov	r0, r4
  404 0068 FFF7FEFF 		bl	u8g2_SetFont
  405              	.LVL28:
-  76:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_origin.width/8, bmp_fan_origin.height, bmp_fan_origi
+  76:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_origin.width / 8, bmp_fan_origin.height, bmp_fan_ori
  406              		.loc 1 76 9 view .LVU77
  407 006c 0C4B     		ldr	r3, .L23+12
  408 006e 2122     		movs	r2, #33
@@ -529,16 +529,16 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  410 0072 2046     		mov	r0, r4
  411 0074 FFF7FEFF 		bl	u8g2_DrawStr
  412              	.LVL29:
-  77:Src/main_screen.c ****     }  
+  77:Src/main_screen.c ****     }
  413              		.loc 1 77 9 view .LVU78
-  77:Src/main_screen.c ****     }  
+  77:Src/main_screen.c ****     }
  414              		.loc 1 77 54 is_stmt 0 view .LVU79
  415 0078 0A4A     		ldr	r2, .L23+16
  416 007a 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
-  77:Src/main_screen.c ****     }  
+  77:Src/main_screen.c ****     }
  417              		.loc 1 77 9 view .LVU80
  418 007c 5168     		ldr	r1, [r2, #4]
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 10
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 10
 
 
  419 007e 0191     		str	r1, [sp, #4]
@@ -588,17 +588,17 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  463 0002 82B0     		sub	sp, sp, #8
  464              	.LCFI14:
  465              		.cfi_def_cfa_offset 16
-  82:Src/main_screen.c ****     if(sStatus)
+  82:Src/main_screen.c ****     if (sStatus)
  466              		.loc 1 82 5 is_stmt 1 view .LVU84
- 467              		.loc 1 82 7 is_stmt 0 view .LVU85
+ 467              		.loc 1 82 8 is_stmt 0 view .LVU85
  468 0004 10B3     		cbz	r0, .L26
   83:Src/main_screen.c ****     {
-  84:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 98, 34, bmp_socket_on.width/8, bmp_socket_on.height, bmp_socket_on.d
+  84:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 98, 34, bmp_socket_on.width / 8, bmp_socket_on.height, bmp_socket_on
  469              		.loc 1 84 9 is_stmt 1 view .LVU86
  470              		.loc 1 84 53 is_stmt 0 view .LVU87
  471 0006 224A     		ldr	r2, .L29
  472 0008 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 11
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 11
 
 
  473              		.loc 1 84 9 view .LVU88
@@ -615,7 +615,7 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  484              		.loc 1 84 9 view .LVU89
  485 001c FFF7FEFF 		bl	u8g2_DrawBitmap
  486              	.LVL33:
-  85:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_u8glib_4_tf );
+  85:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_u8glib_4_tf);
  487              		.loc 1 85 9 is_stmt 1 view .LVU90
  488 0020 1D49     		ldr	r1, .L29+8
  489 0022 2046     		mov	r0, r4
@@ -629,7 +629,7 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  496 002e 2046     		mov	r0, r4
  497 0030 FFF7FEFF 		bl	u8g2_DrawStr
  498              	.LVL35:
-  87:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
+  87:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
  499              		.loc 1 87 9 view .LVU92
  500 0034 1A49     		ldr	r1, .L29+16
  501 0036 2046     		mov	r0, r4
@@ -648,17 +648,17 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
   90:Src/main_screen.c ****     }
   91:Src/main_screen.c ****     else
   92:Src/main_screen.c ****     {
-  93:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 98, 34, bmp_socket_off.width/8, bmp_socket_off.height, bmp_socket_of
-  94:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_u8glib_4_tf );
+  93:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 98, 34, bmp_socket_off.width / 8, bmp_socket_off.height, bmp_socket_
+  94:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_u8glib_4_tf);
   95:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 105, 62, "OFF");
-  96:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
+  96:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
   97:Src/main_screen.c ****         // u8g2_SetDrawColor(&u8g2, ~sStatus);
   98:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 101, 33, "SOCKET");
-  99:Src/main_screen.c ****     }  
+  99:Src/main_screen.c ****     }
  100:Src/main_screen.c **** }
  512              		.loc 1 100 1 is_stmt 0 view .LVU94
  513 0048 02B0     		add	sp, sp, #8
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 12
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 12
 
 
  514              	.LCFI15:
@@ -670,13 +670,13 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  520              	.L26:
  521              	.LCFI16:
  522              		.cfi_restore_state
-  93:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_u8glib_4_tf );
+  93:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_u8glib_4_tf);
  523              		.loc 1 93 9 is_stmt 1 view .LVU95
-  93:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_u8glib_4_tf );
+  93:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_u8glib_4_tf);
  524              		.loc 1 93 54 is_stmt 0 view .LVU96
  525 004c 164A     		ldr	r2, .L29+24
  526 004e 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
-  93:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_u8glib_4_tf );
+  93:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_u8glib_4_tf);
  527              		.loc 1 93 9 view .LVU97
  528 0050 104C     		ldr	r4, .L29+4
  529 0052 5168     		ldr	r1, [r2, #4]
@@ -688,7 +688,7 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  535 005e 6221     		movs	r1, #98
  536 0060 2046     		mov	r0, r4
  537              	.LVL39:
-  93:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_u8glib_4_tf );
+  93:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_u8glib_4_tf);
  538              		.loc 1 93 9 view .LVU98
  539 0062 FFF7FEFF 		bl	u8g2_DrawBitmap
  540              	.LVL40:
@@ -698,7 +698,7 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  543 0068 2046     		mov	r0, r4
  544 006a FFF7FEFF 		bl	u8g2_SetFont
  545              	.LVL41:
-  95:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
+  95:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
  546              		.loc 1 95 9 view .LVU100
  547 006e 0F4B     		ldr	r3, .L29+28
  548 0070 3E22     		movs	r2, #62
@@ -712,13 +712,13 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  555 007c 2046     		mov	r0, r4
  556 007e FFF7FEFF 		bl	u8g2_SetFont
  557              	.LVL43:
-  98:Src/main_screen.c ****     }  
+  98:Src/main_screen.c ****     }
  558              		.loc 1 98 9 view .LVU102
  559 0082 084B     		ldr	r3, .L29+20
  560 0084 2122     		movs	r2, #33
  561 0086 6521     		movs	r1, #101
  562 0088 2046     		mov	r0, r4
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 13
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 13
 
 
  563 008a FFF7FEFF 		bl	u8g2_DrawStr
@@ -763,45 +763,45 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  602 0002 82B0     		sub	sp, sp, #8
  603              	.LCFI18:
  604              		.cfi_def_cfa_offset 16
- 103:Src/main_screen.c ****     switch(FStatus)
+ 103:Src/main_screen.c ****     switch (FStatus)
  605              		.loc 1 103 5 is_stmt 1 view .LVU106
  606 0004 70B1     		cbz	r0, .L32
  607 0006 0128     		cmp	r0, #1
  608 0008 0AD1     		bne	.L31
  104:Src/main_screen.c ****     {
- 105:Src/main_screen.c ****         case 1:
- 106:Src/main_screen.c ****             u8g2_SetFont(&u8g2, u8g2_font_5x7_tf);//
- 609              		.loc 1 106 13 view .LVU107
+ 105:Src/main_screen.c ****     case 1:
+ 106:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_5x7_tf);                   //
+ 609              		.loc 1 106 9 view .LVU107
  610 000a 1C4C     		ldr	r4, .L35
  611 000c 1C49     		ldr	r1, .L35+4
  612 000e 2046     		mov	r0, r4
  613              	.LVL46:
- 614              		.loc 1 106 13 is_stmt 0 view .LVU108
+ 614              		.loc 1 106 9 is_stmt 0 view .LVU108
  615 0010 FFF7FEFF 		bl	u8g2_SetFont
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 14
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 14
 
 
  616              	.LVL47:
- 107:Src/main_screen.c ****             u8g2_DrawStr(&u8g2, 2, 19, "Please change the filter!");// When Filter < 30%, show stri
- 617              		.loc 1 107 13 is_stmt 1 view .LVU109
+ 107:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 2, 19, "Please change the filter!"); // When Filter < 30%, show string 
+ 617              		.loc 1 107 9 is_stmt 1 view .LVU109
  618 0014 1B4B     		ldr	r3, .L35+8
  619 0016 1322     		movs	r2, #19
  620 0018 0221     		movs	r1, #2
  621 001a 2046     		mov	r0, r4
  622 001c FFF7FEFF 		bl	u8g2_DrawStr
  623              	.LVL48:
- 108:Src/main_screen.c ****             break;
- 624              		.loc 1 108 13 view .LVU110
+ 108:Src/main_screen.c ****         break;
+ 624              		.loc 1 108 9 view .LVU110
  625              	.L31:
- 109:Src/main_screen.c ****         case 0:
- 110:Src/main_screen.c ****             u8g2_SetDrawColor(&u8g2, ~FStatus);
- 111:Src/main_screen.c ****             u8g2_SetFont(&u8g2, u8g2_font_5x7_tf);//
- 112:Src/main_screen.c ****             u8g2_DrawStr(&u8g2, 2, 19, "Please change the filter!");// When Filter < 30%, show stri
- 113:Src/main_screen.c ****             u8g2_DrawStr(&u8g2, 7, 10, "Filter:");
- 114:Src/main_screen.c ****             u8g2_DrawStr(&u8g2, 98, 10, "100"); //variable x
- 115:Src/main_screen.c ****             u8g2_DrawStr(&u8g2, 115, 10, "%");
- 116:Src/main_screen.c ****             u8g2_DrawBox(&u8g2, 45, 4, 50, 6); //Value of filter
- 117:Src/main_screen.c ****             break;
+ 109:Src/main_screen.c ****     case 0:
+ 110:Src/main_screen.c ****         u8g2_SetDrawColor(&u8g2, ~FStatus);
+ 111:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_5x7_tf);                   //
+ 112:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 2, 19, "Please change the filter!"); // When Filter < 30%, show string 
+ 113:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 7, 10, "Filter:");
+ 114:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 98, 10, "100"); //variable x
+ 115:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 115, 10, "%");
+ 116:Src/main_screen.c ****         u8g2_DrawBox(&u8g2, 45, 4, 50, 6); //Value of filter
+ 117:Src/main_screen.c ****         break;
  118:Src/main_screen.c ****     }
  119:Src/main_screen.c **** }
  626              		.loc 1 119 1 is_stmt 0 view .LVU111
@@ -815,60 +815,60 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  634              	.L32:
  635              	.LCFI20:
  636              		.cfi_restore_state
- 110:Src/main_screen.c ****             u8g2_SetFont(&u8g2, u8g2_font_5x7_tf);//
- 637              		.loc 1 110 13 is_stmt 1 view .LVU112
+ 110:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_5x7_tf);                   //
+ 637              		.loc 1 110 9 is_stmt 1 view .LVU112
  638 0024 C143     		mvns	r1, r0
  639 0026 154C     		ldr	r4, .L35
  640 0028 C9B2     		uxtb	r1, r1
  641 002a 2046     		mov	r0, r4
  642              	.LVL50:
- 110:Src/main_screen.c ****             u8g2_SetFont(&u8g2, u8g2_font_5x7_tf);//
- 643              		.loc 1 110 13 is_stmt 0 view .LVU113
+ 110:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_5x7_tf);                   //
+ 643              		.loc 1 110 9 is_stmt 0 view .LVU113
  644 002c FFF7FEFF 		bl	u8g2_SetDrawColor
  645              	.LVL51:
- 111:Src/main_screen.c ****             u8g2_DrawStr(&u8g2, 2, 19, "Please change the filter!");// When Filter < 30%, show stri
- 646              		.loc 1 111 13 is_stmt 1 view .LVU114
+ 111:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 2, 19, "Please change the filter!"); // When Filter < 30%, show string 
+ 646              		.loc 1 111 9 is_stmt 1 view .LVU114
  647 0030 1349     		ldr	r1, .L35+4
  648 0032 2046     		mov	r0, r4
  649 0034 FFF7FEFF 		bl	u8g2_SetFont
  650              	.LVL52:
- 112:Src/main_screen.c ****             u8g2_DrawStr(&u8g2, 7, 10, "Filter:");
- 651              		.loc 1 112 13 view .LVU115
+ 112:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 7, 10, "Filter:");
+ 651              		.loc 1 112 9 view .LVU115
  652 0038 124B     		ldr	r3, .L35+8
  653 003a 1322     		movs	r2, #19
  654 003c 0221     		movs	r1, #2
  655 003e 2046     		mov	r0, r4
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 15
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 15
 
 
  656 0040 FFF7FEFF 		bl	u8g2_DrawStr
  657              	.LVL53:
- 113:Src/main_screen.c ****             u8g2_DrawStr(&u8g2, 98, 10, "100"); //variable x
- 658              		.loc 1 113 13 view .LVU116
+ 113:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 98, 10, "100"); //variable x
+ 658              		.loc 1 113 9 view .LVU116
  659 0044 104B     		ldr	r3, .L35+12
  660 0046 0A22     		movs	r2, #10
  661 0048 0721     		movs	r1, #7
  662 004a 2046     		mov	r0, r4
  663 004c FFF7FEFF 		bl	u8g2_DrawStr
  664              	.LVL54:
- 114:Src/main_screen.c ****             u8g2_DrawStr(&u8g2, 115, 10, "%");
- 665              		.loc 1 114 13 view .LVU117
+ 114:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 115, 10, "%");
+ 665              		.loc 1 114 9 view .LVU117
  666 0050 0E4B     		ldr	r3, .L35+16
  667 0052 0A22     		movs	r2, #10
  668 0054 6221     		movs	r1, #98
  669 0056 2046     		mov	r0, r4
  670 0058 FFF7FEFF 		bl	u8g2_DrawStr
  671              	.LVL55:
- 115:Src/main_screen.c ****             u8g2_DrawBox(&u8g2, 45, 4, 50, 6); //Value of filter
- 672              		.loc 1 115 13 view .LVU118
+ 115:Src/main_screen.c ****         u8g2_DrawBox(&u8g2, 45, 4, 50, 6); //Value of filter
+ 672              		.loc 1 115 9 view .LVU118
  673 005c 0C4B     		ldr	r3, .L35+20
  674 005e 0A22     		movs	r2, #10
  675 0060 7321     		movs	r1, #115
  676 0062 2046     		mov	r0, r4
  677 0064 FFF7FEFF 		bl	u8g2_DrawStr
  678              	.LVL56:
- 116:Src/main_screen.c ****             break;
- 679              		.loc 1 116 13 view .LVU119
+ 116:Src/main_screen.c ****         break;
+ 679              		.loc 1 116 9 view .LVU119
  680 0068 0623     		movs	r3, #6
  681 006a 0093     		str	r3, [sp]
  682 006c 3223     		movs	r3, #50
@@ -878,7 +878,7 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  686 0074 FFF7FEFF 		bl	u8g2_DrawBox
  687              	.LVL57:
  117:Src/main_screen.c ****     }
- 688              		.loc 1 117 13 view .LVU120
+ 688              		.loc 1 117 9 view .LVU120
  689              		.loc 1 119 1 is_stmt 0 view .LVU121
  690 0078 D2E7     		b	.L31
  691              	.L36:
@@ -898,7 +898,7 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  706              		.syntax unified
  707              		.thumb
  708              		.thumb_func
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 16
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 16
 
 
  709              		.fpu softvfp
@@ -958,7 +958,7 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  126:Src/main_screen.c ****     u8g2_DrawHVLine(&u8g2, 64, 24, 40, 1);
  758              		.loc 1 126 5 view .LVU127
  759 003a 0096     		str	r6, [sp]
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 17
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 17
 
 
  760 003c 2B46     		mov	r3, r5
@@ -1018,7 +1018,7 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  810              	.LVL64:
  133:Src/main_screen.c ****     UV_Status(main_scr.uvStatus);
  811              		.loc 1 133 5 view .LVU132
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 18
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 18
 
 
  812 000a 6078     		ldrb	r0, [r4, #1]	@ zero_extendqisi2
@@ -1078,7 +1078,7 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  857              		.align	2
  858              	.LC0:
  859 0000 4E454F4E 		.ascii	"NEON\000"
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 19
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 19
 
 
  859      00
@@ -1112,42 +1112,42 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 1
  886              		.file 12 "Inc/main_screen.h"
  887              		.file 13 "u8g2/csrc/u8x8.h"
  888              		.file 14 "u8g2/csrc/u8g2.h"
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cch0uxz9.s 			page 20
+ARM GAS  C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s 			page 20
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 main_screen.c
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:16     .text.main_screen_init:00000000 $t
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:24     .text.main_screen_init:00000000 main_screen_init
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:68     .text.main_screen_init:00000020 $d
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:16     .text.main_screen_init:00000000 $t
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:24     .text.main_screen_init:00000000 main_screen_init
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:68     .text.main_screen_init:00000020 $d
                             *COM*:0000000c main_scr
                             *COM*:00000080 u8g2
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:74     .text.Lamp_Status:00000000 $t
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:81     .text.Lamp_Status:00000000 Lamp_Status
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:177    .text.Lamp_Status:00000068 $d
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:186    .text.UV_Status:00000000 $t
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:193    .text.UV_Status:00000000 UV_Status
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:289    .text.UV_Status:00000068 $d
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:298    .text.Fan_Status:00000000 $t
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:305    .text.Fan_Status:00000000 Fan_Status
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:433    .text.Fan_Status:00000094 $d
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:443    .text.Socket_Status:00000000 $t
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:450    .text.Socket_Status:00000000 Socket_Status
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:570    .text.Socket_Status:00000090 $d
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:582    .text.Filter:00000000 $t
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:589    .text.Filter:00000000 Filter
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:694    .text.Filter:0000007c $d
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:704    .text.Horizontal:00000000 $t
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:711    .text.Horizontal:00000000 Horizontal
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:783    .text.Horizontal:0000005c $d
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:788    .text.Main_Screen_Manage:00000000 $t
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:795    .text.Main_Screen_Manage:00000000 Main_Screen_Manage
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:835    .text.Main_Screen_Manage:00000028 $d
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:842    .rodata.Fan_Status.str1.4:00000000 $d
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:846    .rodata.Filter.str1.4:00000000 $d
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:857    .rodata.Lamp_Status.str1.4:00000000 $d
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:861    .rodata.Socket_Status.str1.4:00000000 $d
-C:\Users\behun\AppData\Local\Temp\cch0uxz9.s:871    .rodata.UV_Status.str1.4:00000000 $d
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:74     .text.Lamp_Status:00000000 $t
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:81     .text.Lamp_Status:00000000 Lamp_Status
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:177    .text.Lamp_Status:00000068 $d
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:186    .text.UV_Status:00000000 $t
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:193    .text.UV_Status:00000000 UV_Status
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:289    .text.UV_Status:00000068 $d
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:298    .text.Fan_Status:00000000 $t
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:305    .text.Fan_Status:00000000 Fan_Status
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:433    .text.Fan_Status:00000094 $d
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:443    .text.Socket_Status:00000000 $t
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:450    .text.Socket_Status:00000000 Socket_Status
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:570    .text.Socket_Status:00000090 $d
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:582    .text.Filter:00000000 $t
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:589    .text.Filter:00000000 Filter
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:694    .text.Filter:0000007c $d
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:704    .text.Horizontal:00000000 $t
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:711    .text.Horizontal:00000000 Horizontal
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:783    .text.Horizontal:0000005c $d
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:788    .text.Main_Screen_Manage:00000000 $t
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:795    .text.Main_Screen_Manage:00000000 Main_Screen_Manage
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:835    .text.Main_Screen_Manage:00000028 $d
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:842    .rodata.Fan_Status.str1.4:00000000 $d
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:846    .rodata.Filter.str1.4:00000000 $d
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:857    .rodata.Lamp_Status.str1.4:00000000 $d
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:861    .rodata.Socket_Status.str1.4:00000000 $d
+C:\Users\behun\AppData\Local\Temp\ccJgsR8k.s:871    .rodata.UV_Status.str1.4:00000000 $d
 
 UNDEFINED SYMBOLS
 u8g2_ClearBuffer

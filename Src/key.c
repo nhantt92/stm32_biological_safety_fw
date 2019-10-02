@@ -1,6 +1,7 @@
 #include "key.h"
 #include "u8g2.h"
 #include "main_screen.h"
+#include "buzzer.h"
 
 KEY_STRUCT key;
 extern uint8_t toggle;
@@ -151,20 +152,25 @@ void KeyManage(void)
 		case NEON:
 			toggle = 1;
 			main_scr.lampStatus = ~main_scr.lampStatus;
+			BUZZER_ON();
 			break;
 		case UV:
 			toggle = 1;
 			main_scr.uvStatus = ~main_scr.uvStatus;
+			BUZZER_ON();
 			break;
 		case FAN:
 			toggle = 1;
 			main_scr.fanStatus = ~main_scr.fanStatus;
+			BUZZER_ON();
 			break;
 		case SOCKET:
 			toggle = 1;
 			main_scr.socketStatus = ~main_scr.socketStatus;
+			BUZZER_ON();
 			break;
 		default:
+			BUZZER_OFF();
 			break;
 		}
 		key.tick = HAL_GetTick();

@@ -24,7 +24,7 @@ build/key.o: Src/key.c Inc/key.h Inc/main.h \
  Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd.h \
  Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usb.h \
  Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd_ex.h u8g2/csrc/u8g2.h \
- u8g2/csrc/u8x8.h Inc/main_screen.h Inc/user_bitmap.h
+ u8g2/csrc/u8x8.h Inc/main_screen.h Inc/user_bitmap.h Inc/buzzer.h
 
 Inc/key.h:
 
@@ -91,3 +91,5 @@ u8g2/csrc/u8x8.h:
 Inc/main_screen.h:
 
 Inc/user_bitmap.h:
+
+Inc/buzzer.h:
