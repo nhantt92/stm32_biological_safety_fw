@@ -60,12 +60,13 @@ BUILD_DIR = build
 C_SOURCES =  \
 Src/main.c \
 Src/gpio.c \
-Src/BlinkLed.c \
+Src/blinkled.c \
 Src/key.c \
 Src/user_bitmap.c \
 Src/logo.c \
 Src/main_screen.c \
 Src/info_screen.c \
+Src/output.c \
 Src/i2c.c \
 Src/spi.c \
 Src/iwdg.c \

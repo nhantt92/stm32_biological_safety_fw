@@ -36,6 +36,7 @@
 #include "logo.h"
 #include "main_screen.h"
 #include "info_screen.h"
+#include "output.h"
 #include "spi.h"
 
 int _write(int file, char *data, int len);
@@ -81,6 +82,7 @@ int main(void)
   main_screen_init();
   Info_Screen_Init();
   Led_Init();
+  Output_Init();
   uint32_t timeRefesh = HAL_GetTick();
   uint32_t tick = HAL_GetTick();
   uint32_t timeSend;
@@ -106,8 +108,8 @@ int main(void)
       Info_Screen_Manage();
     }
     KeyManage();
-
     Blink();
+    Output_Manage();
     if (HAL_GetTick() - timeRefesh > 100)
     {
       u8g2_SendBuffer(&u8g2);

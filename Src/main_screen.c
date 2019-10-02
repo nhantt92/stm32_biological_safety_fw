@@ -27,7 +27,6 @@ void Lamp_Status(uint8_t lampStatus)
         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
         // u8g2_SetDrawColor(&u8g2, ~lampStatus);
         u8g2_DrawStr(&u8g2, 9, 33, "NEON");
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_SET);
     }
     else
     {
@@ -36,7 +35,6 @@ void Lamp_Status(uint8_t lampStatus)
         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
         // u8g2_SetDrawColor(&u8g2, ~lampStatus);
         u8g2_DrawStr(&u8g2, 9, 33, "NEON");
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_RESET);
     }  
 }
 void UV_Status(uint8_t uvStatus)
@@ -47,7 +45,6 @@ void UV_Status(uint8_t uvStatus)
         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
         // u8g2_SetDrawColor(&u8g2, ~uvStatus);
         u8g2_DrawStr(&u8g2, 45, 33, "UV");
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET);
     }
     else
     {
@@ -55,21 +52,11 @@ void UV_Status(uint8_t uvStatus)
         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
         // u8g2_SetDrawColor(&u8g2, ~uvStatus);
         u8g2_DrawStr(&u8g2, 45, 33, "UV");
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET);
     }  
 }
 
 void Fan_Status(uint8_t fanStatus)
 {
-    if(main_scr.fanStatus)
-    {
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET);
-    }
-    else
-    {
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_RESET);
-    }
-    
     if((HAL_GetTick() - main_scr.tick > 200) && main_scr.fanStatus)
     {
       main_scr.fanRotate = ~main_scr.fanRotate;
@@ -100,7 +87,6 @@ void Socket_Status(uint8_t sStatus)
         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
         // u8g2_SetDrawColor(&u8g2, ~sStatus);
         u8g2_DrawStr(&u8g2, 101, 33, "SOCKET");
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
     }
     else
     {
@@ -110,7 +96,6 @@ void Socket_Status(uint8_t sStatus)
         u8g2_SetFont(&u8g2, u8g2_font_micro_tr );
         // u8g2_SetDrawColor(&u8g2, ~sStatus);
         u8g2_DrawStr(&u8g2, 101, 33, "SOCKET");
-        HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
     }  
 }
 void Filter(uint8_t FStatus)

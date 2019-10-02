@@ -1,4 +1,4 @@
-#include "BlinkLed.h"
+#include "blinkled.h"
 
 uint32_t tick;
 void Led_Init(void)
@@ -6,7 +6,7 @@ void Led_Init(void)
       GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   GPIO_InitStruct.Pin = GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;

@@ -82,16 +82,16 @@ void Door(uint8_t DStatus)
     switch (DStatus)
     {
     case 0:
-        u8g2_DrawBox(&u8g2, 115, 50, 5, 3); //0
+        u8g2_DrawBox(&u8g2, 113, 50, 9, 3); //0
         break;
     case 1:
-        u8g2_DrawBox(&u8g2, 115, 50, 5, 3); //0
+        u8g2_DrawBox(&u8g2, 113, 50, 9, 3); //0
         u8g2_DrawBox(&u8g2, 113, 46, 9, 3); //1
         break;
     case 2:
-        u8g2_DrawBox(&u8g2, 115, 50, 5, 3);  //0
+        u8g2_DrawBox(&u8g2, 113, 50, 9, 3);  //0
         u8g2_DrawBox(&u8g2, 113, 46, 9, 3);  //1
-        u8g2_DrawBox(&u8g2, 111, 42, 13, 3); //2
+        u8g2_DrawBox(&u8g2, 113, 42, 9, 3); //2
         break;
     default:
         break;
