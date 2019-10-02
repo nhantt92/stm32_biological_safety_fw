@@ -112,7 +112,7 @@ int main(void)
     KeyManage();
     Blink();
     Output_Manage();
-    buzzer_manage();
+    buzzer_manage(buzzer.short_Status);
 
     if (HAL_GetTick() - timeRefesh > 100)
     {
