@@ -24,7 +24,7 @@ void Blink(void)
     if(HAL_GetTick() - tick >1000)
     {
         HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_9);
-        printf("Blind Led \n");
+        // printf("Blind Led \n");
         tick = HAL_GetTick();
     }
 }

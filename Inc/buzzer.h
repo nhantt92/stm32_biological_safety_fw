@@ -12,7 +12,7 @@
 
 #define SHORT_BEEP 	500
 #define LONG_BEEP 	1500
-#define ALARM		800
+#define ALARM		1000
 
 typedef enum
 {
@@ -29,14 +29,17 @@ typedef struct
 	uint8_t short_Status;
 	uint8_t long_Status;
 	uint8_t alarm_Status;
+	uint8_t cnt;
 } BUZZER_T;
 
 void buzzer_short_beep(void);
 void buzzer_long_beep(void);
 void buzzer_alarm_start(void);
-void buzzer_alarm_stop(void);
+// void buzzer_alarm_stop(void);
 void handle_buzzer(void);
 void buzzer_manage(uint8_t status);
 void buzzer_init(void);
+
+BUZZER_T buzzer;
 
 #endif

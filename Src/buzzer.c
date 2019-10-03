@@ -1,4 +1,5 @@
 #include "buzzer.h"
+#include "key.h"
 
 extern BUZZER_T buzzer;
 
@@ -19,11 +20,11 @@ void buzzer_alarm_start(void)
 	buzzer.state = STATE_AL;
 }
 
-void buzzer_alarm_stop(void)
-{
-	buzzer.state = STATE_IDLE;
-	BUZZER_OFF();
-}
+// void buzzer_alarm_stop(void)
+// {
+// 	buzzer.state = STATE_IDLE;
+// 	BUZZER_OFF();
+// }
 
 void handle_buzzer(void)
 {
@@ -31,24 +32,33 @@ void handle_buzzer(void)
 	switch (buzzer.state)
 	{
 	case STATE_SB:
-		if (delta > SHORT_BEEP)
+		if ((delta > SHORT_BEEP) && buzzer.short_Status)
 		{
 			BUZZER_OFF();
-			buzzer.state = STATE_IDLE;
+			buzzer.short_Status = 0;
+			// printf("Short_Buzzer is off , %d ms\n", delta);
 		}
 		break;
 	case STATE_LB:
-		if (delta > LONG_BEEP)
+		if ((delta > LONG_BEEP) && buzzer.long_Status)
 		{
 			BUZZER_OFF();
-			buzzer.state = STATE_IDLE;
+			buzzer.long_Status = 0;
+			// printf("Long_Buzzer is off, %d ms \n", delta);
 		}
 		break;
 	case STATE_AL:
-		if (delta > ALARM)
+		if ((delta > ALARM) && buzzer.alarm_Status)
 		{
 			BUZZER_TOGGLE();
 			buzzer.tick = HAL_GetTick();
+			buzzer.cnt++;
+			// printf("Alarm_Buzzer is toggling, t = %d\n", buzzer.cnt);
+			if (buzzer.cnt >= 15) // Setup time buzzer toggle
+			{
+				buzzer.alarm_Status = 0;
+				// printf("Alarm_Buzzer is off, t= %d \n", buzzer.cnt);
+			}
 		}
 		break;
 	default:
@@ -60,14 +70,14 @@ void buzzer_manage(uint8_t status)
 {
 	switch (status)
 	{
-	case buzzer.short_Status:
+	case 1:
 		buzzer_short_beep();
 		handle_buzzer();
 		break;
-	case buzzer.long_Status:
+	case 2:
 		buzzer_long_beep();
 		handle_buzzer();
-	case buzzer.alarm_Status:
+	case 3:
 		buzzer_alarm_start();
 		handle_buzzer();
 	default:
@@ -87,9 +97,10 @@ void buzzer_init(void)
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-	buzzer.short_Status = 0;
-	buzzer.long_Status = 0;
-	buzzer.alarm_Status = 0;
+	buzzer.cnt = 0;
+	buzzer.short_Status = 1;
+	buzzer.long_Status = 2;
+	buzzer.alarm_Status = 3;
 
 	buzzer.tick = HAL_GetTick();
 	BUZZER_OFF();

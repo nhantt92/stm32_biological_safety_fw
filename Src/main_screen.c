@@ -67,7 +67,7 @@ void Fan_Status(uint8_t fanStatus)
         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
         // u8g2_SetDrawColor(&u8g2, ~fanStatus);
         u8g2_DrawStr(&u8g2, 75, 33, "FAN");
-        u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_origin.width / 8, bmp_fan_rotate.height, bmp_fan_rotate.data);
+        u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_rotate.width / 8, bmp_fan_rotate.height, bmp_fan_rotate.data);
     }
     else
     {
