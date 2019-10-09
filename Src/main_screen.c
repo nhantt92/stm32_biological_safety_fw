@@ -39,19 +39,15 @@ void Lamp_Status(uint8_t lampStatus)
 }
 void UV_Status(uint8_t uvStatus)
 {
+    u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
+    u8g2_DrawStr(&u8g2, 45, 33, "UV");
     if (uvStatus)
     {
         u8g2_DrawBitmap(&u8g2, 32, 33, bmp_uv_on.width / 8, bmp_uv_on.height, bmp_uv_on.data);
-        u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
-        // u8g2_SetDrawColor(&u8g2, ~uvStatus);
-        u8g2_DrawStr(&u8g2, 45, 33, "UV");
     }
     else
     {
         u8g2_DrawBitmap(&u8g2, 32, 33, bmp_uv_off.width / 8, bmp_uv_off.height, bmp_uv_off.data);
-        u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
-        // u8g2_SetDrawColor(&u8g2, ~uvStatus);
-        u8g2_DrawStr(&u8g2, 45, 33, "UV");
     }
 }
 
