@@ -1,5 +1,6 @@
 #include "info_screen.h"
 #include "u8g2.h"
+#include "user_bitmap.h"
 
 u8g2_t u8g2;
 
@@ -13,6 +14,7 @@ void Info_Screen_Init(void)
     Info_Scr.Filter_Time = 0;
     Info_Scr.Flow = 0;
     Info_Scr.UV = 0;
+    Info_Scr.Temp = 0;
     Info_Scr.Door = 2;
     Info_Scr.tick = HAL_GetTick();
 }
@@ -22,6 +24,7 @@ void SysTime(uint8_t TimeStatus)
     {
     case 0:
         u8g2_SetFont(&u8g2, u8g2_font_inr21_mf);
+        // u8g2_SetFont(&u8g2, u8g2_font_inr19_mn);
         u8g2_DrawStr(&u8g2, 19, 24, "23"); //Variable
         u8g2_DrawStr(&u8g2, 55, 24, ":");  //Blink for second
         u8g2_DrawStr(&u8g2, 73, 24, "59"); //Variable
@@ -75,6 +78,24 @@ void Flow(uint8_t FlowStatus)
         break;
     }
 }
+void Temperature(uint8_t TempStatus)
+{
+    u8g2_DrawBitmap(&u8g2, 97, 26, bmp_temp.width / 8, bmp_temp.height, bmp_temp.data);
+    u8g2_SetFont(&u8g2, u8g2_font_5x7_tr);
+    u8g2_DrawStr(&u8g2, 119, 29, ".");
+    u8g2_DrawStr(&u8g2, 122, 35, "C");
+    switch (TempStatus)
+    {
+    case 0:
+        u8g2_DrawStr(&u8g2, 110, 35, "75");
+        break;
+    case 1:
+        u8g2_DrawStr(&u8g2, 110, 35, "00"); //variable x
+        break;
+    default:
+        break;
+    }
+}
 void Door(uint8_t DStatus)
 {
     u8g2_SetFont(&u8g2, u8g2_font_5x8_mf);
@@ -89,8 +110,8 @@ void Door(uint8_t DStatus)
         u8g2_DrawBox(&u8g2, 113, 46, 9, 3); //1
         break;
     case 2:
-        u8g2_DrawBox(&u8g2, 113, 50, 9, 3);  //0
-        u8g2_DrawBox(&u8g2, 113, 46, 9, 3);  //1
+        u8g2_DrawBox(&u8g2, 113, 50, 9, 3); //0
+        u8g2_DrawBox(&u8g2, 113, 46, 9, 3); //1
         u8g2_DrawBox(&u8g2, 113, 42, 9, 3); //2
         break;
     default:
@@ -103,7 +124,15 @@ void Info_Screen_Manage(void)
     Filter_Pa(Info_Scr.Filter_Pa);
     Flow(Info_Scr.Flow);
     Door(Info_Scr.Door);
+    Temperature(Info_Scr.Temp);
     u8g2_DrawHLine(&u8g2, 29, 40, 70);
+    Frame_Door();
+}
+void Frame_Door(void)
+{
+    u8g2_DrawHVLine(&u8g2, 109, 40, 13, 1);
+    u8g2_DrawHVLine(&u8g2, 125, 40, 13, 1);
+    u8g2_DrawHLine(&u8g2, 110, 40, 16);
 }
 // void SysWork(uint8_t WorkStatus)
 // {

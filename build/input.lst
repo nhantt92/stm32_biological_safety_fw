@@ -1,0 +1,474 @@
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cctFuZhl.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"input.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.Input_Init,"ax",%progbits
+  16              		.align	1
+  17              		.global	Input_Init
+  18              		.arch armv7-m
+  19              		.syntax unified
+  20              		.thumb
+  21              		.thumb_func
+  22              		.fpu softvfp
+  24              	Input_Init:
+  25              	.LFB66:
+  26              		.file 1 "Src/input.c"
+   1:Src/input.c   **** #include "input.h"
+   2:Src/input.c   **** #include "output.h"
+   3:Src/input.c   **** #include "main_screen.h"
+   4:Src/input.c   **** 
+   5:Src/input.c   **** void Input_Init(void)
+   6:Src/input.c   **** {
+  27              		.loc 1 6 1 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 16
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31 0000 00B5     		push	{lr}
+  32              	.LCFI0:
+  33              		.cfi_def_cfa_offset 4
+  34              		.cfi_offset 14, -4
+  35 0002 85B0     		sub	sp, sp, #20
+  36              	.LCFI1:
+  37              		.cfi_def_cfa_offset 24
+   7:Src/input.c   ****     GPIO_InitTypeDef GPIO_InitStruct = {0};
+  38              		.loc 1 7 5 view .LVU1
+  39              		.loc 1 7 22 is_stmt 0 view .LVU2
+  40 0004 0023     		movs	r3, #0
+  41 0006 0193     		str	r3, [sp, #4]
+  42 0008 0393     		str	r3, [sp, #12]
+   8:Src/input.c   **** 
+   9:Src/input.c   ****     GPIO_InitStruct.Pin = In1_Pin | In2_Pin | In3_Pin | In4_Pin | In5_Pin | In6_Pin;
+  43              		.loc 1 9 5 is_stmt 1 view .LVU3
+  44              		.loc 1 9 25 is_stmt 0 view .LVU4
+  45 000a 3F23     		movs	r3, #63
+  46 000c 0093     		str	r3, [sp]
+  10:Src/input.c   ****     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  47              		.loc 1 10 5 is_stmt 1 view .LVU5
+  11:Src/input.c   ****     GPIO_InitStruct.Pull = GPIO_PULLUP;
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cctFuZhl.s 			page 2
+
+
+  48              		.loc 1 11 5 view .LVU6
+  49              		.loc 1 11 26 is_stmt 0 view .LVU7
+  50 000e 0123     		movs	r3, #1
+  51 0010 0293     		str	r3, [sp, #8]
+  12:Src/input.c   ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  52              		.loc 1 12 5 is_stmt 1 view .LVU8
+  53 0012 6946     		mov	r1, sp
+  54 0014 0248     		ldr	r0, .L3
+  55 0016 FFF7FEFF 		bl	HAL_GPIO_Init
+  56              	.LVL0:
+  13:Src/input.c   **** }
+  57              		.loc 1 13 1 is_stmt 0 view .LVU9
+  58 001a 05B0     		add	sp, sp, #20
+  59              	.LCFI2:
+  60              		.cfi_def_cfa_offset 4
+  61              		@ sp needed
+  62 001c 5DF804FB 		ldr	pc, [sp], #4
+  63              	.L4:
+  64              		.align	2
+  65              	.L3:
+  66 0020 00100140 		.word	1073811456
+  67              		.cfi_endproc
+  68              	.LFE66:
+  70              		.section	.text.Input_Neon,"ax",%progbits
+  71              		.align	1
+  72              		.global	Input_Neon
+  73              		.syntax unified
+  74              		.thumb
+  75              		.thumb_func
+  76              		.fpu softvfp
+  78              	Input_Neon:
+  79              	.LFB68:
+  14:Src/input.c   **** 
+  15:Src/input.c   **** void Input_Manage(void)
+  16:Src/input.c   **** {
+  17:Src/input.c   ****     Input_Neon();
+  18:Src/input.c   ****     Input_Uv();
+  19:Src/input.c   ****     Input_Fan();
+  20:Src/input.c   ****     Input_Socket();
+  21:Src/input.c   **** }
+  22:Src/input.c   **** 
+  23:Src/input.c   **** void Input_Neon(void)
+  24:Src/input.c   **** {
+  80              		.loc 1 24 1 is_stmt 1 view -0
+  81              		.cfi_startproc
+  82              		@ args = 0, pretend = 0, frame = 0
+  83              		@ frame_needed = 0, uses_anonymous_args = 0
+  84 0000 08B5     		push	{r3, lr}
+  85              	.LCFI3:
+  86              		.cfi_def_cfa_offset 8
+  87              		.cfi_offset 3, -8
+  88              		.cfi_offset 14, -4
+  25:Src/input.c   ****     switch (In1())
+  89              		.loc 1 25 5 view .LVU11
+  90              		.loc 1 25 13 is_stmt 0 view .LVU12
+  91 0002 0121     		movs	r1, #1
+  92 0004 0848     		ldr	r0, .L9
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cctFuZhl.s 			page 3
+
+
+  93 0006 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+  94              	.LVL1:
+  95              		.loc 1 25 5 view .LVU13
+  96 000a 30B9     		cbnz	r0, .L6
+  26:Src/input.c   ****     {
+  27:Src/input.c   ****     case On:
+  28:Src/input.c   ****         SW_Neon(1);
+  97              		.loc 1 28 9 is_stmt 1 view .LVU14
+  98 000c 0120     		movs	r0, #1
+  99 000e FFF7FEFF 		bl	SW_Neon
+ 100              	.LVL2:
+  29:Src/input.c   ****         printf("Neon On\n");
+ 101              		.loc 1 29 9 view .LVU15
+ 102 0012 0648     		ldr	r0, .L9+4
+ 103 0014 FFF7FEFF 		bl	puts
+ 104              	.LVL3:
+  30:Src/input.c   ****         break;
+ 105              		.loc 1 30 9 view .LVU16
+ 106              	.L5:
+  31:Src/input.c   ****     default:
+  32:Src/input.c   ****         SW_Neon(0);
+  33:Src/input.c   ****         printf("Neon Off\n");
+  34:Src/input.c   ****         break;
+  35:Src/input.c   ****     }
+  36:Src/input.c   **** }
+ 107              		.loc 1 36 1 is_stmt 0 view .LVU17
+ 108 0018 08BD     		pop	{r3, pc}
+ 109              	.L6:
+  32:Src/input.c   ****         printf("Neon Off\n");
+ 110              		.loc 1 32 9 is_stmt 1 view .LVU18
+ 111 001a 0020     		movs	r0, #0
+ 112 001c FFF7FEFF 		bl	SW_Neon
+ 113              	.LVL4:
+  33:Src/input.c   ****         break;
+ 114              		.loc 1 33 9 view .LVU19
+ 115 0020 0348     		ldr	r0, .L9+8
+ 116 0022 FFF7FEFF 		bl	puts
+ 117              	.LVL5:
+  34:Src/input.c   ****     }
+ 118              		.loc 1 34 9 view .LVU20
+ 119              		.loc 1 36 1 is_stmt 0 view .LVU21
+ 120 0026 F7E7     		b	.L5
+ 121              	.L10:
+ 122              		.align	2
+ 123              	.L9:
+ 124 0028 00100140 		.word	1073811456
+ 125 002c 00000000 		.word	.LC0
+ 126 0030 08000000 		.word	.LC1
+ 127              		.cfi_endproc
+ 128              	.LFE68:
+ 130              		.section	.text.Input_Uv,"ax",%progbits
+ 131              		.align	1
+ 132              		.global	Input_Uv
+ 133              		.syntax unified
+ 134              		.thumb
+ 135              		.thumb_func
+ 136              		.fpu softvfp
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cctFuZhl.s 			page 4
+
+
+ 138              	Input_Uv:
+ 139              	.LFB69:
+  37:Src/input.c   **** void Input_Uv(void)
+  38:Src/input.c   **** {
+ 140              		.loc 1 38 1 is_stmt 1 view -0
+ 141              		.cfi_startproc
+ 142              		@ args = 0, pretend = 0, frame = 0
+ 143              		@ frame_needed = 0, uses_anonymous_args = 0
+ 144 0000 08B5     		push	{r3, lr}
+ 145              	.LCFI4:
+ 146              		.cfi_def_cfa_offset 8
+ 147              		.cfi_offset 3, -8
+ 148              		.cfi_offset 14, -4
+  39:Src/input.c   ****     switch (In2())
+ 149              		.loc 1 39 5 view .LVU23
+ 150              		.loc 1 39 13 is_stmt 0 view .LVU24
+ 151 0002 0221     		movs	r1, #2
+ 152 0004 0548     		ldr	r0, .L15
+ 153 0006 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 154              	.LVL6:
+ 155              		.loc 1 39 5 view .LVU25
+ 156 000a 18B9     		cbnz	r0, .L12
+  40:Src/input.c   ****     {
+  41:Src/input.c   ****     case On:
+  42:Src/input.c   ****         SW_Uv(1);
+ 157              		.loc 1 42 9 is_stmt 1 view .LVU26
+ 158 000c 0120     		movs	r0, #1
+ 159 000e FFF7FEFF 		bl	SW_Uv
+ 160              	.LVL7:
+  43:Src/input.c   ****         break;
+ 161              		.loc 1 43 9 view .LVU27
+ 162              	.L11:
+  44:Src/input.c   ****     default:
+  45:Src/input.c   ****         SW_Uv(0);
+  46:Src/input.c   ****         break;
+  47:Src/input.c   ****     }
+  48:Src/input.c   **** }
+ 163              		.loc 1 48 1 is_stmt 0 view .LVU28
+ 164 0012 08BD     		pop	{r3, pc}
+ 165              	.L12:
+  45:Src/input.c   ****         break;
+ 166              		.loc 1 45 9 is_stmt 1 view .LVU29
+ 167 0014 0020     		movs	r0, #0
+ 168 0016 FFF7FEFF 		bl	SW_Uv
+ 169              	.LVL8:
+  46:Src/input.c   ****     }
+ 170              		.loc 1 46 9 view .LVU30
+ 171              		.loc 1 48 1 is_stmt 0 view .LVU31
+ 172 001a FAE7     		b	.L11
+ 173              	.L16:
+ 174              		.align	2
+ 175              	.L15:
+ 176 001c 00100140 		.word	1073811456
+ 177              		.cfi_endproc
+ 178              	.LFE69:
+ 180              		.section	.text.Input_Fan,"ax",%progbits
+ 181              		.align	1
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cctFuZhl.s 			page 5
+
+
+ 182              		.global	Input_Fan
+ 183              		.syntax unified
+ 184              		.thumb
+ 185              		.thumb_func
+ 186              		.fpu softvfp
+ 188              	Input_Fan:
+ 189              	.LFB70:
+  49:Src/input.c   **** void Input_Fan(void)
+  50:Src/input.c   **** {
+ 190              		.loc 1 50 1 is_stmt 1 view -0
+ 191              		.cfi_startproc
+ 192              		@ args = 0, pretend = 0, frame = 0
+ 193              		@ frame_needed = 0, uses_anonymous_args = 0
+ 194 0000 08B5     		push	{r3, lr}
+ 195              	.LCFI5:
+ 196              		.cfi_def_cfa_offset 8
+ 197              		.cfi_offset 3, -8
+ 198              		.cfi_offset 14, -4
+  51:Src/input.c   ****     switch (In3())
+ 199              		.loc 1 51 5 view .LVU33
+ 200              		.loc 1 51 13 is_stmt 0 view .LVU34
+ 201 0002 0421     		movs	r1, #4
+ 202 0004 0548     		ldr	r0, .L21
+ 203 0006 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 204              	.LVL9:
+ 205              		.loc 1 51 5 view .LVU35
+ 206 000a 18B9     		cbnz	r0, .L18
+  52:Src/input.c   ****     {
+  53:Src/input.c   ****     case On:
+  54:Src/input.c   ****         SW_Fan(1);
+ 207              		.loc 1 54 9 is_stmt 1 view .LVU36
+ 208 000c 0120     		movs	r0, #1
+ 209 000e FFF7FEFF 		bl	SW_Fan
+ 210              	.LVL10:
+  55:Src/input.c   ****         break;
+ 211              		.loc 1 55 9 view .LVU37
+ 212              	.L17:
+  56:Src/input.c   ****     default:
+  57:Src/input.c   ****         SW_Fan(0);
+  58:Src/input.c   ****         break;
+  59:Src/input.c   ****     }
+  60:Src/input.c   **** }
+ 213              		.loc 1 60 1 is_stmt 0 view .LVU38
+ 214 0012 08BD     		pop	{r3, pc}
+ 215              	.L18:
+  57:Src/input.c   ****         break;
+ 216              		.loc 1 57 9 is_stmt 1 view .LVU39
+ 217 0014 0020     		movs	r0, #0
+ 218 0016 FFF7FEFF 		bl	SW_Fan
+ 219              	.LVL11:
+  58:Src/input.c   ****     }
+ 220              		.loc 1 58 9 view .LVU40
+ 221              		.loc 1 60 1 is_stmt 0 view .LVU41
+ 222 001a FAE7     		b	.L17
+ 223              	.L22:
+ 224              		.align	2
+ 225              	.L21:
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cctFuZhl.s 			page 6
+
+
+ 226 001c 00100140 		.word	1073811456
+ 227              		.cfi_endproc
+ 228              	.LFE70:
+ 230              		.section	.text.Input_Socket,"ax",%progbits
+ 231              		.align	1
+ 232              		.global	Input_Socket
+ 233              		.syntax unified
+ 234              		.thumb
+ 235              		.thumb_func
+ 236              		.fpu softvfp
+ 238              	Input_Socket:
+ 239              	.LFB71:
+  61:Src/input.c   **** void Input_Socket(void)
+  62:Src/input.c   **** {
+ 240              		.loc 1 62 1 is_stmt 1 view -0
+ 241              		.cfi_startproc
+ 242              		@ args = 0, pretend = 0, frame = 0
+ 243              		@ frame_needed = 0, uses_anonymous_args = 0
+ 244 0000 08B5     		push	{r3, lr}
+ 245              	.LCFI6:
+ 246              		.cfi_def_cfa_offset 8
+ 247              		.cfi_offset 3, -8
+ 248              		.cfi_offset 14, -4
+  63:Src/input.c   ****     switch(In4())
+ 249              		.loc 1 63 5 view .LVU43
+ 250              		.loc 1 63 12 is_stmt 0 view .LVU44
+ 251 0002 0821     		movs	r1, #8
+ 252 0004 0548     		ldr	r0, .L27
+ 253 0006 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 254              	.LVL12:
+ 255              		.loc 1 63 5 view .LVU45
+ 256 000a 18B9     		cbnz	r0, .L24
+  64:Src/input.c   ****     {
+  65:Src/input.c   ****         case On:
+  66:Src/input.c   ****         SW_Socket(1);
+ 257              		.loc 1 66 9 is_stmt 1 view .LVU46
+ 258 000c 0120     		movs	r0, #1
+ 259 000e FFF7FEFF 		bl	SW_Socket
+ 260              	.LVL13:
+  67:Src/input.c   ****         break;
+ 261              		.loc 1 67 9 view .LVU47
+ 262              	.L23:
+  68:Src/input.c   ****         default:
+  69:Src/input.c   ****         SW_Socket(0);
+  70:Src/input.c   ****         break;
+  71:Src/input.c   ****     }
+  72:Src/input.c   **** }...
+ 263              		.loc 1 72 1 is_stmt 0 view .LVU48
+ 264 0012 08BD     		pop	{r3, pc}
+ 265              	.L24:
+  69:Src/input.c   ****         SW_Socket(0);
+ 266              		.loc 1 69 9 is_stmt 1 view .LVU49
+ 267 0014 0020     		movs	r0, #0
+ 268 0016 FFF7FEFF 		bl	SW_Socket
+ 269              	.LVL14:
+  70:Src/input.c   ****         break;
+ 270              		.loc 1 70 9 view .LVU50
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cctFuZhl.s 			page 7
+
+
+ 271              		.loc 1 72 1 is_stmt 0 view .LVU51
+ 272 001a FAE7     		b	.L23
+ 273              	.L28:
+ 274              		.align	2
+ 275              	.L27:
+ 276 001c 00100140 		.word	1073811456
+ 277              		.cfi_endproc
+ 278              	.LFE71:
+ 280              		.section	.text.Input_Manage,"ax",%progbits
+ 281              		.align	1
+ 282              		.global	Input_Manage
+ 283              		.syntax unified
+ 284              		.thumb
+ 285              		.thumb_func
+ 286              		.fpu softvfp
+ 288              	Input_Manage:
+ 289              	.LFB67:
+  16:Src/input.c   **** {
+ 290              		.loc 1 16 1 is_stmt 1 view -0
+ 291              		.cfi_startproc
+ 292              		@ args = 0, pretend = 0, frame = 0
+ 293              		@ frame_needed = 0, uses_anonymous_args = 0
+ 294 0000 08B5     		push	{r3, lr}
+ 295              	.LCFI7:
+ 296              		.cfi_def_cfa_offset 8
+ 297              		.cfi_offset 3, -8
+ 298              		.cfi_offset 14, -4
+  17:Src/input.c   ****     Input_Neon();
+ 299              		.loc 1 17 5 view .LVU53
+ 300 0002 FFF7FEFF 		bl	Input_Neon
+ 301              	.LVL15:
+  18:Src/input.c   ****     Input_Uv();
+ 302              		.loc 1 18 5 view .LVU54
+ 303 0006 FFF7FEFF 		bl	Input_Uv
+ 304              	.LVL16:
+  19:Src/input.c   ****     Input_Fan();
+ 305              		.loc 1 19 5 view .LVU55
+ 306 000a FFF7FEFF 		bl	Input_Fan
+ 307              	.LVL17:
+  20:Src/input.c   ****     Input_Socket();
+ 308              		.loc 1 20 5 view .LVU56
+ 309 000e FFF7FEFF 		bl	Input_Socket
+ 310              	.LVL18:
+  21:Src/input.c   **** }
+ 311              		.loc 1 21 1 is_stmt 0 view .LVU57
+ 312 0012 08BD     		pop	{r3, pc}
+ 313              		.cfi_endproc
+ 314              	.LFE67:
+ 316              		.comm	bmp_temp,8,4
+ 317              		.section	.rodata.Input_Neon.str1.4,"aMS",%progbits,1
+ 318              		.align	2
+ 319              	.LC0:
+ 320 0000 4E656F6E 		.ascii	"Neon On\000"
+ 320      204F6E00 
+ 321              	.LC1:
+ 322 0008 4E656F6E 		.ascii	"Neon Off\000"
+ 322      204F6666 
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cctFuZhl.s 			page 8
+
+
+ 322      00
+ 323              		.text
+ 324              	.Letext0:
+ 325              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 326              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 327              		.file 4 "Drivers/CMSIS/Include/core_cm3.h"
+ 328              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h"
+ 329              		.file 6 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
+ 330              		.file 7 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\lib\\gcc\\arm-none-eab
+ 331              		.file 8 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 332              		.file 9 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 333              		.file 10 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\includ
+ 334              		.file 11 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ 335              		.file 12 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 336              		.file 13 "Inc/user_bitmap.h"
+ 337              		.file 14 "Inc/main_screen.h"
+ 338              		.file 15 "Inc/output.h"
+ 339              		.file 16 "<built-in>"
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cctFuZhl.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 input.c
+C:\Users\behun\AppData\Local\Temp\cctFuZhl.s:16     .text.Input_Init:00000000 $t
+C:\Users\behun\AppData\Local\Temp\cctFuZhl.s:24     .text.Input_Init:00000000 Input_Init
+C:\Users\behun\AppData\Local\Temp\cctFuZhl.s:66     .text.Input_Init:00000020 $d
+C:\Users\behun\AppData\Local\Temp\cctFuZhl.s:71     .text.Input_Neon:00000000 $t
+C:\Users\behun\AppData\Local\Temp\cctFuZhl.s:78     .text.Input_Neon:00000000 Input_Neon
+C:\Users\behun\AppData\Local\Temp\cctFuZhl.s:124    .text.Input_Neon:00000028 $d
+C:\Users\behun\AppData\Local\Temp\cctFuZhl.s:131    .text.Input_Uv:00000000 $t
+C:\Users\behun\AppData\Local\Temp\cctFuZhl.s:138    .text.Input_Uv:00000000 Input_Uv
+C:\Users\behun\AppData\Local\Temp\cctFuZhl.s:176    .text.Input_Uv:0000001c $d
+C:\Users\behun\AppData\Local\Temp\cctFuZhl.s:181    .text.Input_Fan:00000000 $t
+C:\Users\behun\AppData\Local\Temp\cctFuZhl.s:188    .text.Input_Fan:00000000 Input_Fan
+C:\Users\behun\AppData\Local\Temp\cctFuZhl.s:226    .text.Input_Fan:0000001c $d
+C:\Users\behun\AppData\Local\Temp\cctFuZhl.s:231    .text.Input_Socket:00000000 $t
+C:\Users\behun\AppData\Local\Temp\cctFuZhl.s:238    .text.Input_Socket:00000000 Input_Socket
+C:\Users\behun\AppData\Local\Temp\cctFuZhl.s:276    .text.Input_Socket:0000001c $d
+C:\Users\behun\AppData\Local\Temp\cctFuZhl.s:281    .text.Input_Manage:00000000 $t
+C:\Users\behun\AppData\Local\Temp\cctFuZhl.s:288    .text.Input_Manage:00000000 Input_Manage
+                            *COM*:00000008 bmp_temp
+C:\Users\behun\AppData\Local\Temp\cctFuZhl.s:318    .rodata.Input_Neon.str1.4:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_Init
+HAL_GPIO_ReadPin
+SW_Neon
+puts
+SW_Uv
+SW_Fan
+SW_Socket

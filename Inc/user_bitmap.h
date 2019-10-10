@@ -18,5 +18,6 @@ extern const BITMAP bmp_fan_origin;
 extern const BITMAP bmp_fan_rotate;
 extern const BITMAP bmp_socket_on;
 extern const BITMAP bmp_socket_off;
+const BITMAP bmp_temp;
 
 #endif

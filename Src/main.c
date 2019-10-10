@@ -37,6 +37,7 @@
 #include "main_screen.h"
 #include "info_screen.h"
 #include "output.h"
+#include "input.h"
 #include "buzzer.h"
 #include "spi.h"
 
@@ -85,6 +86,7 @@ int main(void)
   Info_Screen_Init();
   Led_Init();
   Output_Init();
+  Input_Init();
   buzzer_init();
   uint32_t timeRefesh = HAL_GetTick();
   uint32_t tick = HAL_GetTick();
@@ -112,6 +114,7 @@ int main(void)
     KeyManage();
     Blink();
     Output_Manage();
+    // Input_Manage();
     // buzzer_manage(buzzer.short_Status);
 
     if (HAL_GetTick() - timeRefesh > 100)

@@ -12,6 +12,7 @@ typedef struct {
     uint8_t Filter_Time;
     uint8_t Flow;
     uint8_t UV;
+    uint8_t Temp;
     uint8_t Door;
     uint32_t tick;
 } INFO_SCREEN_STR;
@@ -22,7 +23,9 @@ void Info_Screen_Init(void);
 void SysTime(uint8_t TimeStatus);
 void Filter_Pa(uint8_t PaStatus);
 void Flow(uint8_t FlowStatus);
+void Temperature(uint8_t TempStatus);
 void Door(uint8_t DStatus);
+void Frame_Door(void);
 void Info_Screen_Manage(void);
 // void SysWork(uint8_t WorkStatus);
 // void Filter_Time(uint8_t FTStatus);
