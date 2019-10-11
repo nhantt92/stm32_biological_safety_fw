@@ -69,6 +69,7 @@ Src/info_screen.c \
 Src/output.c \
 Src/input.c \
 Src/buzzer.c \
+Src/clock_rtc.c \
 Src/i2c.c \
 Src/spi.c \
 Src/iwdg.c \
@@ -92,6 +93,8 @@ Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c \
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rtc.c \
+Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rtc_ex.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c \
