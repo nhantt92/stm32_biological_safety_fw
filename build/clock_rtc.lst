@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s 			page 1
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 1
 
 
    1              		.cpu cortex-m3
@@ -15,36 +15,70 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s 			page 1
   12              		.text
   13              	.Ltext0:
   14              		.cfi_sections	.debug_frame
-  15              		.section	.text.set_time,"ax",%progbits
+  15              		.section	.text.RTC_GetUnixTimestamp,"ax",%progbits
   16              		.align	1
-  17              		.global	set_time
+  17              		.global	RTC_GetUnixTimestamp
   18              		.arch armv7-m
   19              		.syntax unified
   20              		.thumb
   21              		.thumb_func
   22              		.fpu softvfp
-  24              	set_time:
+  24              	RTC_GetUnixTimestamp:
   25              	.LVL0:
-  26              	.LFB66:
-  27              		.file 1 "Inc/clock_rtc.h"
-   1:Inc/clock_rtc.h **** #ifndef __CLOCK_RTC_H
-   2:Inc/clock_rtc.h **** #define __CLOCK_RTC_H
-   3:Inc/clock_rtc.h **** 
-   4:Inc/clock_rtc.h **** #include "main.h"
-   5:Inc/clock_rtc.h **** #include "time.h"
-   6:Inc/clock_rtc.h **** #include "stm32f1xx_hal_rtc.h"
-   7:Inc/clock_rtc.h **** 
-   8:Inc/clock_rtc.h **** RTC_HandleTypeDef hrtc;
-   9:Inc/clock_rtc.h **** 
-  10:Inc/clock_rtc.h **** const uint8_t daysInMonth [] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-  11:Inc/clock_rtc.h **** 
-  12:Inc/clock_rtc.h **** time_t set_time(uint32_t year, uint32_t month, uint32_t day, uint32_t hour, uint32_t minute, uint32
-  13:Inc/clock_rtc.h **** {
-  28              		.loc 1 13 1 view -0
+  26              	.LFB67:
+  27              		.file 1 "Src/clock_rtc.c"
+   1:Src/clock_rtc.c **** #include "clock_rtc.h"
+   2:Src/clock_rtc.c **** 
+   3:Src/clock_rtc.c **** DATE_TIME localTime;
+   4:Src/clock_rtc.c **** RTC_HandleTypeDef hrtc;
+   5:Src/clock_rtc.c **** 
+   6:Src/clock_rtc.c **** uint32_t timeRTC;
+   7:Src/clock_rtc.c **** 
+   8:Src/clock_rtc.c **** void RTC_Init(void)
+   9:Src/clock_rtc.c **** {
+  10:Src/clock_rtc.c ****     timeRTC = HAL_GetTick();
+  11:Src/clock_rtc.c ****     hrtc.Instance = RTC;
+  12:Src/clock_rtc.c ****     hrtc.Init.AsynchPrediv = RTC_AUTO_1_SECOND;
+  13:Src/clock_rtc.c ****     hrtc.Init.OutPut = RTC_OUTPUTSOURCE_NONE;
+  14:Src/clock_rtc.c **** 	if (HAL_RTC_Init(&hrtc) != HAL_OK)
+  15:Src/clock_rtc.c ****     {
+  16:Src/clock_rtc.c ****         Error_Handler();
+  17:Src/clock_rtc.c ****     }
+  18:Src/clock_rtc.c ****     if (HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR1) != RTC_HOLDER) 
+  19:Src/clock_rtc.c ****     {
+  20:Src/clock_rtc.c ****         localTime.year = 2019;
+  21:Src/clock_rtc.c ****         localTime.month = 10;
+  22:Src/clock_rtc.c ****         localTime.mday = 12;
+  23:Src/clock_rtc.c ****         localTime.hour = 11 - 7;
+  24:Src/clock_rtc.c ****         localTime.min = 30;
+  25:Src/clock_rtc.c ****         localTime.sec = 00;
+  26:Src/clock_rtc.c ****         RTC_Sync(&localTime, +7);
+  27:Src/clock_rtc.c ****         HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR1, RTC_HOLDER);   
+  28:Src/clock_rtc.c ****     }
+  29:Src/clock_rtc.c ****     else
+  30:Src/clock_rtc.c ****     {
+  31:Src/clock_rtc.c ****         if (__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST) != RESET)
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 2
+
+
+  32:Src/clock_rtc.c ****         {
+  33:Src/clock_rtc.c ****         }
+  34:Src/clock_rtc.c ****         if (__HAL_RCC_GET_FLAG(RCC_FLAG_PINRST) != RESET)
+  35:Src/clock_rtc.c ****         {
+  36:Src/clock_rtc.c ****         }
+  37:Src/clock_rtc.c ****         /* Clear source Reset Flag */
+  38:Src/clock_rtc.c ****         __HAL_RCC_CLEAR_RESET_FLAGS();
+  39:Src/clock_rtc.c ****     }
+  40:Src/clock_rtc.c ****     HAL_RTCEx_SetSecond_IT(&hrtc);
+  41:Src/clock_rtc.c **** }
+  42:Src/clock_rtc.c **** 
+  43:Src/clock_rtc.c **** uint32_t RTC_GetUnixTimestamp(DATE_TIME *dt)
+  44:Src/clock_rtc.c **** {
+  28              		.loc 1 44 1 view -0
   29              		.cfi_startproc
-  30              		@ args = 8, pretend = 0, frame = 40
+  30              		@ args = 0, pretend = 0, frame = 40
   31              		@ frame_needed = 0, uses_anonymous_args = 0
-  32              		.loc 1 13 1 is_stmt 0 view .LVU1
+  32              		.loc 1 44 1 is_stmt 0 view .LVU1
   33 0000 00B5     		push	{lr}
   34              	.LCFI0:
   35              		.cfi_def_cfa_offset 4
@@ -52,869 +86,1061 @@ ARM GAS  C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s 			page 1
   37 0002 8BB0     		sub	sp, sp, #44
   38              	.LCFI1:
   39              		.cfi_def_cfa_offset 48
-  14:Inc/clock_rtc.h ****     struct tm time_struct;
-  40              		.loc 1 14 5 is_stmt 1 view .LVU2
-  15:Inc/clock_rtc.h ****     time_t m_time;
-  41              		.loc 1 15 5 view .LVU3
-  16:Inc/clock_rtc.h ****     time_struct.tm_year = year - 1900;
-  42              		.loc 1 16 5 view .LVU4
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s 			page 2
+  45:Src/clock_rtc.c **** 	struct tm t;
+  40              		.loc 1 45 2 is_stmt 1 view .LVU2
+  46:Src/clock_rtc.c **** 	time_t t_of_day;
+  41              		.loc 1 46 2 view .LVU3
+  47:Src/clock_rtc.c **** 	t.tm_year = dt->year - 1900;
+  42              		.loc 1 47 2 view .LVU4
+  43              		.loc 1 47 16 is_stmt 0 view .LVU5
+  44 0004 B0F90030 		ldrsh	r3, [r0]	@ unaligned
+  45              		.loc 1 47 23 view .LVU6
+  46 0008 A3F26C73 		subw	r3, r3, #1900
+  47              		.loc 1 47 12 view .LVU7
+  48 000c 0693     		str	r3, [sp, #24]
+  48:Src/clock_rtc.c **** 	t.tm_mon = dt->month - 1; 				// Month, 0 - jan
+  49              		.loc 1 48 2 is_stmt 1 view .LVU8
+  50              		.loc 1 48 15 is_stmt 0 view .LVU9
+  51 000e 90F90230 		ldrsb	r3, [r0, #2]
+  52              		.loc 1 48 23 view .LVU10
+  53 0012 013B     		subs	r3, r3, #1
+  54              		.loc 1 48 11 view .LVU11
+  55 0014 0593     		str	r3, [sp, #20]
+  49:Src/clock_rtc.c **** 	t.tm_mday = dt->mday; 					// Day of the month
+  56              		.loc 1 49 2 is_stmt 1 view .LVU12
+  57              		.loc 1 49 16 is_stmt 0 view .LVU13
+  58 0016 90F90330 		ldrsb	r3, [r0, #3]
+  59              		.loc 1 49 12 view .LVU14
+  60 001a 0493     		str	r3, [sp, #16]
+  50:Src/clock_rtc.c **** 	t.tm_hour = dt->hour;
+  61              		.loc 1 50 2 is_stmt 1 view .LVU15
+  62              		.loc 1 50 16 is_stmt 0 view .LVU16
+  63 001c 90F90530 		ldrsb	r3, [r0, #5]
+  64              		.loc 1 50 12 view .LVU17
+  65 0020 0393     		str	r3, [sp, #12]
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 3
 
 
-  43              		.loc 1 16 32 is_stmt 0 view .LVU5
-  44 0004 A0F26C70 		subw	r0, r0, #1900
-  45              	.LVL1:
-  46              		.loc 1 16 25 view .LVU6
-  47 0008 0690     		str	r0, [sp, #24]
-  17:Inc/clock_rtc.h ****     time_struct.tm_mon = month;
-  48              		.loc 1 17 5 is_stmt 1 view .LVU7
-  49              		.loc 1 17 24 is_stmt 0 view .LVU8
-  50 000a 0591     		str	r1, [sp, #20]
-  18:Inc/clock_rtc.h ****     time_struct.tm_mday = day;
-  51              		.loc 1 18 5 is_stmt 1 view .LVU9
-  52              		.loc 1 18 25 is_stmt 0 view .LVU10
-  53 000c 0492     		str	r2, [sp, #16]
-  19:Inc/clock_rtc.h ****     time_struct.tm_hour = hour;
-  54              		.loc 1 19 5 is_stmt 1 view .LVU11
-  55              		.loc 1 19 25 is_stmt 0 view .LVU12
-  56 000e 0393     		str	r3, [sp, #12]
-  20:Inc/clock_rtc.h ****     time_struct.tm_min = minute;
-  57              		.loc 1 20 5 is_stmt 1 view .LVU13
-  58              		.loc 1 20 24 is_stmt 0 view .LVU14
-  59 0010 0C9B     		ldr	r3, [sp, #48]
-  60              	.LVL2:
-  61              		.loc 1 20 24 view .LVU15
-  62 0012 0293     		str	r3, [sp, #8]
-  21:Inc/clock_rtc.h ****     time_struct.tm_sec = second;
-  63              		.loc 1 21 5 is_stmt 1 view .LVU16
-  64              		.loc 1 21 24 is_stmt 0 view .LVU17
-  65 0014 0D9B     		ldr	r3, [sp, #52]
-  66 0016 0193     		str	r3, [sp, #4]
-  22:Inc/clock_rtc.h ****     m_time = mktime(&time_struct);// Convert to timestamp
-  67              		.loc 1 22 5 is_stmt 1 view .LVU18
-  68              		.loc 1 22 14 is_stmt 0 view .LVU19
-  69 0018 01A8     		add	r0, sp, #4
-  70              	.LVL3:
-  71              		.loc 1 22 14 view .LVU20
-  72 001a FFF7FEFF 		bl	mktime
-  73              	.LVL4:
-  23:Inc/clock_rtc.h ****     return m_time;
-  74              		.loc 1 23 5 is_stmt 1 view .LVU21
-  24:Inc/clock_rtc.h **** }
-  75              		.loc 1 24 1 is_stmt 0 view .LVU22
-  76 001e 0BB0     		add	sp, sp, #44
-  77              	.LCFI2:
-  78              		.cfi_def_cfa_offset 4
-  79              		@ sp needed
-  80 0020 5DF804FB 		ldr	pc, [sp], #4
-  81              		.loc 1 24 1 view .LVU23
-  82              		.cfi_endproc
-  83              	.LFE66:
-  85              		.section	.text.convert_time_stamp,"ax",%progbits
-  86              		.align	1
-  87              		.global	convert_time_stamp
-  88              		.syntax unified
-  89              		.thumb
-  90              		.thumb_func
-  91              		.fpu softvfp
-  93              	convert_time_stamp:
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s 			page 3
+  51:Src/clock_rtc.c **** 	t.tm_min = dt->min;
+  66              		.loc 1 51 2 is_stmt 1 view .LVU18
+  67              		.loc 1 51 15 is_stmt 0 view .LVU19
+  68 0022 90F90630 		ldrsb	r3, [r0, #6]
+  69              		.loc 1 51 11 view .LVU20
+  70 0026 0293     		str	r3, [sp, #8]
+  52:Src/clock_rtc.c **** 	t.tm_sec = dt->sec;
+  71              		.loc 1 52 2 is_stmt 1 view .LVU21
+  72              		.loc 1 52 15 is_stmt 0 view .LVU22
+  73 0028 90F90730 		ldrsb	r3, [r0, #7]
+  74              		.loc 1 52 11 view .LVU23
+  75 002c 0193     		str	r3, [sp, #4]
+  53:Src/clock_rtc.c **** 	t.tm_isdst = -1; 						// Is DST on? 1 = yes, 0 = no, -1 = unknown
+  76              		.loc 1 53 2 is_stmt 1 view .LVU24
+  77              		.loc 1 53 13 is_stmt 0 view .LVU25
+  78 002e 4FF0FF33 		mov	r3, #-1
+  79 0032 0993     		str	r3, [sp, #36]
+  54:Src/clock_rtc.c **** 	t_of_day = mktime(&t);
+  80              		.loc 1 54 2 is_stmt 1 view .LVU26
+  81              		.loc 1 54 13 is_stmt 0 view .LVU27
+  82 0034 01A8     		add	r0, sp, #4
+  83              	.LVL1:
+  84              		.loc 1 54 13 view .LVU28
+  85 0036 FFF7FEFF 		bl	mktime
+  86              	.LVL2:
+  55:Src/clock_rtc.c **** 	return (uint32_t)t_of_day; 
+  87              		.loc 1 55 2 is_stmt 1 view .LVU29
+  56:Src/clock_rtc.c **** }
+  88              		.loc 1 56 1 is_stmt 0 view .LVU30
+  89 003a 0BB0     		add	sp, sp, #44
+  90              	.LCFI2:
+  91              		.cfi_def_cfa_offset 4
+  92              		@ sp needed
+  93 003c 5DF804FB 		ldr	pc, [sp], #4
+  94              		.cfi_endproc
+  95              	.LFE67:
+  97              		.section	.text.RTC_Sync,"ax",%progbits
+  98              		.align	1
+  99              		.global	RTC_Sync
+ 100              		.syntax unified
+ 101              		.thumb
+ 102              		.thumb_func
+ 103              		.fpu softvfp
+ 105              	RTC_Sync:
+ 106              	.LVL3:
+ 107              	.LFB68:
+  57:Src/clock_rtc.c **** 
+  58:Src/clock_rtc.c **** void RTC_Sync(DATE_TIME *dt, uint8_t timeZone)
+  59:Src/clock_rtc.c **** {
+ 108              		.loc 1 59 1 is_stmt 1 view -0
+ 109              		.cfi_startproc
+ 110              		@ args = 0, pretend = 0, frame = 0
+ 111              		@ frame_needed = 0, uses_anonymous_args = 0
+ 112              		.loc 1 59 1 is_stmt 0 view .LVU32
+ 113 0000 38B5     		push	{r3, r4, r5, lr}
+ 114              	.LCFI3:
+ 115              		.cfi_def_cfa_offset 16
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 4
 
 
-  94              	.LVL5:
-  95              	.LFB67:
-  25:Inc/clock_rtc.h **** 
-  26:Inc/clock_rtc.h **** struct tm convert_time_stamp(uint32_t t)
-  27:Inc/clock_rtc.h **** {
-  96              		.loc 1 27 1 is_stmt 1 view -0
-  97              		.cfi_startproc
-  98              		@ args = 0, pretend = 0, frame = 40
-  99              		@ frame_needed = 0, uses_anonymous_args = 0
- 100              		.loc 1 27 1 is_stmt 0 view .LVU25
- 101 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
- 102              	.LCFI3:
- 103              		.cfi_def_cfa_offset 24
- 104              		.cfi_offset 4, -24
- 105              		.cfi_offset 5, -20
- 106              		.cfi_offset 6, -16
- 107              		.cfi_offset 7, -12
- 108              		.cfi_offset 8, -8
- 109              		.cfi_offset 14, -4
- 110 0004 8AB0     		sub	sp, sp, #40
- 111              	.LCFI4:
- 112              		.cfi_def_cfa_offset 64
- 113 0006 8046     		mov	r8, r0
-  28:Inc/clock_rtc.h ****     struct tm time_struct;
- 114              		.loc 1 28 5 is_stmt 1 view .LVU26
-  29:Inc/clock_rtc.h ****     uint32_t yOff, m, d, hh, mm, ss;
- 115              		.loc 1 29 5 view .LVU27
-  30:Inc/clock_rtc.h **** 
-  31:Inc/clock_rtc.h ****     t -= 946684800;//SECONDS_FROM_1970_TO_2000;    // bring to 2000 timestamp from 1970
- 116              		.loc 1 31 5 view .LVU28
- 117              		.loc 1 31 7 is_stmt 0 view .LVU29
- 118 0008 304B     		ldr	r3, .L10
- 119 000a 0B44     		add	r3, r3, r1
- 120              	.LVL6:
-  32:Inc/clock_rtc.h ****     ss = t % 60;
- 121              		.loc 1 32 5 is_stmt 1 view .LVU30
- 122              		.loc 1 32 8 is_stmt 0 view .LVU31
- 123 000c 304D     		ldr	r5, .L10+4
- 124 000e A5FB0327 		umull	r2, r7, r5, r3
- 125 0012 7F09     		lsrs	r7, r7, #5
- 126 0014 3946     		mov	r1, r7
- 127 0016 C7EB0717 		rsb	r7, r7, r7, lsl #4
- 128 001a BA00     		lsls	r2, r7, #2
- 129 001c 9F1A     		subs	r7, r3, r2
- 130              	.LVL7:
-  33:Inc/clock_rtc.h ****     t /= 60;
- 131              		.loc 1 33 5 is_stmt 1 view .LVU32
-  34:Inc/clock_rtc.h ****     mm = t % 60;
- 132              		.loc 1 34 5 view .LVU33
- 133              		.loc 1 34 8 is_stmt 0 view .LVU34
- 134 001e A5FB0125 		umull	r2, r5, r5, r1
- 135 0022 6D09     		lsrs	r5, r5, #5
- 136 0024 C5EB0515 		rsb	r5, r5, r5, lsl #4
- 137 0028 AA00     		lsls	r2, r5, #2
- 138 002a 8D1A     		subs	r5, r1, r2
- 139              	.LVL8:
-  35:Inc/clock_rtc.h ****     t /= 60;
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s 			page 4
+ 116              		.cfi_offset 3, -16
+ 117              		.cfi_offset 4, -12
+ 118              		.cfi_offset 5, -8
+ 119              		.cfi_offset 14, -4
+ 120 0002 0D46     		mov	r5, r1
+  60:Src/clock_rtc.c **** 	uint32_t tt;
+ 121              		.loc 1 60 2 is_stmt 1 view .LVU33
+  61:Src/clock_rtc.c **** 	uint32_t number;
+ 122              		.loc 1 61 2 view .LVU34
+  62:Src/clock_rtc.c ****     __HAL_RTC_SECOND_DISABLE_IT(&hrtc, RTC_IT_SEC);
+ 123              		.loc 1 62 5 view .LVU35
+ 124 0004 0A4C     		ldr	r4, .L5
+ 125 0006 2268     		ldr	r2, [r4]
+ 126 0008 1368     		ldr	r3, [r2]
+ 127 000a 23F00103 		bic	r3, r3, #1
+ 128 000e 1360     		str	r3, [r2]
+  63:Src/clock_rtc.c **** 	tt = RTC_GetUnixTimestamp(dt);
+ 129              		.loc 1 63 2 view .LVU36
+ 130              		.loc 1 63 7 is_stmt 0 view .LVU37
+ 131 0010 FFF7FEFF 		bl	RTC_GetUnixTimestamp
+ 132              	.LVL4:
+  64:Src/clock_rtc.c **** 	tt += timeZone * 60 * 60;
+ 133              		.loc 1 64 2 is_stmt 1 view .LVU38
+  65:Src/clock_rtc.c ****     RTC_WriteTimeCounter(&hrtc, (uint32_t)tt) ;  // ghi vao thanh ghi gia tri Timestamp
+ 134              		.loc 1 65 5 view .LVU39
+ 135 0014 4FF46161 		mov	r1, #3600
+ 136 0018 01FB0501 		mla	r1, r1, r5, r0
+ 137              	.LVL5:
+ 138              		.loc 1 65 5 is_stmt 0 view .LVU40
+ 139 001c 2046     		mov	r0, r4
+ 140 001e FFF7FEFF 		bl	RTC_WriteTimeCounter
+ 141              	.LVL6:
+  66:Src/clock_rtc.c **** 	__HAL_RTC_SECOND_ENABLE_IT(&hrtc, RTC_IT_SEC);
+ 142              		.loc 1 66 2 is_stmt 1 view .LVU41
+ 143 0022 2268     		ldr	r2, [r4]
+ 144 0024 1368     		ldr	r3, [r2]
+ 145 0026 43F00103 		orr	r3, r3, #1
+ 146 002a 1360     		str	r3, [r2]
+  67:Src/clock_rtc.c **** }
+ 147              		.loc 1 67 1 is_stmt 0 view .LVU42
+ 148 002c 38BD     		pop	{r3, r4, r5, pc}
+ 149              	.L6:
+ 150              		.loc 1 67 1 view .LVU43
+ 151 002e 00BF     		.align	2
+ 152              	.L5:
+ 153 0030 00000000 		.word	hrtc
+ 154              		.cfi_endproc
+ 155              	.LFE68:
+ 157              		.section	.text.RTC_Init,"ax",%progbits
+ 158              		.align	1
+ 159              		.global	RTC_Init
+ 160              		.syntax unified
+ 161              		.thumb
+ 162              		.thumb_func
+ 163              		.fpu softvfp
+ 165              	RTC_Init:
+ 166              	.LFB66:
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 5
 
 
- 140              		.loc 1 35 5 is_stmt 1 view .LVU35
- 141              		.loc 1 35 7 is_stmt 0 view .LVU36
- 142 002c 294A     		ldr	r2, .L10+8
- 143 002e A2FB0312 		umull	r1, r2, r2, r3
- 144              	.LVL9:
- 145              		.loc 1 35 7 view .LVU37
- 146 0032 D20A     		lsrs	r2, r2, #11
- 147              	.LVL10:
-  36:Inc/clock_rtc.h ****     hh = t % 24;
- 148              		.loc 1 36 5 is_stmt 1 view .LVU38
- 149              		.loc 1 36 8 is_stmt 0 view .LVU39
- 150 0034 284E     		ldr	r6, .L10+12
- 151 0036 A6FB0216 		umull	r1, r6, r6, r2
- 152 003a 3609     		lsrs	r6, r6, #4
- 153 003c 06EB4606 		add	r6, r6, r6, lsl #1
- 154 0040 F100     		lsls	r1, r6, #3
- 155 0042 561A     		subs	r6, r2, r1
- 156              	.LVL11:
-  37:Inc/clock_rtc.h ****     uint16_t days = t / 24;
- 157              		.loc 1 37 5 is_stmt 1 view .LVU40
- 158              		.loc 1 37 23 is_stmt 0 view .LVU41
- 159 0044 2549     		ldr	r1, .L10+16
- 160 0046 A1FB0323 		umull	r2, r3, r1, r3
- 161              	.LVL12:
- 162              		.loc 1 37 14 view .LVU42
- 163 004a 190C     		lsrs	r1, r3, #16
- 164              	.LVL13:
-  38:Inc/clock_rtc.h ****     uint8_t leap;
- 165              		.loc 1 38 5 is_stmt 1 view .LVU43
-  39:Inc/clock_rtc.h ****     for (yOff = 0; ; ++yOff)
- 166              		.loc 1 39 5 view .LVU44
- 167              		.loc 1 39 15 is_stmt 0 view .LVU45
- 168 004c 0020     		movs	r0, #0
- 169              	.LVL14:
- 170              	.L5:
-  40:Inc/clock_rtc.h ****     {
-  41:Inc/clock_rtc.h ****         leap = yOff % 4 == 0;
- 171              		.loc 1 41 9 is_stmt 1 view .LVU46
- 172              		.loc 1 41 25 is_stmt 0 view .LVU47
- 173 004e 10F00304 		ands	r4, r0, #3
- 174 0052 0CBF     		ite	eq
- 175 0054 0123     		moveq	r3, #1
- 176 0056 0023     		movne	r3, #0
- 177              	.LVL15:
-  42:Inc/clock_rtc.h ****         if (days < 365 + leap)
- 178              		.loc 1 42 9 is_stmt 1 view .LVU48
- 179              		.loc 1 42 18 is_stmt 0 view .LVU49
- 180 0058 03F5B672 		add	r2, r3, #364
- 181              		.loc 1 42 12 view .LVU50
- 182 005c 8A42     		cmp	r2, r1
- 183 005e 06DA     		bge	.L8
-  43:Inc/clock_rtc.h ****             break;
-  44:Inc/clock_rtc.h ****         days -= 365 + leap;
- 184              		.loc 1 44 9 is_stmt 1 view .LVU51
- 185              		.loc 1 44 14 is_stmt 0 view .LVU52
- 186 0060 CB1A     		subs	r3, r1, r3
- 187              	.LVL16:
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s 			page 5
+   9:Src/clock_rtc.c ****     timeRTC = HAL_GetTick();
+ 167              		.loc 1 9 1 is_stmt 1 view -0
+ 168              		.cfi_startproc
+ 169              		@ args = 0, pretend = 0, frame = 0
+ 170              		@ frame_needed = 0, uses_anonymous_args = 0
+ 171 0000 08B5     		push	{r3, lr}
+ 172              	.LCFI4:
+ 173              		.cfi_def_cfa_offset 8
+ 174              		.cfi_offset 3, -8
+ 175              		.cfi_offset 14, -4
+  10:Src/clock_rtc.c ****     hrtc.Instance = RTC;
+ 176              		.loc 1 10 5 view .LVU45
+  10:Src/clock_rtc.c ****     hrtc.Instance = RTC;
+ 177              		.loc 1 10 15 is_stmt 0 view .LVU46
+ 178 0002 FFF7FEFF 		bl	HAL_GetTick
+ 179              	.LVL7:
+  10:Src/clock_rtc.c ****     hrtc.Instance = RTC;
+ 180              		.loc 1 10 13 view .LVU47
+ 181 0006 1E4B     		ldr	r3, .L14
+ 182 0008 1860     		str	r0, [r3]
+  11:Src/clock_rtc.c ****     hrtc.Init.AsynchPrediv = RTC_AUTO_1_SECOND;
+ 183              		.loc 1 11 5 is_stmt 1 view .LVU48
+  11:Src/clock_rtc.c ****     hrtc.Init.AsynchPrediv = RTC_AUTO_1_SECOND;
+ 184              		.loc 1 11 19 is_stmt 0 view .LVU49
+ 185 000a 1E48     		ldr	r0, .L14+4
+ 186 000c 1E4B     		ldr	r3, .L14+8
+ 187 000e 0360     		str	r3, [r0]
+  12:Src/clock_rtc.c ****     hrtc.Init.OutPut = RTC_OUTPUTSOURCE_NONE;
+ 188              		.loc 1 12 5 is_stmt 1 view .LVU50
+  12:Src/clock_rtc.c ****     hrtc.Init.OutPut = RTC_OUTPUTSOURCE_NONE;
+ 189              		.loc 1 12 28 is_stmt 0 view .LVU51
+ 190 0010 4FF0FF33 		mov	r3, #-1
+ 191 0014 4360     		str	r3, [r0, #4]
+  13:Src/clock_rtc.c **** 	if (HAL_RTC_Init(&hrtc) != HAL_OK)
+ 192              		.loc 1 13 5 is_stmt 1 view .LVU52
+  13:Src/clock_rtc.c **** 	if (HAL_RTC_Init(&hrtc) != HAL_OK)
+ 193              		.loc 1 13 22 is_stmt 0 view .LVU53
+ 194 0016 0023     		movs	r3, #0
+ 195 0018 8360     		str	r3, [r0, #8]
+  14:Src/clock_rtc.c ****     {
+ 196              		.loc 1 14 2 is_stmt 1 view .LVU54
+  14:Src/clock_rtc.c ****     {
+ 197              		.loc 1 14 6 is_stmt 0 view .LVU55
+ 198 001a FFF7FEFF 		bl	HAL_RTC_Init
+ 199              	.LVL8:
+  14:Src/clock_rtc.c ****     {
+ 200              		.loc 1 14 5 view .LVU56
+ 201 001e 88B9     		cbnz	r0, .L12
+ 202              	.L8:
+  18:Src/clock_rtc.c ****     {
+ 203              		.loc 1 18 5 is_stmt 1 view .LVU57
+  18:Src/clock_rtc.c ****     {
+ 204              		.loc 1 18 9 is_stmt 0 view .LVU58
+ 205 0020 0121     		movs	r1, #1
+ 206 0022 1848     		ldr	r0, .L14+4
+ 207 0024 FFF7FEFF 		bl	HAL_RTCEx_BKUPRead
+ 208              	.LVL9:
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 6
 
 
- 188              		.loc 1 44 14 view .LVU53
- 189 0062 9BB2     		uxth	r3, r3
- 190 0064 A3F26D13 		subw	r3, r3, #365
- 191 0068 99B2     		uxth	r1, r3
- 192              	.LVL17:
-  39:Inc/clock_rtc.h ****     {
- 193              		.loc 1 39 22 view .LVU54
- 194 006a 0130     		adds	r0, r0, #1
- 195              	.LVL18:
-  41:Inc/clock_rtc.h ****         if (days < 365 + leap)
- 196              		.loc 1 41 14 view .LVU55
- 197 006c EFE7     		b	.L5
- 198              	.LVL19:
- 199              	.L8:
-  45:Inc/clock_rtc.h ****     }
-  46:Inc/clock_rtc.h ****     for (m = 1; ; ++m)
- 200              		.loc 1 46 12 view .LVU56
- 201 006e 4FF0010C 		mov	ip, #1
- 202 0072 06E0     		b	.L4
- 203              	.LVL20:
- 204              	.L6:
- 205              	.LBB2:
-  47:Inc/clock_rtc.h ****     {
-  48:Inc/clock_rtc.h ****         uint8_t daysPerMonth = daysInMonth[m - 1];
-  49:Inc/clock_rtc.h ****         if (leap && m == 2)
-  50:Inc/clock_rtc.h ****             ++daysPerMonth;
-  51:Inc/clock_rtc.h ****         if (days < daysPerMonth)
- 206              		.loc 1 51 9 is_stmt 1 view .LVU57
- 207              		.loc 1 51 18 is_stmt 0 view .LVU58
- 208 0074 92B2     		uxth	r2, r2
- 209              	.LVL21:
- 210              		.loc 1 51 12 view .LVU59
- 211 0076 8A42     		cmp	r2, r1
- 212 0078 10D8     		bhi	.L7
-  52:Inc/clock_rtc.h ****             break;
-  53:Inc/clock_rtc.h ****         days -= daysPerMonth;
- 213              		.loc 1 53 9 is_stmt 1 view .LVU60
- 214              		.loc 1 53 14 is_stmt 0 view .LVU61
- 215 007a 8B1A     		subs	r3, r1, r2
- 216 007c 99B2     		uxth	r1, r3
- 217              	.LVL22:
- 218              		.loc 1 53 14 view .LVU62
- 219              	.LBE2:
-  46:Inc/clock_rtc.h ****     {
- 220              		.loc 1 46 19 view .LVU63
- 221 007e 0CF1010C 		add	ip, ip, #1
- 222              	.LVL23:
- 223              	.L4:
- 224              	.LBB3:
-  48:Inc/clock_rtc.h ****         if (leap && m == 2)
- 225              		.loc 1 48 9 is_stmt 1 view .LVU64
-  48:Inc/clock_rtc.h ****         if (leap && m == 2)
- 226              		.loc 1 48 46 is_stmt 0 view .LVU65
- 227 0082 0CF1FF3E 		add	lr, ip, #-1
-  48:Inc/clock_rtc.h ****         if (leap && m == 2)
- 228              		.loc 1 48 17 view .LVU66
- 229 0086 164B     		ldr	r3, .L10+20
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s 			page 6
+  18:Src/clock_rtc.c ****     {
+ 209              		.loc 1 18 8 view .LVU59
+ 210 0028 4AF2A453 		movw	r3, #42404
+ 211 002c 9842     		cmp	r0, r3
+ 212 002e 0CD1     		bne	.L13
+  31:Src/clock_rtc.c ****         {
+ 213              		.loc 1 31 9 is_stmt 1 view .LVU60
+  31:Src/clock_rtc.c ****         {
+ 214              		.loc 1 31 13 is_stmt 0 view .LVU61
+ 215 0030 164B     		ldr	r3, .L14+12
+ 216 0032 5A6A     		ldr	r2, [r3, #36]
+  33:Src/clock_rtc.c ****         if (__HAL_RCC_GET_FLAG(RCC_FLAG_PINRST) != RESET)
+ 217              		.loc 1 33 9 is_stmt 1 view .LVU62
+  34:Src/clock_rtc.c ****         {
+ 218              		.loc 1 34 9 view .LVU63
+  34:Src/clock_rtc.c ****         {
+ 219              		.loc 1 34 13 is_stmt 0 view .LVU64
+ 220 0034 5B6A     		ldr	r3, [r3, #36]
+  36:Src/clock_rtc.c ****         /* Clear source Reset Flag */
+ 221              		.loc 1 36 9 is_stmt 1 view .LVU65
+  38:Src/clock_rtc.c ****     }
+ 222              		.loc 1 38 9 view .LVU66
+ 223 0036 164B     		ldr	r3, .L14+16
+ 224 0038 0122     		movs	r2, #1
+ 225 003a 1A60     		str	r2, [r3]
+ 226              	.L10:
+  40:Src/clock_rtc.c **** }
+ 227              		.loc 1 40 5 view .LVU67
+ 228 003c 1148     		ldr	r0, .L14+4
+ 229 003e FFF7FEFF 		bl	HAL_RTCEx_SetSecond_IT
+ 230              	.LVL10:
+  41:Src/clock_rtc.c **** 
+ 231              		.loc 1 41 1 is_stmt 0 view .LVU68
+ 232 0042 08BD     		pop	{r3, pc}
+ 233              	.L12:
+  16:Src/clock_rtc.c ****     }
+ 234              		.loc 1 16 9 is_stmt 1 view .LVU69
+ 235 0044 FFF7FEFF 		bl	Error_Handler
+ 236              	.LVL11:
+ 237 0048 EAE7     		b	.L8
+ 238              	.L13:
+  20:Src/clock_rtc.c ****         localTime.month = 10;
+ 239              		.loc 1 20 9 view .LVU70
+  20:Src/clock_rtc.c ****         localTime.month = 10;
+ 240              		.loc 1 20 24 is_stmt 0 view .LVU71
+ 241 004a 1248     		ldr	r0, .L14+20
+ 242 004c 6FF01C03 		mvn	r3, #28
+ 243 0050 0370     		strb	r3, [r0]
+ 244 0052 0723     		movs	r3, #7
+ 245 0054 4370     		strb	r3, [r0, #1]
+  21:Src/clock_rtc.c ****         localTime.mday = 12;
+ 246              		.loc 1 21 9 is_stmt 1 view .LVU72
+  21:Src/clock_rtc.c ****         localTime.mday = 12;
+ 247              		.loc 1 21 25 is_stmt 0 view .LVU73
+ 248 0056 0A23     		movs	r3, #10
+ 249 0058 8370     		strb	r3, [r0, #2]
+  22:Src/clock_rtc.c ****         localTime.hour = 11 - 7;
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 7
 
 
- 230 0088 13F80E20 		ldrb	r2, [r3, lr]	@ zero_extendqisi2
- 231              	.LVL24:
-  49:Inc/clock_rtc.h ****             ++daysPerMonth;
- 232              		.loc 1 49 9 is_stmt 1 view .LVU67
-  49:Inc/clock_rtc.h ****             ++daysPerMonth;
- 233              		.loc 1 49 12 is_stmt 0 view .LVU68
- 234 008c 002C     		cmp	r4, #0
- 235 008e F1D1     		bne	.L6
-  49:Inc/clock_rtc.h ****             ++daysPerMonth;
- 236              		.loc 1 49 18 discriminator 1 view .LVU69
- 237 0090 BCF1020F 		cmp	ip, #2
- 238 0094 EED1     		bne	.L6
-  50:Inc/clock_rtc.h ****         if (days < daysPerMonth)
- 239              		.loc 1 50 13 is_stmt 1 view .LVU70
- 240 0096 0132     		adds	r2, r2, #1
- 241              	.LVL25:
-  50:Inc/clock_rtc.h ****         if (days < daysPerMonth)
- 242              		.loc 1 50 13 is_stmt 0 view .LVU71
- 243 0098 D2B2     		uxtb	r2, r2
- 244              	.LVL26:
-  50:Inc/clock_rtc.h ****         if (days < daysPerMonth)
- 245              		.loc 1 50 13 view .LVU72
- 246 009a EBE7     		b	.L6
- 247              	.LVL27:
- 248              	.L7:
-  50:Inc/clock_rtc.h ****         if (days < daysPerMonth)
- 249              		.loc 1 50 13 view .LVU73
- 250              	.LBE3:
-  54:Inc/clock_rtc.h ****     }
-  55:Inc/clock_rtc.h ****     d = days + 1;
- 251              		.loc 1 55 5 is_stmt 1 view .LVU74
- 252              		.loc 1 55 14 is_stmt 0 view .LVU75
- 253 009c 0131     		adds	r1, r1, #1
- 254              	.LVL28:
-  56:Inc/clock_rtc.h **** 
-  57:Inc/clock_rtc.h ****     time_struct.tm_year = (yOff + 100);//1900
- 255              		.loc 1 57 5 is_stmt 1 view .LVU76
- 256              		.loc 1 57 33 is_stmt 0 view .LVU77
- 257 009e 6430     		adds	r0, r0, #100
- 258              	.LVL29:
- 259              		.loc 1 57 25 view .LVU78
- 260 00a0 0690     		str	r0, [sp, #24]
-  58:Inc/clock_rtc.h ****     time_struct.tm_mon = m - 1;
- 261              		.loc 1 58 5 is_stmt 1 view .LVU79
- 262              		.loc 1 58 24 is_stmt 0 view .LVU80
- 263 00a2 CDF814E0 		str	lr, [sp, #20]
-  59:Inc/clock_rtc.h ****     time_struct.tm_mday = d;
- 264              		.loc 1 59 5 is_stmt 1 view .LVU81
- 265              		.loc 1 59 25 is_stmt 0 view .LVU82
- 266 00a6 0491     		str	r1, [sp, #16]
-  60:Inc/clock_rtc.h ****     time_struct.tm_hour = hh;
- 267              		.loc 1 60 5 is_stmt 1 view .LVU83
- 268              		.loc 1 60 25 is_stmt 0 view .LVU84
- 269 00a8 0396     		str	r6, [sp, #12]
-  61:Inc/clock_rtc.h ****     time_struct.tm_min = mm;
- 270              		.loc 1 61 5 is_stmt 1 view .LVU85
- 271              		.loc 1 61 24 is_stmt 0 view .LVU86
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s 			page 7
+ 250              		.loc 1 22 9 is_stmt 1 view .LVU74
+  22:Src/clock_rtc.c ****         localTime.hour = 11 - 7;
+ 251              		.loc 1 22 24 is_stmt 0 view .LVU75
+ 252 005a 0C23     		movs	r3, #12
+ 253 005c C370     		strb	r3, [r0, #3]
+  23:Src/clock_rtc.c ****         localTime.min = 30;
+ 254              		.loc 1 23 9 is_stmt 1 view .LVU76
+  23:Src/clock_rtc.c ****         localTime.min = 30;
+ 255              		.loc 1 23 24 is_stmt 0 view .LVU77
+ 256 005e 0423     		movs	r3, #4
+ 257 0060 4371     		strb	r3, [r0, #5]
+  24:Src/clock_rtc.c ****         localTime.sec = 00;
+ 258              		.loc 1 24 9 is_stmt 1 view .LVU78
+  24:Src/clock_rtc.c ****         localTime.sec = 00;
+ 259              		.loc 1 24 23 is_stmt 0 view .LVU79
+ 260 0062 1E23     		movs	r3, #30
+ 261 0064 8371     		strb	r3, [r0, #6]
+  25:Src/clock_rtc.c ****         RTC_Sync(&localTime, +7);
+ 262              		.loc 1 25 9 is_stmt 1 view .LVU80
+  25:Src/clock_rtc.c ****         RTC_Sync(&localTime, +7);
+ 263              		.loc 1 25 23 is_stmt 0 view .LVU81
+ 264 0066 0023     		movs	r3, #0
+ 265 0068 C371     		strb	r3, [r0, #7]
+  26:Src/clock_rtc.c ****         HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR1, RTC_HOLDER);   
+ 266              		.loc 1 26 9 is_stmt 1 view .LVU82
+ 267 006a 0721     		movs	r1, #7
+ 268 006c FFF7FEFF 		bl	RTC_Sync
+ 269              	.LVL12:
+  27:Src/clock_rtc.c ****     }
+ 270              		.loc 1 27 9 view .LVU83
+ 271 0070 4AF2A452 		movw	r2, #42404
+ 272 0074 0121     		movs	r1, #1
+ 273 0076 0348     		ldr	r0, .L14+4
+ 274 0078 FFF7FEFF 		bl	HAL_RTCEx_BKUPWrite
+ 275              	.LVL13:
+ 276 007c DEE7     		b	.L10
+ 277              	.L15:
+ 278 007e 00BF     		.align	2
+ 279              	.L14:
+ 280 0080 00000000 		.word	timeRTC
+ 281 0084 00000000 		.word	hrtc
+ 282 0088 00280040 		.word	1073752064
+ 283 008c 00100240 		.word	1073876992
+ 284 0090 E0044242 		.word	1111622880
+ 285 0094 00000000 		.word	localTime
+ 286              		.cfi_endproc
+ 287              	.LFE66:
+ 289              		.section	.text.RTC_CalcTime,"ax",%progbits
+ 290              		.align	1
+ 291              		.global	RTC_CalcTime
+ 292              		.syntax unified
+ 293              		.thumb
+ 294              		.thumb_func
+ 295              		.fpu softvfp
+ 297              	RTC_CalcTime:
+ 298              	.LVL14:
+ 299              	.LFB69:
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 8
 
 
- 272 00aa 0295     		str	r5, [sp, #8]
-  62:Inc/clock_rtc.h ****     time_struct.tm_sec = ss;
- 273              		.loc 1 62 5 is_stmt 1 view .LVU87
- 274              		.loc 1 62 24 is_stmt 0 view .LVU88
- 275 00ac 0197     		str	r7, [sp, #4]
-  63:Inc/clock_rtc.h ****     mktime(&time_struct);
- 276              		.loc 1 63 5 is_stmt 1 view .LVU89
- 277 00ae 01A8     		add	r0, sp, #4
- 278              	.LVL30:
- 279              		.loc 1 63 5 is_stmt 0 view .LVU90
- 280 00b0 FFF7FEFF 		bl	mktime
- 281              	.LVL31:
-  64:Inc/clock_rtc.h ****     return time_struct;
- 282              		.loc 1 64 5 is_stmt 1 view .LVU91
- 283              		.loc 1 64 12 is_stmt 0 view .LVU92
- 284 00b4 4646     		mov	r6, r8
- 285              	.LVL32:
- 286              		.loc 1 64 12 view .LVU93
- 287 00b6 01AD     		add	r5, sp, #4
- 288              	.LVL33:
- 289              		.loc 1 64 12 view .LVU94
- 290 00b8 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
- 291 00ba 0FC6     		stmia	r6!, {r0, r1, r2, r3}
- 292 00bc 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
- 293 00be 0FC6     		stmia	r6!, {r0, r1, r2, r3}
- 294 00c0 2B68     		ldr	r3, [r5]
- 295 00c2 3360     		str	r3, [r6]
-  65:Inc/clock_rtc.h **** }
- 296              		.loc 1 65 1 view .LVU95
- 297 00c4 4046     		mov	r0, r8
- 298 00c6 0AB0     		add	sp, sp, #40
- 299              	.LCFI5:
- 300              		.cfi_def_cfa_offset 24
- 301              		@ sp needed
- 302 00c8 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
- 303              	.LVL34:
- 304              	.L11:
- 305              		.loc 1 65 1 view .LVU96
- 306              		.align	2
- 307              	.L10:
- 308 00cc 80BC92C7 		.word	-946684800
- 309 00d0 89888888 		.word	-2004318071
- 310 00d4 C5B3A291 		.word	-1851608123
- 311 00d8 ABAAAAAA 		.word	-1431655765
- 312 00dc 07452EC2 		.word	-1037155065
- 313 00e0 00000000 		.word	.LANCHOR0
- 314              		.cfi_endproc
- 315              	.LFE67:
- 317              		.section	.text.RTC_Init,"ax",%progbits
- 318              		.align	1
- 319              		.global	RTC_Init
- 320              		.syntax unified
- 321              		.thumb
- 322              		.thumb_func
- 323              		.fpu softvfp
- 325              	RTC_Init:
- 326              	.LFB68:
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s 			page 8
+  68:Src/clock_rtc.c **** 
+  69:Src/clock_rtc.c **** void RTC_CalcTime(DATE_TIME *dt, uint32_t unixTime)
+  70:Src/clock_rtc.c **** {
+ 300              		.loc 1 70 1 view -0
+ 301              		.cfi_startproc
+ 302              		@ args = 0, pretend = 0, frame = 8
+ 303              		@ frame_needed = 0, uses_anonymous_args = 0
+ 304              		.loc 1 70 1 is_stmt 0 view .LVU85
+ 305 0000 10B5     		push	{r4, lr}
+ 306              	.LCFI5:
+ 307              		.cfi_def_cfa_offset 8
+ 308              		.cfi_offset 4, -8
+ 309              		.cfi_offset 14, -4
+ 310 0002 82B0     		sub	sp, sp, #8
+ 311              	.LCFI6:
+ 312              		.cfi_def_cfa_offset 16
+ 313 0004 0446     		mov	r4, r0
+  71:Src/clock_rtc.c **** 	struct tm *gt;
+ 314              		.loc 1 71 2 is_stmt 1 view .LVU86
+  72:Src/clock_rtc.c **** 	time_t epoch;
+ 315              		.loc 1 72 2 view .LVU87
+  73:Src/clock_rtc.c **** 	epoch = unixTime;
+ 316              		.loc 1 73 2 view .LVU88
+ 317              		.loc 1 73 8 is_stmt 0 view .LVU89
+ 318 0006 0091     		str	r1, [sp]
+ 319 0008 0023     		movs	r3, #0
+ 320 000a 0193     		str	r3, [sp, #4]
+  74:Src/clock_rtc.c **** 	gt = localtime(&epoch);			
+ 321              		.loc 1 74 2 is_stmt 1 view .LVU90
+ 322              		.loc 1 74 7 is_stmt 0 view .LVU91
+ 323 000c 6846     		mov	r0, sp
+ 324              	.LVL15:
+ 325              		.loc 1 74 7 view .LVU92
+ 326 000e FFF7FEFF 		bl	localtime
+ 327              	.LVL16:
+  75:Src/clock_rtc.c **** 	dt->sec = gt->tm_sec;
+ 328              		.loc 1 75 2 is_stmt 1 view .LVU93
+ 329              		.loc 1 75 14 is_stmt 0 view .LVU94
+ 330 0012 0368     		ldr	r3, [r0]
+ 331              		.loc 1 75 10 view .LVU95
+ 332 0014 E371     		strb	r3, [r4, #7]
+  76:Src/clock_rtc.c **** 	dt->min = gt->tm_min;
+ 333              		.loc 1 76 2 is_stmt 1 view .LVU96
+ 334              		.loc 1 76 14 is_stmt 0 view .LVU97
+ 335 0016 4368     		ldr	r3, [r0, #4]
+ 336              		.loc 1 76 10 view .LVU98
+ 337 0018 A371     		strb	r3, [r4, #6]
+  77:Src/clock_rtc.c **** 	dt->hour = gt->tm_hour;
+ 338              		.loc 1 77 2 is_stmt 1 view .LVU99
+ 339              		.loc 1 77 15 is_stmt 0 view .LVU100
+ 340 001a 8368     		ldr	r3, [r0, #8]
+ 341              		.loc 1 77 11 view .LVU101
+ 342 001c 6371     		strb	r3, [r4, #5]
+  78:Src/clock_rtc.c **** 	dt->mday = gt->tm_mday;
+ 343              		.loc 1 78 2 is_stmt 1 view .LVU102
+ 344              		.loc 1 78 15 is_stmt 0 view .LVU103
+ 345 001e C368     		ldr	r3, [r0, #12]
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 9
 
 
- 327              		.file 2 "Src/clock_rtc.c"
-   1:Src/clock_rtc.c **** #include "clock_rtc.h"
-   2:Src/clock_rtc.c **** 
-   3:Src/clock_rtc.c **** void RTC_Init(void)
-   4:Src/clock_rtc.c **** {
- 328              		.loc 2 4 1 is_stmt 1 view -0
- 329              		.cfi_startproc
- 330              		@ args = 0, pretend = 0, frame = 0
- 331              		@ frame_needed = 0, uses_anonymous_args = 0
- 332 0000 10B5     		push	{r4, lr}
- 333              	.LCFI6:
- 334              		.cfi_def_cfa_offset 8
- 335              		.cfi_offset 4, -8
- 336              		.cfi_offset 14, -4
- 337 0002 82B0     		sub	sp, sp, #8
- 338              	.LCFI7:
- 339              		.cfi_def_cfa_offset 16
-   5:Src/clock_rtc.c ****     uint32_t return_time;
- 340              		.loc 2 5 5 view .LVU98
-   6:Src/clock_rtc.c ****     hrtc.Instance = RTC;
- 341              		.loc 2 6 5 view .LVU99
- 342              		.loc 2 6 19 is_stmt 0 view .LVU100
- 343 0004 204C     		ldr	r4, .L21
- 344 0006 214B     		ldr	r3, .L21+4
- 345 0008 2360     		str	r3, [r4]
-   7:Src/clock_rtc.c ****     hrtc.Init.AsynchPrediv = RTC_AUTO_1_SECOND;
- 346              		.loc 2 7 5 is_stmt 1 view .LVU101
- 347              		.loc 2 7 28 is_stmt 0 view .LVU102
- 348 000a 4FF0FF33 		mov	r3, #-1
- 349 000e 6360     		str	r3, [r4, #4]
-   8:Src/clock_rtc.c **** 	HAL_RTC_Init(&hrtc);
- 350              		.loc 2 8 2 is_stmt 1 view .LVU103
- 351 0010 2046     		mov	r0, r4
- 352 0012 FFF7FEFF 		bl	HAL_RTC_Init
- 353              	.LVL35:
-   9:Src/clock_rtc.c ****         if (HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR1) != 0x32F2) //0x32F2
- 354              		.loc 2 9 9 view .LVU104
- 355              		.loc 2 9 13 is_stmt 0 view .LVU105
- 356 0016 0121     		movs	r1, #1
- 357 0018 2046     		mov	r0, r4
- 358 001a FFF7FEFF 		bl	HAL_RTCEx_BKUPRead
- 359              	.LVL36:
- 360              		.loc 2 9 12 view .LVU106
- 361 001e 43F2F223 		movw	r3, #13042
- 362 0022 9842     		cmp	r0, r3
- 363 0024 11D1     		bne	.L18
-  10:Src/clock_rtc.c ****         {
-  11:Src/clock_rtc.c ****             return_time = set_time(2019, 10, 11, 13, 25, 30);    //Setup Time
-  12:Src/clock_rtc.c ****         
-  13:Src/clock_rtc.c ****         RTC_WriteTimeCounter(&hrtc,return_time) ;  // ghi vao thanh ghi gia tri Timestamp
-  14:Src/clock_rtc.c ****         HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR1, 0x32F2);   
-  15:Src/clock_rtc.c ****         }
-  16:Src/clock_rtc.c ****         else
-  17:Src/clock_rtc.c ****         {
-  18:Src/clock_rtc.c ****             if (__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST) != RESET)
- 364              		.loc 2 18 13 is_stmt 1 view .LVU107
- 365              		.loc 2 18 17 is_stmt 0 view .LVU108
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s 			page 9
+ 346              		.loc 1 78 11 view .LVU104
+ 347 0020 E370     		strb	r3, [r4, #3]
+  79:Src/clock_rtc.c **** 	dt->wday = gt->tm_wday + 1;				// tm_wday 0 - 6 (0 = sunday)
+ 348              		.loc 1 79 2 is_stmt 1 view .LVU105
+ 349              		.loc 1 79 15 is_stmt 0 view .LVU106
+ 350 0022 8369     		ldr	r3, [r0, #24]
+ 351              		.loc 1 79 25 view .LVU107
+ 352 0024 0133     		adds	r3, r3, #1
+ 353              		.loc 1 79 11 view .LVU108
+ 354 0026 2371     		strb	r3, [r4, #4]
+  80:Src/clock_rtc.c **** 	dt->month = gt->tm_mon + 1;				// tm_mon 0 - 11 (0 = Jan)
+ 355              		.loc 1 80 2 is_stmt 1 view .LVU109
+ 356              		.loc 1 80 16 is_stmt 0 view .LVU110
+ 357 0028 0369     		ldr	r3, [r0, #16]
+ 358              		.loc 1 80 25 view .LVU111
+ 359 002a 0133     		adds	r3, r3, #1
+ 360              		.loc 1 80 12 view .LVU112
+ 361 002c A370     		strb	r3, [r4, #2]
+  81:Src/clock_rtc.c **** 	dt->year = gt->tm_year + 1900;		    // tm_year = current year - 1900
+ 362              		.loc 1 81 2 is_stmt 1 view .LVU113
+ 363              		.loc 1 81 15 is_stmt 0 view .LVU114
+ 364 002e 4369     		ldr	r3, [r0, #20]
+ 365              		.loc 1 81 11 view .LVU115
+ 366 0030 03F26C73 		addw	r3, r3, #1900
+ 367 0034 2380     		strh	r3, [r4]	@ unaligned
+  82:Src/clock_rtc.c **** }
+ 368              		.loc 1 82 1 view .LVU116
+ 369 0036 02B0     		add	sp, sp, #8
+ 370              	.LCFI7:
+ 371              		.cfi_def_cfa_offset 8
+ 372              		@ sp needed
+ 373 0038 10BD     		pop	{r4, pc}
+ 374              		.loc 1 82 1 view .LVU117
+ 375              		.cfi_endproc
+ 376              	.LFE69:
+ 378              		.section	.text.HAL_RTCEx_RTCEventCallback,"ax",%progbits
+ 379              		.align	1
+ 380              		.global	HAL_RTCEx_RTCEventCallback
+ 381              		.syntax unified
+ 382              		.thumb
+ 383              		.thumb_func
+ 384              		.fpu softvfp
+ 386              	HAL_RTCEx_RTCEventCallback:
+ 387              	.LVL17:
+ 388              	.LFB70:
+  83:Src/clock_rtc.c **** 
+  84:Src/clock_rtc.c **** void HAL_RTCEx_RTCEventCallback(RTC_HandleTypeDef *hrtc)
+  85:Src/clock_rtc.c **** {
+ 389              		.loc 1 85 1 is_stmt 1 view -0
+ 390              		.cfi_startproc
+ 391              		@ args = 0, pretend = 0, frame = 8
+ 392              		@ frame_needed = 0, uses_anonymous_args = 0
+ 393              		.loc 1 85 1 is_stmt 0 view .LVU119
+ 394 0000 00B5     		push	{lr}
+ 395              	.LCFI8:
+ 396              		.cfi_def_cfa_offset 4
+ 397              		.cfi_offset 14, -4
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 10
 
 
- 366 0026 1A4B     		ldr	r3, .L21+8
- 367 0028 5B6A     		ldr	r3, [r3, #36]
- 368              		.loc 2 18 16 view .LVU109
- 369 002a 13F0006F 		tst	r3, #134217728
- 370 002e 22D1     		bne	.L19
- 371              	.L15:
-  19:Src/clock_rtc.c ****             {
-  20:Src/clock_rtc.c ****             printf("\n ..");
-  21:Src/clock_rtc.c ****             }
-  22:Src/clock_rtc.c ****             if (__HAL_RCC_GET_FLAG(RCC_FLAG_PINRST) != RESET)
- 372              		.loc 2 22 13 is_stmt 1 view .LVU110
- 373              		.loc 2 22 17 is_stmt 0 view .LVU111
- 374 0030 174B     		ldr	r3, .L21+8
- 375 0032 5B6A     		ldr	r3, [r3, #36]
- 376              		.loc 2 22 16 view .LVU112
- 377 0034 13F0806F 		tst	r3, #67108864
- 378 0038 21D1     		bne	.L20
- 379              	.L16:
-  23:Src/clock_rtc.c ****             {
-  24:Src/clock_rtc.c ****             printf("\n ...");
-  25:Src/clock_rtc.c ****             }
-  26:Src/clock_rtc.c ****             /* Clear source Reset Flag */
-  27:Src/clock_rtc.c ****             __HAL_RCC_CLEAR_RESET_FLAGS();
- 380              		.loc 2 27 13 is_stmt 1 view .LVU113
- 381 003a 164B     		ldr	r3, .L21+12
- 382 003c 0122     		movs	r2, #1
- 383 003e 1A60     		str	r2, [r3]
- 384              	.L14:
-  28:Src/clock_rtc.c ****         }
-  29:Src/clock_rtc.c ****     HAL_RTCEx_SetSecond_IT(&hrtc);
- 385              		.loc 2 29 5 view .LVU114
- 386 0040 1148     		ldr	r0, .L21
- 387 0042 FFF7FEFF 		bl	HAL_RTCEx_SetSecond_IT
- 388              	.LVL37:
-  30:Src/clock_rtc.c **** }
- 389              		.loc 2 30 1 is_stmt 0 view .LVU115
- 390 0046 02B0     		add	sp, sp, #8
- 391              	.LCFI8:
- 392              		.cfi_remember_state
- 393              		.cfi_def_cfa_offset 8
- 394              		@ sp needed
- 395 0048 10BD     		pop	{r4, pc}
- 396              	.L18:
- 397              	.LCFI9:
- 398              		.cfi_restore_state
-  11:Src/clock_rtc.c ****         
- 399              		.loc 2 11 13 is_stmt 1 view .LVU116
-  11:Src/clock_rtc.c ****         
- 400              		.loc 2 11 27 is_stmt 0 view .LVU117
- 401 004a 1E23     		movs	r3, #30
- 402 004c 0193     		str	r3, [sp, #4]
- 403 004e 1923     		movs	r3, #25
- 404 0050 0093     		str	r3, [sp]
- 405 0052 0D23     		movs	r3, #13
- 406 0054 0B22     		movs	r2, #11
- 407 0056 0A21     		movs	r1, #10
- 408 0058 40F2E370 		movw	r0, #2019
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s 			page 10
+ 398 0002 83B0     		sub	sp, sp, #12
+ 399              	.LCFI9:
+ 400              		.cfi_def_cfa_offset 16
+  86:Src/clock_rtc.c ****     volatile uint32_t number;
+ 401              		.loc 1 86 5 is_stmt 1 view .LVU120
+  87:Src/clock_rtc.c ****     number = RTC_ReadTimeCounter(hrtc);
+ 402              		.loc 1 87 5 view .LVU121
+ 403              		.loc 1 87 14 is_stmt 0 view .LVU122
+ 404 0004 FFF7FEFF 		bl	RTC_ReadTimeCounter
+ 405              	.LVL18:
+ 406              		.loc 1 87 12 view .LVU123
+ 407 0008 0190     		str	r0, [sp, #4]
+  88:Src/clock_rtc.c ****     RTC_CalcTime(&localTime, number); 
+ 408              		.loc 1 88 5 is_stmt 1 view .LVU124
+ 409 000a 0199     		ldr	r1, [sp, #4]
+ 410 000c 0248     		ldr	r0, .L20
+ 411 000e FFF7FEFF 		bl	RTC_CalcTime
+ 412              	.LVL19:
+  89:Src/clock_rtc.c **** }
+ 413              		.loc 1 89 1 is_stmt 0 view .LVU125
+ 414 0012 03B0     		add	sp, sp, #12
+ 415              	.LCFI10:
+ 416              		.cfi_def_cfa_offset 4
+ 417              		@ sp needed
+ 418 0014 5DF804FB 		ldr	pc, [sp], #4
+ 419              	.L21:
+ 420              		.align	2
+ 421              	.L20:
+ 422 0018 00000000 		.word	localTime
+ 423              		.cfi_endproc
+ 424              	.LFE70:
+ 426              		.section	.text.RTC_Now,"ax",%progbits
+ 427              		.align	1
+ 428              		.global	RTC_Now
+ 429              		.syntax unified
+ 430              		.thumb
+ 431              		.thumb_func
+ 432              		.fpu softvfp
+ 434              	RTC_Now:
+ 435              	.LVL20:
+ 436              	.LFB71:
+  90:Src/clock_rtc.c **** 
+  91:Src/clock_rtc.c **** void RTC_Now(DATE_TIME *dt)
+  92:Src/clock_rtc.c **** {
+ 437              		.loc 1 92 1 is_stmt 1 view -0
+ 438              		.cfi_startproc
+ 439              		@ args = 0, pretend = 0, frame = 0
+ 440              		@ frame_needed = 0, uses_anonymous_args = 0
+ 441              		@ link register save eliminated.
+  93:Src/clock_rtc.c **** 	__HAL_RTC_SECOND_DISABLE_IT(&hrtc, RTC_IT_SEC);
+ 442              		.loc 1 93 2 view .LVU127
+ 443 0000 084A     		ldr	r2, .L23
+ 444 0002 1168     		ldr	r1, [r2]
+ 445 0004 0B68     		ldr	r3, [r1]
+ 446 0006 23F00103 		bic	r3, r3, #1
+ 447 000a 0B60     		str	r3, [r1]
+  94:Src/clock_rtc.c **** 	*dt = localTime;
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 11
 
 
- 409 005c FFF7FEFF 		bl	set_time
- 410              	.LVL38:
-  13:Src/clock_rtc.c ****         HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR1, 0x32F2);   
- 411              		.loc 2 13 9 is_stmt 1 view .LVU118
- 412 0060 0146     		mov	r1, r0
- 413 0062 2046     		mov	r0, r4
- 414              	.LVL39:
-  13:Src/clock_rtc.c ****         HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR1, 0x32F2);   
- 415              		.loc 2 13 9 is_stmt 0 view .LVU119
- 416 0064 FFF7FEFF 		bl	RTC_WriteTimeCounter
- 417              	.LVL40:
-  14:Src/clock_rtc.c ****         }
- 418              		.loc 2 14 9 is_stmt 1 view .LVU120
- 419 0068 43F2F222 		movw	r2, #13042
- 420 006c 0121     		movs	r1, #1
- 421 006e 2046     		mov	r0, r4
- 422 0070 FFF7FEFF 		bl	HAL_RTCEx_BKUPWrite
- 423              	.LVL41:
- 424 0074 E4E7     		b	.L14
- 425              	.L19:
-  20:Src/clock_rtc.c ****             }
- 426              		.loc 2 20 13 view .LVU121
- 427 0076 0848     		ldr	r0, .L21+16
- 428 0078 FFF7FEFF 		bl	printf
- 429              	.LVL42:
- 430 007c D8E7     		b	.L15
- 431              	.L20:
-  24:Src/clock_rtc.c ****             }
- 432              		.loc 2 24 13 view .LVU122
- 433 007e 0748     		ldr	r0, .L21+20
- 434 0080 FFF7FEFF 		bl	printf
- 435              	.LVL43:
- 436 0084 D9E7     		b	.L16
- 437              	.L22:
- 438 0086 00BF     		.align	2
- 439              	.L21:
- 440 0088 00000000 		.word	hrtc
- 441 008c 00280040 		.word	1073752064
- 442 0090 00100240 		.word	1073876992
- 443 0094 E0044242 		.word	1111622880
- 444 0098 00000000 		.word	.LC0
- 445 009c 08000000 		.word	.LC1
- 446              		.cfi_endproc
- 447              	.LFE68:
- 449              		.section	.text.RTC_CalendarShow,"ax",%progbits
- 450              		.align	1
- 451              		.global	RTC_CalendarShow
- 452              		.syntax unified
- 453              		.thumb
- 454              		.thumb_func
- 455              		.fpu softvfp
- 457              	RTC_CalendarShow:
- 458              	.LFB69:
-  31:Src/clock_rtc.c **** void RTC_CalendarShow(void)
-  32:Src/clock_rtc.c **** {
- 459              		.loc 2 32 1 view -0
- 460              		.cfi_startproc
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s 			page 11
+ 448              		.loc 1 94 2 view .LVU128
+ 449              		.loc 1 94 6 is_stmt 0 view .LVU129
+ 450 000c 064B     		ldr	r3, .L23+4
+ 451 000e 1968     		ldr	r1, [r3]	@ unaligned
+ 452 0010 5B68     		ldr	r3, [r3, #4]	@ unaligned
+ 453 0012 0160     		str	r1, [r0]	@ unaligned
+ 454 0014 4360     		str	r3, [r0, #4]	@ unaligned
+  95:Src/clock_rtc.c **** 	__HAL_RTC_SECOND_ENABLE_IT(&hrtc, RTC_IT_SEC);
+ 455              		.loc 1 95 2 is_stmt 1 view .LVU130
+ 456 0016 1268     		ldr	r2, [r2]
+ 457 0018 1368     		ldr	r3, [r2]
+ 458 001a 43F00103 		orr	r3, r3, #1
+ 459 001e 1360     		str	r3, [r2]
+  96:Src/clock_rtc.c **** }
+ 460              		.loc 1 96 1 is_stmt 0 view .LVU131
+ 461 0020 7047     		bx	lr
+ 462              	.L24:
+ 463 0022 00BF     		.align	2
+ 464              	.L23:
+ 465 0024 00000000 		.word	hrtc
+ 466 0028 00000000 		.word	localTime
+ 467              		.cfi_endproc
+ 468              	.LFE71:
+ 470              		.section	.text.RTC_CalendarShow,"ax",%progbits
+ 471              		.align	1
+ 472              		.global	RTC_CalendarShow
+ 473              		.syntax unified
+ 474              		.thumb
+ 475              		.thumb_func
+ 476              		.fpu softvfp
+ 478              	RTC_CalendarShow:
+ 479              	.LFB72:
+  97:Src/clock_rtc.c **** 
+  98:Src/clock_rtc.c **** 
+  99:Src/clock_rtc.c **** void RTC_CalendarShow(void)
+ 100:Src/clock_rtc.c **** {
+ 480              		.loc 1 100 1 is_stmt 1 view -0
+ 481              		.cfi_startproc
+ 482              		@ args = 0, pretend = 0, frame = 0
+ 483              		@ frame_needed = 0, uses_anonymous_args = 0
+ 484 0000 10B5     		push	{r4, lr}
+ 485              	.LCFI11:
+ 486              		.cfi_def_cfa_offset 8
+ 487              		.cfi_offset 4, -8
+ 488              		.cfi_offset 14, -4
+ 101:Src/clock_rtc.c ****     if(HAL_GetTick() - timeRTC > 1000)
+ 489              		.loc 1 101 5 view .LVU133
+ 490              		.loc 1 101 8 is_stmt 0 view .LVU134
+ 491 0002 FFF7FEFF 		bl	HAL_GetTick
+ 492              	.LVL21:
+ 493              		.loc 1 101 22 view .LVU135
+ 494 0006 0F4B     		ldr	r3, .L29
+ 495 0008 1B68     		ldr	r3, [r3]
+ 496 000a C01A     		subs	r0, r0, r3
+ 497              		.loc 1 101 7 view .LVU136
+ 498 000c B0F57A7F 		cmp	r0, #1000
+ 499 0010 00D8     		bhi	.L28
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 12
 
 
- 461              		@ args = 0, pretend = 0, frame = 80
- 462              		@ frame_needed = 0, uses_anonymous_args = 0
- 463 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
- 464              	.LCFI10:
- 465              		.cfi_def_cfa_offset 32
- 466              		.cfi_offset 4, -32
- 467              		.cfi_offset 5, -28
- 468              		.cfi_offset 6, -24
- 469              		.cfi_offset 7, -20
- 470              		.cfi_offset 8, -16
- 471              		.cfi_offset 9, -12
- 472              		.cfi_offset 10, -8
- 473              		.cfi_offset 14, -4
- 474 0004 96B0     		sub	sp, sp, #88
- 475              	.LCFI11:
- 476              		.cfi_def_cfa_offset 120
-  33:Src/clock_rtc.c ****     RTC_DateTypeDef sdatestructureget;
- 477              		.loc 2 33 5 view .LVU124
-  34:Src/clock_rtc.c ****     RTC_TimeTypeDef stimestructureget;
- 478              		.loc 2 34 5 view .LVU125
-  35:Src/clock_rtc.c ****     char sprintfTime[20];
- 479              		.loc 2 35 5 view .LVU126
-  36:Src/clock_rtc.c ****     char sprintfDate[20];
- 480              		.loc 2 36 5 view .LVU127
-  37:Src/clock_rtc.c ****     uint32_t time = RTC_ReadTimeCounter(&hrtc);
- 481              		.loc 2 37 5 view .LVU128
- 482              		.loc 2 37 21 is_stmt 0 view .LVU129
- 483 0006 2448     		ldr	r0, .L25
- 484 0008 FFF7FEFF 		bl	RTC_ReadTimeCounter
- 485              	.LVL44:
- 486 000c 8246     		mov	r10, r0
- 487              	.LVL45:
-  38:Src/clock_rtc.c ****     struct tm time_struct =convert_time_stamp(time);
- 488              		.loc 2 38 5 is_stmt 1 view .LVU130
- 489              		.loc 2 38 28 is_stmt 0 view .LVU131
- 490 000e 0146     		mov	r1, r0
- 491 0010 03A8     		add	r0, sp, #12
- 492              	.LVL46:
- 493              		.loc 2 38 28 view .LVU132
- 494 0012 FFF7FEFF 		bl	convert_time_stamp
- 495              	.LVL47:
-  39:Src/clock_rtc.c **** 
-  40:Src/clock_rtc.c ****     printf((char *)sprintfTime, "%0.2d:%0.2d:%0.2d", time_struct.tm_hour,time_struct.tm_min,time_st
- 496              		.loc 2 40 5 is_stmt 1 view .LVU133
- 497 0016 059F     		ldr	r7, [sp, #20]
- 498 0018 DDF81080 		ldr	r8, [sp, #16]
- 499 001c DDF80C90 		ldr	r9, [sp, #12]
- 500 0020 CDF80090 		str	r9, [sp]
- 501 0024 4346     		mov	r3, r8
- 502 0026 3A46     		mov	r2, r7
- 503 0028 1C49     		ldr	r1, .L25+4
- 504 002a 11A8     		add	r0, sp, #68
- 505 002c FFF7FEFF 		bl	printf
- 506              	.LVL48:
-  41:Src/clock_rtc.c ****     printf((char *)sprintfDate, ">>>%0.2d-%0.2d-%0.2d<<<",time_struct.tm_mday,time_struct.tm_mon, 2
- 507              		.loc 2 41 5 view .LVU134
- 508 0030 069E     		ldr	r6, [sp, #24]
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s 			page 12
+ 500              	.L25:
+ 102:Src/clock_rtc.c ****     {
+ 103:Src/clock_rtc.c ****         printf("Date: %02d: %02d: %04d \n", localTime.mday, localTime.month, localTime.year);
+ 104:Src/clock_rtc.c ****         printf("Time: %02d: %02d: %02d \n", localTime.hour, localTime.min, localTime.sec);
+ 105:Src/clock_rtc.c ****         timeRTC = HAL_GetTick();
+ 106:Src/clock_rtc.c ****     }
+ 107:Src/clock_rtc.c **** }
+ 501              		.loc 1 107 1 view .LVU137
+ 502 0012 10BD     		pop	{r4, pc}
+ 503              	.L28:
+ 103:Src/clock_rtc.c ****         printf("Time: %02d: %02d: %02d \n", localTime.hour, localTime.min, localTime.sec);
+ 504              		.loc 1 103 9 is_stmt 1 view .LVU138
+ 103:Src/clock_rtc.c ****         printf("Time: %02d: %02d: %02d \n", localTime.hour, localTime.min, localTime.sec);
+ 505              		.loc 1 103 54 is_stmt 0 view .LVU139
+ 506 0014 0C4C     		ldr	r4, .L29+4
+ 103:Src/clock_rtc.c ****         printf("Time: %02d: %02d: %02d \n", localTime.hour, localTime.min, localTime.sec);
+ 507              		.loc 1 103 9 view .LVU140
+ 508 0016 B4F90030 		ldrsh	r3, [r4]	@ unaligned
+ 509 001a 94F90220 		ldrsb	r2, [r4, #2]
+ 510 001e 94F90310 		ldrsb	r1, [r4, #3]
+ 511 0022 0A48     		ldr	r0, .L29+8
+ 512 0024 FFF7FEFF 		bl	printf
+ 513              	.LVL22:
+ 104:Src/clock_rtc.c ****         timeRTC = HAL_GetTick();
+ 514              		.loc 1 104 9 is_stmt 1 view .LVU141
+ 515 0028 94F90730 		ldrsb	r3, [r4, #7]
+ 516 002c 94F90620 		ldrsb	r2, [r4, #6]
+ 517 0030 94F90510 		ldrsb	r1, [r4, #5]
+ 518 0034 0648     		ldr	r0, .L29+12
+ 519 0036 FFF7FEFF 		bl	printf
+ 520              	.LVL23:
+ 105:Src/clock_rtc.c ****     }
+ 521              		.loc 1 105 9 view .LVU142
+ 105:Src/clock_rtc.c ****     }
+ 522              		.loc 1 105 19 is_stmt 0 view .LVU143
+ 523 003a FFF7FEFF 		bl	HAL_GetTick
+ 524              	.LVL24:
+ 105:Src/clock_rtc.c ****     }
+ 525              		.loc 1 105 17 view .LVU144
+ 526 003e 014B     		ldr	r3, .L29
+ 527 0040 1860     		str	r0, [r3]
+ 528              		.loc 1 107 1 view .LVU145
+ 529 0042 E6E7     		b	.L25
+ 530              	.L30:
+ 531              		.align	2
+ 532              	.L29:
+ 533 0044 00000000 		.word	timeRTC
+ 534 0048 00000000 		.word	localTime
+ 535 004c 00000000 		.word	.LC0
+ 536 0050 1C000000 		.word	.LC1
+ 537              		.cfi_endproc
+ 538              	.LFE72:
+ 540              		.section	.text.TIME_GetSec,"ax",%progbits
+ 541              		.align	1
+ 542              		.global	TIME_GetSec
+ 543              		.syntax unified
+ 544              		.thumb
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 13
 
 
- 509 0032 079D     		ldr	r5, [sp, #28]
- 510              		.loc 2 41 117 is_stmt 0 view .LVU135
- 511 0034 089C     		ldr	r4, [sp, #32]
- 512              		.loc 2 41 5 view .LVU136
- 513 0036 04F26C73 		addw	r3, r4, #1900
- 514 003a 0093     		str	r3, [sp]
- 515 003c 2B46     		mov	r3, r5
- 516 003e 3246     		mov	r2, r6
- 517 0040 1749     		ldr	r1, .L25+8
- 518 0042 0CA8     		add	r0, sp, #48
- 519 0044 FFF7FEFF 		bl	printf
- 520              	.LVL49:
-  42:Src/clock_rtc.c **** 
-  43:Src/clock_rtc.c ****     printf("\nTimestamp = %d\n", time);
- 521              		.loc 2 43 5 is_stmt 1 view .LVU137
- 522 0048 5146     		mov	r1, r10
- 523 004a 1648     		ldr	r0, .L25+12
- 524 004c FFF7FEFF 		bl	printf
- 525              	.LVL50:
-  44:Src/clock_rtc.c ****     printf("tm.Second  = %d\n",time_struct.tm_sec);
- 526              		.loc 2 44 5 view .LVU138
- 527 0050 4946     		mov	r1, r9
- 528 0052 1548     		ldr	r0, .L25+16
- 529 0054 FFF7FEFF 		bl	printf
- 530              	.LVL51:
-  45:Src/clock_rtc.c ****     printf("tm.Minute  = %d\n",time_struct.tm_min);
- 531              		.loc 2 45 5 view .LVU139
- 532 0058 4146     		mov	r1, r8
- 533 005a 1448     		ldr	r0, .L25+20
- 534 005c FFF7FEFF 		bl	printf
- 535              	.LVL52:
-  46:Src/clock_rtc.c ****     printf("tm.Hour    = %d\n",time_struct.tm_hour);
- 536              		.loc 2 46 5 view .LVU140
- 537 0060 3946     		mov	r1, r7
- 538 0062 1348     		ldr	r0, .L25+24
- 539 0064 FFF7FEFF 		bl	printf
- 540              	.LVL53:
-  47:Src/clock_rtc.c ****     printf("tm.Wday    = %d\n",time_struct.tm_wday);  // chu y cac thu trong tuan (0-6)
- 541              		.loc 2 47 5 view .LVU141
- 542 0068 0999     		ldr	r1, [sp, #36]
- 543 006a 1248     		ldr	r0, .L25+28
- 544 006c FFF7FEFF 		bl	printf
- 545              	.LVL54:
-  48:Src/clock_rtc.c ****     printf("tm.Day     = %d\n",time_struct.tm_mday);
- 546              		.loc 2 48 5 view .LVU142
- 547 0070 3146     		mov	r1, r6
- 548 0072 1148     		ldr	r0, .L25+32
- 549 0074 FFF7FEFF 		bl	printf
- 550              	.LVL55:
-  49:Src/clock_rtc.c ****     printf("tm.Month   = %d\n",time_struct.tm_mon);
- 551              		.loc 2 49 5 view .LVU143
- 552 0078 2946     		mov	r1, r5
- 553 007a 1048     		ldr	r0, .L25+36
- 554 007c FFF7FEFF 		bl	printf
- 555              	.LVL56:
-  50:Src/clock_rtc.c ****     printf("tm.Year    = %d\n",time_struct.tm_year-100);
- 556              		.loc 2 50 5 view .LVU144
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s 			page 13
+ 545              		.thumb_func
+ 546              		.fpu softvfp
+ 548              	TIME_GetSec:
+ 549              	.LVL25:
+ 550              	.LFB74:
+ 108:Src/clock_rtc.c **** 
+ 109:Src/clock_rtc.c **** // add number of secs to a DATE_TIME struct
+ 110:Src/clock_rtc.c **** int8_t TIME_AddSec(DATE_TIME *t, int32_t sec)
+ 111:Src/clock_rtc.c **** {
+ 112:Src/clock_rtc.c **** 	if(t == NULL) return -1;
+ 113:Src/clock_rtc.c **** 	if(sec == 0) return 0;	
+ 114:Src/clock_rtc.c **** 	TIME_FromSec(t, TIME_GetSec(t) + sec);	
+ 115:Src/clock_rtc.c **** 	return 0;
+ 116:Src/clock_rtc.c **** }
+ 117:Src/clock_rtc.c **** 
+ 118:Src/clock_rtc.c **** // find the number of sec since 00:00 hours, Jan 1, 1970 UTC
+ 119:Src/clock_rtc.c **** int32_t TIME_GetSec(DATE_TIME *t)
+ 120:Src/clock_rtc.c **** {
+ 551              		.loc 1 120 1 is_stmt 1 view -0
+ 552              		.cfi_startproc
+ 553              		@ args = 0, pretend = 0, frame = 40
+ 554              		@ frame_needed = 0, uses_anonymous_args = 0
+ 121:Src/clock_rtc.c **** 	struct tm tx;
+ 555              		.loc 1 121 2 view .LVU147
+ 122:Src/clock_rtc.c **** 	if(t == NULL) return -1;	
+ 556              		.loc 1 122 2 view .LVU148
+ 557              		.loc 1 122 4 is_stmt 0 view .LVU149
+ 558 0000 10B3     		cbz	r0, .L33
+ 120:Src/clock_rtc.c **** 	struct tm tx;
+ 559              		.loc 1 120 1 view .LVU150
+ 560 0002 00B5     		push	{lr}
+ 561              	.LCFI12:
+ 562              		.cfi_def_cfa_offset 4
+ 563              		.cfi_offset 14, -4
+ 564 0004 8BB0     		sub	sp, sp, #44
+ 565              	.LCFI13:
+ 566              		.cfi_def_cfa_offset 48
+ 123:Src/clock_rtc.c **** 	tx.tm_sec = t->sec;
+ 567              		.loc 1 123 2 is_stmt 1 view .LVU151
+ 568              		.loc 1 123 15 is_stmt 0 view .LVU152
+ 569 0006 90F90730 		ldrsb	r3, [r0, #7]
+ 570              		.loc 1 123 12 view .LVU153
+ 571 000a 0193     		str	r3, [sp, #4]
+ 124:Src/clock_rtc.c **** 	tx.tm_min = t->min;
+ 572              		.loc 1 124 2 is_stmt 1 view .LVU154
+ 573              		.loc 1 124 15 is_stmt 0 view .LVU155
+ 574 000c 90F90630 		ldrsb	r3, [r0, #6]
+ 575              		.loc 1 124 12 view .LVU156
+ 576 0010 0293     		str	r3, [sp, #8]
+ 125:Src/clock_rtc.c **** 	tx.tm_hour = t->hour;
+ 577              		.loc 1 125 2 is_stmt 1 view .LVU157
+ 578              		.loc 1 125 16 is_stmt 0 view .LVU158
+ 579 0012 90F90530 		ldrsb	r3, [r0, #5]
+ 580              		.loc 1 125 13 view .LVU159
+ 581 0016 0393     		str	r3, [sp, #12]
+ 126:Src/clock_rtc.c **** 	tx.tm_mday = t->mday;
+ 582              		.loc 1 126 2 is_stmt 1 view .LVU160
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 14
 
 
- 557 0080 A4F16401 		sub	r1, r4, #100
- 558 0084 0E48     		ldr	r0, .L25+40
- 559 0086 FFF7FEFF 		bl	printf
- 560              	.LVL57:
-  51:Src/clock_rtc.c ****     printf("\n-----------------------------------\n");
- 561              		.loc 2 51 5 view .LVU145
- 562 008a 0E48     		ldr	r0, .L25+44
- 563 008c FFF7FEFF 		bl	puts
- 564              	.LVL58:
-  52:Src/clock_rtc.c **** }...
- 565              		.loc 2 52 1 is_stmt 0 view .LVU146
- 566 0090 16B0     		add	sp, sp, #88
- 567              	.LCFI12:
- 568              		.cfi_def_cfa_offset 32
- 569              		@ sp needed
- 570 0092 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
- 571              	.LVL59:
- 572              	.L26:
- 573              		.loc 2 52 1 view .LVU147
- 574 0096 00BF     		.align	2
- 575              	.L25:
- 576 0098 00000000 		.word	hrtc
- 577 009c 00000000 		.word	.LC2
- 578 00a0 14000000 		.word	.LC3
- 579 00a4 2C000000 		.word	.LC4
- 580 00a8 40000000 		.word	.LC5
- 581 00ac 54000000 		.word	.LC6
- 582 00b0 68000000 		.word	.LC7
- 583 00b4 7C000000 		.word	.LC8
- 584 00b8 90000000 		.word	.LC9
- 585 00bc A4000000 		.word	.LC10
- 586 00c0 B8000000 		.word	.LC11
- 587 00c4 CC000000 		.word	.LC12
- 588              		.cfi_endproc
- 589              	.LFE69:
- 591              		.global	daysInMonth
- 592              		.comm	hrtc,20,4
- 593              		.section	.rodata.RTC_CalendarShow.str1.4,"aMS",%progbits,1
- 594              		.align	2
- 595              	.LC2:
- 596 0000 25302E32 		.ascii	"%0.2d:%0.2d:%0.2d\000"
- 596      643A2530 
- 596      2E32643A 
- 596      25302E32 
- 596      6400
- 597 0012 0000     		.space	2
- 598              	.LC3:
- 599 0014 3E3E3E25 		.ascii	">>>%0.2d-%0.2d-%0.2d<<<\000"
- 599      302E3264 
- 599      2D25302E 
- 599      32642D25 
- 599      302E3264 
- 600              	.LC4:
- 601 002c 0A54696D 		.ascii	"\012Timestamp = %d\012\000"
- 601      65737461 
- 601      6D70203D 
- 601      2025640A 
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s 			page 14
+ 583              		.loc 1 126 16 is_stmt 0 view .LVU161
+ 584 0018 90F90330 		ldrsb	r3, [r0, #3]
+ 585              		.loc 1 126 13 view .LVU162
+ 586 001c 0493     		str	r3, [sp, #16]
+ 127:Src/clock_rtc.c **** 	tx.tm_mday = t->mday;
+ 587              		.loc 1 127 2 is_stmt 1 view .LVU163
+ 128:Src/clock_rtc.c **** 	tx.tm_wday = t->wday - 1;
+ 588              		.loc 1 128 2 view .LVU164
+ 589              		.loc 1 128 16 is_stmt 0 view .LVU165
+ 590 001e 90F90430 		ldrsb	r3, [r0, #4]
+ 591              		.loc 1 128 23 view .LVU166
+ 592 0022 013B     		subs	r3, r3, #1
+ 593              		.loc 1 128 13 view .LVU167
+ 594 0024 0793     		str	r3, [sp, #28]
+ 129:Src/clock_rtc.c **** 	tx.tm_mon = t->month - 1;
+ 595              		.loc 1 129 2 is_stmt 1 view .LVU168
+ 596              		.loc 1 129 15 is_stmt 0 view .LVU169
+ 597 0026 90F90230 		ldrsb	r3, [r0, #2]
+ 598              		.loc 1 129 23 view .LVU170
+ 599 002a 013B     		subs	r3, r3, #1
+ 600              		.loc 1 129 12 view .LVU171
+ 601 002c 0593     		str	r3, [sp, #20]
+ 130:Src/clock_rtc.c **** 	tx.tm_year = t->year - 1900;
+ 602              		.loc 1 130 2 is_stmt 1 view .LVU172
+ 603              		.loc 1 130 16 is_stmt 0 view .LVU173
+ 604 002e B0F90030 		ldrsh	r3, [r0]	@ unaligned
+ 605              		.loc 1 130 23 view .LVU174
+ 606 0032 A3F26C73 		subw	r3, r3, #1900
+ 607              		.loc 1 130 13 view .LVU175
+ 608 0036 0693     		str	r3, [sp, #24]
+ 131:Src/clock_rtc.c **** 	tx.tm_isdst = 0;
+ 609              		.loc 1 131 2 is_stmt 1 view .LVU176
+ 610              		.loc 1 131 14 is_stmt 0 view .LVU177
+ 611 0038 0023     		movs	r3, #0
+ 612 003a 0993     		str	r3, [sp, #36]
+ 132:Src/clock_rtc.c **** 	return mktime(&tx);
+ 613              		.loc 1 132 2 is_stmt 1 view .LVU178
+ 614              		.loc 1 132 9 is_stmt 0 view .LVU179
+ 615 003c 01A8     		add	r0, sp, #4
+ 616              	.LVL26:
+ 617              		.loc 1 132 9 view .LVU180
+ 618 003e FFF7FEFF 		bl	mktime
+ 619              	.LVL27:
+ 133:Src/clock_rtc.c **** }
+ 620              		.loc 1 133 1 view .LVU181
+ 621 0042 0BB0     		add	sp, sp, #44
+ 622              	.LCFI14:
+ 623              		.cfi_def_cfa_offset 4
+ 624              		@ sp needed
+ 625 0044 5DF804FB 		ldr	pc, [sp], #4
+ 626              	.LVL28:
+ 627              	.L33:
+ 628              	.LCFI15:
+ 629              		.cfi_def_cfa_offset 0
+ 630              		.cfi_restore 14
+ 122:Src/clock_rtc.c **** 	tx.tm_sec = t->sec;
+ 631              		.loc 1 122 23 view .LVU182
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 15
 
 
- 601      00
- 602 003d 000000   		.space	3
- 603              	.LC5:
- 604 0040 746D2E53 		.ascii	"tm.Second  = %d\012\000"
- 604      65636F6E 
- 604      6420203D 
- 604      2025640A 
- 604      00
- 605 0051 000000   		.space	3
- 606              	.LC6:
- 607 0054 746D2E4D 		.ascii	"tm.Minute  = %d\012\000"
- 607      696E7574 
- 607      6520203D 
- 607      2025640A 
- 607      00
- 608 0065 000000   		.space	3
- 609              	.LC7:
- 610 0068 746D2E48 		.ascii	"tm.Hour    = %d\012\000"
- 610      6F757220 
- 610      2020203D 
- 610      2025640A 
- 610      00
- 611 0079 000000   		.space	3
- 612              	.LC8:
- 613 007c 746D2E57 		.ascii	"tm.Wday    = %d\012\000"
- 613      64617920 
- 613      2020203D 
- 613      2025640A 
- 613      00
- 614 008d 000000   		.space	3
- 615              	.LC9:
- 616 0090 746D2E44 		.ascii	"tm.Day     = %d\012\000"
- 616      61792020 
- 616      2020203D 
- 616      2025640A 
- 616      00
- 617 00a1 000000   		.space	3
- 618              	.LC10:
- 619 00a4 746D2E4D 		.ascii	"tm.Month   = %d\012\000"
- 619      6F6E7468 
- 619      2020203D 
- 619      2025640A 
- 619      00
- 620 00b5 000000   		.space	3
- 621              	.LC11:
- 622 00b8 746D2E59 		.ascii	"tm.Year    = %d\012\000"
- 622      65617220 
- 622      2020203D 
- 622      2025640A 
- 622      00
- 623 00c9 000000   		.space	3
- 624              	.LC12:
- 625 00cc 0A2D2D2D 		.ascii	"\012-----------------------------------\000"
- 625      2D2D2D2D 
- 625      2D2D2D2D 
- 625      2D2D2D2D 
- 625      2D2D2D2D 
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s 			page 15
+ 632 0048 4FF0FF30 		mov	r0, #-1
+ 633              	.LVL29:
+ 634              		.loc 1 133 1 view .LVU183
+ 635 004c 7047     		bx	lr
+ 636              		.cfi_endproc
+ 637              	.LFE74:
+ 639              		.section	.text.TIME_FromSec,"ax",%progbits
+ 640              		.align	1
+ 641              		.global	TIME_FromSec
+ 642              		.syntax unified
+ 643              		.thumb
+ 644              		.thumb_func
+ 645              		.fpu softvfp
+ 647              	TIME_FromSec:
+ 648              	.LVL30:
+ 649              	.LFB75:
+ 134:Src/clock_rtc.c **** 
+ 135:Src/clock_rtc.c **** int8_t TIME_FromSec(DATE_TIME *t, int32_t sec)
+ 136:Src/clock_rtc.c **** {
+ 650              		.loc 1 136 1 is_stmt 1 view -0
+ 651              		.cfi_startproc
+ 652              		@ args = 0, pretend = 0, frame = 8
+ 653              		@ frame_needed = 0, uses_anonymous_args = 0
+ 654              		.loc 1 136 1 is_stmt 0 view .LVU185
+ 655 0000 10B5     		push	{r4, lr}
+ 656              	.LCFI16:
+ 657              		.cfi_def_cfa_offset 8
+ 658              		.cfi_offset 4, -8
+ 659              		.cfi_offset 14, -4
+ 660 0002 82B0     		sub	sp, sp, #8
+ 661              	.LCFI17:
+ 662              		.cfi_def_cfa_offset 16
+ 663 0004 0191     		str	r1, [sp, #4]
+ 137:Src/clock_rtc.c **** 	struct tm *gt;
+ 664              		.loc 1 137 2 is_stmt 1 view .LVU186
+ 138:Src/clock_rtc.c **** 	if(t == NULL) return -1;
+ 665              		.loc 1 138 2 view .LVU187
+ 666              		.loc 1 138 4 is_stmt 0 view .LVU188
+ 667 0006 C0B1     		cbz	r0, .L40
+ 668 0008 0446     		mov	r4, r0
+ 139:Src/clock_rtc.c **** 	gt = localtime((const time_t*)&sec);
+ 669              		.loc 1 139 2 is_stmt 1 view .LVU189
+ 670              		.loc 1 139 7 is_stmt 0 view .LVU190
+ 671 000a 01A8     		add	r0, sp, #4
+ 672              	.LVL31:
+ 673              		.loc 1 139 7 view .LVU191
+ 674 000c FFF7FEFF 		bl	localtime
+ 675              	.LVL32:
+ 140:Src/clock_rtc.c **** 	t->sec = gt->tm_sec;
+ 676              		.loc 1 140 2 is_stmt 1 view .LVU192
+ 677              		.loc 1 140 13 is_stmt 0 view .LVU193
+ 678 0010 0368     		ldr	r3, [r0]
+ 679              		.loc 1 140 9 view .LVU194
+ 680 0012 E371     		strb	r3, [r4, #7]
+ 141:Src/clock_rtc.c **** 	t->min = gt->tm_min;
+ 681              		.loc 1 141 2 is_stmt 1 view .LVU195
+ 682              		.loc 1 141 13 is_stmt 0 view .LVU196
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 16
 
 
- 626              		.section	.rodata.RTC_Init.str1.4,"aMS",%progbits,1
- 627              		.align	2
- 628              	.LC0:
- 629 0000 0A202E2E 		.ascii	"\012 ..\000"
- 629      00
- 630 0005 000000   		.space	3
- 631              	.LC1:
- 632 0008 0A202E2E 		.ascii	"\012 ...\000"
- 632      2E00
- 633              		.section	.rodata.daysInMonth,"a"
- 634              		.align	2
- 635              		.set	.LANCHOR0,. + 0
- 638              	daysInMonth:
- 639 0000 1F       		.byte	31
- 640 0001 1C       		.byte	28
- 641 0002 1F       		.byte	31
- 642 0003 1E       		.byte	30
- 643 0004 1F       		.byte	31
- 644 0005 1E       		.byte	30
- 645 0006 1F       		.byte	31
- 646 0007 1F       		.byte	31
- 647 0008 1E       		.byte	30
- 648 0009 1F       		.byte	31
- 649 000a 1E       		.byte	30
- 650 000b 1F       		.byte	31
- 651              		.text
- 652              	.Letext0:
- 653              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
- 654              		.file 4 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
- 655              		.file 5 "Drivers/CMSIS/Include/core_cm3.h"
- 656              		.file 6 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h"
- 657              		.file 7 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
- 658              		.file 8 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h"
- 659              		.file 9 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\lib\\gcc\\arm-none-eab
- 660              		.file 10 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\includ
- 661              		.file 11 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\includ
- 662              		.file 12 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\includ
- 663              		.file 13 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\includ
- 664              		.file 14 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
- 665              		.file 15 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
- 666              		.file 16 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\includ
- 667              		.file 17 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc.h"
- 668              		.file 18 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\includ
- 669              		.file 19 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc_ex.h"
- 670              		.file 20 "<built-in>"
-ARM GAS  C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s 			page 16
+ 683 0014 4368     		ldr	r3, [r0, #4]
+ 684              		.loc 1 141 9 view .LVU197
+ 685 0016 A371     		strb	r3, [r4, #6]
+ 142:Src/clock_rtc.c **** 	t->hour = gt->tm_hour;
+ 686              		.loc 1 142 2 is_stmt 1 view .LVU198
+ 687              		.loc 1 142 14 is_stmt 0 view .LVU199
+ 688 0018 8368     		ldr	r3, [r0, #8]
+ 689              		.loc 1 142 10 view .LVU200
+ 690 001a 6371     		strb	r3, [r4, #5]
+ 143:Src/clock_rtc.c **** 	t->mday = gt->tm_mday;
+ 691              		.loc 1 143 2 is_stmt 1 view .LVU201
+ 692              		.loc 1 143 14 is_stmt 0 view .LVU202
+ 693 001c C368     		ldr	r3, [r0, #12]
+ 694              		.loc 1 143 10 view .LVU203
+ 695 001e E370     		strb	r3, [r4, #3]
+ 144:Src/clock_rtc.c **** 	t->wday = gt->tm_wday + 1;			// tm_wday 0 - 6 (0 = sunday)
+ 696              		.loc 1 144 2 is_stmt 1 view .LVU204
+ 697              		.loc 1 144 14 is_stmt 0 view .LVU205
+ 698 0020 8369     		ldr	r3, [r0, #24]
+ 699              		.loc 1 144 24 view .LVU206
+ 700 0022 0133     		adds	r3, r3, #1
+ 701              		.loc 1 144 10 view .LVU207
+ 702 0024 2371     		strb	r3, [r4, #4]
+ 145:Src/clock_rtc.c **** 	t->month = gt->tm_mon + 1;			// tm_mon 0 - 11 (0 = Jan)
+ 703              		.loc 1 145 2 is_stmt 1 view .LVU208
+ 704              		.loc 1 145 15 is_stmt 0 view .LVU209
+ 705 0026 0369     		ldr	r3, [r0, #16]
+ 706              		.loc 1 145 24 view .LVU210
+ 707 0028 0133     		adds	r3, r3, #1
+ 708              		.loc 1 145 11 view .LVU211
+ 709 002a A370     		strb	r3, [r4, #2]
+ 146:Src/clock_rtc.c **** 	t->year = gt->tm_year + 1900;		// tm_year = current year - 1900
+ 710              		.loc 1 146 2 is_stmt 1 view .LVU212
+ 711              		.loc 1 146 14 is_stmt 0 view .LVU213
+ 712 002c 4369     		ldr	r3, [r0, #20]
+ 713              		.loc 1 146 10 view .LVU214
+ 714 002e 03F26C73 		addw	r3, r3, #1900
+ 715 0032 2380     		strh	r3, [r4]	@ unaligned
+ 147:Src/clock_rtc.c **** 	return 0;
+ 716              		.loc 1 147 2 is_stmt 1 view .LVU215
+ 717              		.loc 1 147 9 is_stmt 0 view .LVU216
+ 718 0034 0020     		movs	r0, #0
+ 719              	.LVL33:
+ 720              	.L39:
+ 148:Src/clock_rtc.c **** }...
+ 721              		.loc 1 148 1 view .LVU217
+ 722 0036 02B0     		add	sp, sp, #8
+ 723              	.LCFI18:
+ 724              		.cfi_remember_state
+ 725              		.cfi_def_cfa_offset 8
+ 726              		@ sp needed
+ 727 0038 10BD     		pop	{r4, pc}
+ 728              	.LVL34:
+ 729              	.L40:
+ 730              	.LCFI19:
+ 731              		.cfi_restore_state
+ 138:Src/clock_rtc.c **** 	if(t == NULL) return -1;
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 17
+
+
+ 732              		.loc 1 138 23 view .LVU218
+ 733 003a 4FF0FF30 		mov	r0, #-1
+ 734              	.LVL35:
+ 138:Src/clock_rtc.c **** 	if(t == NULL) return -1;
+ 735              		.loc 1 138 23 view .LVU219
+ 736 003e FAE7     		b	.L39
+ 737              		.cfi_endproc
+ 738              	.LFE75:
+ 740              		.section	.text.TIME_AddSec,"ax",%progbits
+ 741              		.align	1
+ 742              		.global	TIME_AddSec
+ 743              		.syntax unified
+ 744              		.thumb
+ 745              		.thumb_func
+ 746              		.fpu softvfp
+ 748              	TIME_AddSec:
+ 749              	.LVL36:
+ 750              	.LFB73:
+ 111:Src/clock_rtc.c **** {
+ 751              		.loc 1 111 1 is_stmt 1 view -0
+ 752              		.cfi_startproc
+ 753              		@ args = 0, pretend = 0, frame = 0
+ 754              		@ frame_needed = 0, uses_anonymous_args = 0
+ 112:Src/clock_rtc.c **** 	if(t == NULL) return -1;
+ 755              		.loc 1 112 2 view .LVU221
+ 112:Src/clock_rtc.c **** 	if(t == NULL) return -1;
+ 756              		.loc 1 112 4 is_stmt 0 view .LVU222
+ 757 0000 68B1     		cbz	r0, .L44
+ 111:Src/clock_rtc.c **** {
+ 758              		.loc 1 111 1 view .LVU223
+ 759 0002 38B5     		push	{r3, r4, r5, lr}
+ 760              	.LCFI20:
+ 761              		.cfi_def_cfa_offset 16
+ 762              		.cfi_offset 3, -16
+ 763              		.cfi_offset 4, -12
+ 764              		.cfi_offset 5, -8
+ 765              		.cfi_offset 14, -4
+ 766 0004 0546     		mov	r5, r0
+ 113:Src/clock_rtc.c **** 	if(sec == 0) return 0;	
+ 767              		.loc 1 113 2 is_stmt 1 view .LVU224
+ 113:Src/clock_rtc.c **** 	if(sec == 0) return 0;	
+ 768              		.loc 1 113 4 is_stmt 0 view .LVU225
+ 769 0006 09B9     		cbnz	r1, .L50
+ 113:Src/clock_rtc.c **** 	if(sec == 0) return 0;	
+ 770              		.loc 1 113 22 view .LVU226
+ 771 0008 0020     		movs	r0, #0
+ 772              	.LVL37:
+ 773              	.L43:
+ 116:Src/clock_rtc.c **** }
+ 774              		.loc 1 116 1 view .LVU227
+ 775 000a 38BD     		pop	{r3, r4, r5, pc}
+ 776              	.LVL38:
+ 777              	.L50:
+ 116:Src/clock_rtc.c **** }
+ 778              		.loc 1 116 1 view .LVU228
+ 779 000c 0C46     		mov	r4, r1
+ 114:Src/clock_rtc.c **** 	TIME_FromSec(t, TIME_GetSec(t) + sec);	
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 18
+
+
+ 780              		.loc 1 114 2 is_stmt 1 view .LVU229
+ 114:Src/clock_rtc.c **** 	TIME_FromSec(t, TIME_GetSec(t) + sec);	
+ 781              		.loc 1 114 18 is_stmt 0 view .LVU230
+ 782 000e FFF7FEFF 		bl	TIME_GetSec
+ 783              	.LVL39:
+ 114:Src/clock_rtc.c **** 	TIME_FromSec(t, TIME_GetSec(t) + sec);	
+ 784              		.loc 1 114 2 view .LVU231
+ 785 0012 0119     		adds	r1, r0, r4
+ 786 0014 2846     		mov	r0, r5
+ 787 0016 FFF7FEFF 		bl	TIME_FromSec
+ 788              	.LVL40:
+ 115:Src/clock_rtc.c **** 	return 0;
+ 789              		.loc 1 115 2 is_stmt 1 view .LVU232
+ 115:Src/clock_rtc.c **** 	return 0;
+ 790              		.loc 1 115 9 is_stmt 0 view .LVU233
+ 791 001a 0020     		movs	r0, #0
+ 792 001c F5E7     		b	.L43
+ 793              	.LVL41:
+ 794              	.L44:
+ 795              	.LCFI21:
+ 796              		.cfi_def_cfa_offset 0
+ 797              		.cfi_restore 3
+ 798              		.cfi_restore 4
+ 799              		.cfi_restore 5
+ 800              		.cfi_restore 14
+ 112:Src/clock_rtc.c **** 	if(t == NULL) return -1;
+ 801              		.loc 1 112 23 view .LVU234
+ 802 001e 4FF0FF30 		mov	r0, #-1
+ 803              	.LVL42:
+ 116:Src/clock_rtc.c **** }
+ 804              		.loc 1 116 1 view .LVU235
+ 805 0022 7047     		bx	lr
+ 806              		.cfi_endproc
+ 807              	.LFE73:
+ 809              		.comm	timeRTC,4,4
+ 810              		.comm	hrtc,20,4
+ 811              		.comm	localTime,8,4
+ 812              		.section	.rodata.RTC_CalendarShow.str1.4,"aMS",%progbits,1
+ 813              		.align	2
+ 814              	.LC0:
+ 815 0000 44617465 		.ascii	"Date: %02d: %02d: %04d \012\000"
+ 815      3A202530 
+ 815      32643A20 
+ 815      25303264 
+ 815      3A202530 
+ 816 0019 000000   		.space	3
+ 817              	.LC1:
+ 818 001c 54696D65 		.ascii	"Time: %02d: %02d: %02d \012\000"
+ 818      3A202530 
+ 818      32643A20 
+ 818      25303264 
+ 818      3A202530 
+ 819              		.text
+ 820              	.Letext0:
+ 821              		.file 2 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 822              		.file 3 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 823              		.file 4 "Drivers/CMSIS/Include/core_cm3.h"
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 19
+
+
+ 824              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h"
+ 825              		.file 6 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
+ 826              		.file 7 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h"
+ 827              		.file 8 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\lib\\gcc\\arm-none-eab
+ 828              		.file 9 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\include
+ 829              		.file 10 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\includ
+ 830              		.file 11 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\includ
+ 831              		.file 12 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\includ
+ 832              		.file 13 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 833              		.file 14 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc.h"
+ 834              		.file 15 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 835              		.file 16 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\includ
+ 836              		.file 17 "Inc/clock_rtc.h"
+ 837              		.file 18 "c:\\program files (x86)\\gnu tools arm embedded\\8 2019-q3-update\\arm-none-eabi\\includ
+ 838              		.file 19 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc_ex.h"
+ 839              		.file 20 "Inc/main.h"
+ARM GAS  C:\Users\behun\AppData\Local\Temp\cc3npcow.s 			page 20
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 clock_rtc.c
-C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s:16     .text.set_time:00000000 $t
-C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s:24     .text.set_time:00000000 set_time
-C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s:86     .text.convert_time_stamp:00000000 $t
-C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s:93     .text.convert_time_stamp:00000000 convert_time_stamp
-C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s:308    .text.convert_time_stamp:000000cc $d
-C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s:318    .text.RTC_Init:00000000 $t
-C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s:325    .text.RTC_Init:00000000 RTC_Init
-C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s:440    .text.RTC_Init:00000088 $d
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:16     .text.RTC_GetUnixTimestamp:00000000 $t
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:24     .text.RTC_GetUnixTimestamp:00000000 RTC_GetUnixTimestamp
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:98     .text.RTC_Sync:00000000 $t
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:105    .text.RTC_Sync:00000000 RTC_Sync
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:153    .text.RTC_Sync:00000030 $d
                             *COM*:00000014 hrtc
-C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s:450    .text.RTC_CalendarShow:00000000 $t
-C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s:457    .text.RTC_CalendarShow:00000000 RTC_CalendarShow
-C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s:576    .text.RTC_CalendarShow:00000098 $d
-C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s:638    .rodata.daysInMonth:00000000 daysInMonth
-C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s:594    .rodata.RTC_CalendarShow.str1.4:00000000 $d
-C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s:627    .rodata.RTC_Init.str1.4:00000000 $d
-C:\Users\behun\AppData\Local\Temp\cc0Mb0cf.s:634    .rodata.daysInMonth:00000000 $d
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:158    .text.RTC_Init:00000000 $t
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:165    .text.RTC_Init:00000000 RTC_Init
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:280    .text.RTC_Init:00000080 $d
+                            *COM*:00000004 timeRTC
+                            *COM*:00000008 localTime
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:290    .text.RTC_CalcTime:00000000 $t
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:297    .text.RTC_CalcTime:00000000 RTC_CalcTime
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:379    .text.HAL_RTCEx_RTCEventCallback:00000000 $t
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:386    .text.HAL_RTCEx_RTCEventCallback:00000000 HAL_RTCEx_RTCEventCallback
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:422    .text.HAL_RTCEx_RTCEventCallback:00000018 $d
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:427    .text.RTC_Now:00000000 $t
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:434    .text.RTC_Now:00000000 RTC_Now
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:465    .text.RTC_Now:00000024 $d
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:471    .text.RTC_CalendarShow:00000000 $t
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:478    .text.RTC_CalendarShow:00000000 RTC_CalendarShow
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:533    .text.RTC_CalendarShow:00000044 $d
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:541    .text.TIME_GetSec:00000000 $t
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:548    .text.TIME_GetSec:00000000 TIME_GetSec
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:640    .text.TIME_FromSec:00000000 $t
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:647    .text.TIME_FromSec:00000000 TIME_FromSec
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:741    .text.TIME_AddSec:00000000 $t
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:748    .text.TIME_AddSec:00000000 TIME_AddSec
+C:\Users\behun\AppData\Local\Temp\cc3npcow.s:813    .rodata.RTC_CalendarShow.str1.4:00000000 $d
 
 UNDEFINED SYMBOLS
 mktime
+RTC_WriteTimeCounter
+HAL_GetTick
 HAL_RTC_Init
 HAL_RTCEx_BKUPRead
 HAL_RTCEx_SetSecond_IT
-RTC_WriteTimeCounter
+Error_Handler
 HAL_RTCEx_BKUPWrite
-printf
+localtime
 RTC_ReadTimeCounter
-puts
+printf

@@ -116,7 +116,6 @@ int main(void)
     KeyManage();
     Blink();
     Output_Manage();
-    RTC_CalendarShow();
     // Input_Manage();
     // buzzer_manage(buzzer.short_Status);
 
@@ -346,24 +345,3 @@ int _write(int file, char *data, int len)
   uint8_t status = CDC_Transmit_FS((uint8_t *)data, len);
   return status;
 }
-
-/*void key_toggle(void)
-{
-  if (HAL_GetTick() - tick > 10000)
-  {
-    toggle = !toggle;
-    tick = HAL_GetTick();
-  }
-  if (toggle)
-  {
-    u8g2_ClearBuffer(&u8g2);
-    Main_Screen_Manage();
-  }
-  else
-  {
-    u8g2_ClearBuffer(&u8g2);
-    Info_Screen_Manage();
-  }
-}*/
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

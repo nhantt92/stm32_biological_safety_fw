@@ -1,6 +1,7 @@
 #include "info_screen.h"
 #include "u8g2.h"
 #include "user_bitmap.h"
+#include "clock_rtc.h"
 
 u8g2_t u8g2;
 
@@ -18,22 +19,31 @@ void Info_Screen_Init(void)
     Info_Scr.Door = 2;
     Info_Scr.tick = HAL_GetTick();
 }
+
 void SysTime(uint8_t TimeStatus)
 {
+    uint8_t buff[11];
+    uint8_t dot;
     switch (TimeStatus)
     {
     case 0:
+        if(localTime.sec % 2 == 0)
+            dot = ~dot;
         u8g2_SetFont(&u8g2, u8g2_font_inr21_mf);
-        // u8g2_SetFont(&u8g2, u8g2_font_inr19_mn);
-        u8g2_DrawStr(&u8g2, 19, 24, "23"); //Variable
-        u8g2_DrawStr(&u8g2, 55, 24, ":");  //Blink for second
-        u8g2_DrawStr(&u8g2, 73, 24, "59"); //Variable
+        if(dot)
+            sprintf(buff, "%02d:%02d", localTime.hour, localTime.min);
+        else
+            sprintf(buff, "%02d %02d", localTime.hour, localTime.min);
+        u8g2_DrawStr(&u8g2, 19, 24, buff); //Variable
+        // u8g2_DrawStr(&u8g2, 55, 24, ":");  //Blink for second
+        // u8g2_DrawStr(&u8g2, 73, 24, "59"); //Variable
         u8g2_SetFont(&u8g2, u8g2_font_5x7_tr);
-        u8g2_DrawStr(&u8g2, 40, 36, "31"); //Variable
-        u8g2_DrawStr(&u8g2, 50, 36, ".");
-        u8g2_DrawStr(&u8g2, 54, 36, "12"); //Variable
-        u8g2_DrawStr(&u8g2, 64, 36, ".");
-        u8g2_DrawStr(&u8g2, 69, 36, "2019"); //Variable
+        sprintf(buff, "%02d.%02d.%04d", localTime.mday, localTime.month, localTime.year);
+        u8g2_DrawStr(&u8g2, 40, 36, buff); //Variable
+        // u8g2_DrawStr(&u8g2, 50, 36, ".");
+        // u8g2_DrawStr(&u8g2, 54, 36, "12"); //Variable
+        // u8g2_DrawStr(&u8g2, 64, 36, ".");
+        // u8g2_DrawStr(&u8g2, 69, 36, "2019"); //Variable
         break;
     case 1:
         break;

@@ -2,69 +2,34 @@
 #define __CLOCK_RTC_H
 
 #include "main.h"
-#include "time.h"
+#include <time.h>
 #include "stm32f1xx_hal_rtc.h"
+#include "stm32f1xx_hal_rtc_ex.h"
 
-RTC_HandleTypeDef hrtc;
+#define	RTC_HOLDER	0xA5A4
 
-const uint8_t daysInMonth [] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+typedef struct __attribute__((packed)){
+	int16_t year;				// year with all 4-digit (2011)
+	int8_t month;				// month 1 - 12 (1 = Jan)
+	int8_t mday;				// day of month 1 - 31
+	int8_t wday;				// day of week 1 - 7 (1 = Sunday)
+	int8_t hour;				// hour 0 - 23
+	int8_t min;					// min 0 - 59
+	int8_t sec;					// sec 0 - 59
+} DATE_TIME;
 
-time_t set_time(uint32_t year, uint32_t month, uint32_t day, uint32_t hour, uint32_t minute, uint32_t second)
-{
-    struct tm time_struct;
-    time_t m_time;
-    time_struct.tm_year = year - 1900;
-    time_struct.tm_mon = month;
-    time_struct.tm_mday = day;
-    time_struct.tm_hour = hour;
-    time_struct.tm_min = minute;
-    time_struct.tm_sec = second;
-    m_time = mktime(&time_struct);// Convert to timestamp
-    return m_time;
-}
+extern RTC_HandleTypeDef hrtc;
+extern DATE_TIME localTime;
 
-struct tm convert_time_stamp(uint32_t t)
-{
-    struct tm time_struct;
-    uint32_t yOff, m, d, hh, mm, ss;
-
-    t -= 946684800;//SECONDS_FROM_1970_TO_2000;    // bring to 2000 timestamp from 1970
-    ss = t % 60;
-    t /= 60;
-    mm = t % 60;
-    t /= 60;
-    hh = t % 24;
-    uint16_t days = t / 24;
-    uint8_t leap;
-    for (yOff = 0; ; ++yOff)
-    {
-        leap = yOff % 4 == 0;
-        if (days < 365 + leap)
-            break;
-        days -= 365 + leap;
-    }
-    for (m = 1; ; ++m)
-    {
-        uint8_t daysPerMonth = daysInMonth[m - 1];
-        if (leap && m == 2)
-            ++daysPerMonth;
-        if (days < daysPerMonth)
-            break;
-        days -= daysPerMonth;
-    }
-    d = days + 1;
-
-    time_struct.tm_year = (yOff + 100);//1900
-    time_struct.tm_mon = m - 1;
-    time_struct.tm_mday = d;
-    time_struct.tm_hour = hh;
-    time_struct.tm_min = mm;
-    time_struct.tm_sec = ss;
-    mktime(&time_struct);
-    return time_struct;
-}
 
 void RTC_Init(void);
+void RTC_Sync(DATE_TIME *dt, uint8_t timeZone);
+uint32_t RTC_GetUnixTimestamp(DATE_TIME *dt);
+void RTC_CalcTime(DATE_TIME *dt, uint32_t unixTime);
+void RTC_Now(DATE_TIME *dt);
+int8_t TIME_AddSec(DATE_TIME *t, int32_t sec);
+int32_t TIME_GetSec(DATE_TIME *t);
+int8_t TIME_FromSec(DATE_TIME *t, int32_t sec);
 void RTC_CalendarShow(void);
 
 #endif
