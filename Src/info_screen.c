@@ -2,6 +2,8 @@
 #include "u8g2.h"
 #include "user_bitmap.h"
 #include "clock_rtc.h"
+#include "filter_data.h"
+#include <stdlib.h>
 
 u8g2_t u8g2;
 
@@ -27,10 +29,12 @@ void SysTime(uint8_t TimeStatus)
     switch (TimeStatus)
     {
     case 0:
-        if(localTime.sec % 2 == 0)
+        if (localTime.sec % 2 == 0)
+        {
             dot = ~dot;
+        }
         u8g2_SetFont(&u8g2, u8g2_font_inr21_mf);
-        if(dot)
+        if (dot)
             sprintf(buff, "%02d:%02d", localTime.hour, localTime.min);
         else
             sprintf(buff, "%02d %02d", localTime.hour, localTime.min);
@@ -53,6 +57,8 @@ void SysTime(uint8_t TimeStatus)
 }
 void Filter_Pa(uint8_t PaStatus)
 {
+    uint16_t buff[4];
+    itoa(filt_data.val, buff, 10);
     u8g2_SetFont(&u8g2, u8g2_font_5x8_tr);
     u8g2_DrawStr(&u8g2, 3, 51, "Filter:");
     u8g2_DrawStr(&u8g2, 77, 51, "Pa");
@@ -60,7 +66,8 @@ void Filter_Pa(uint8_t PaStatus)
     {
     case 0:
         u8g2_SetFont(&u8g2, u8g2_font_5x7_tr);
-        u8g2_DrawStr(&u8g2, 55, 51, "000"); //Variable
+        // u8g2_DrawStr(&u8g2, 55, 51, "000"); //Variable
+        u8g2_DrawStr(&u8g2, 55, 51, buff); //Variable
         break;
     case 1:
         break;

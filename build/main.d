@@ -32,7 +32,7 @@ build/main.o: Src/main.c Inc/main.h \
  u8g2/csrc/u8x8.h Inc/key.h Inc/logo.h Inc/user_bitmap.h \
  Inc/main_screen.h Inc/info_screen.h Inc/output.h Inc/input.h \
  Inc/clock_rtc.h Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc_ex.h \
- Inc/buzzer.h Inc/spi.h
+ Inc/buzzer.h Inc/spi.h Inc/filter_data.h
 
 Inc/main.h:
 
@@ -137,3 +137,5 @@ Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc_ex.h:
 Inc/buzzer.h:
 
 Inc/spi.h:
+
+Inc/filter_data.h:

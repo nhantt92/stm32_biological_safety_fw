@@ -66,6 +66,7 @@ Src/user_bitmap.c \
 Src/logo.c \
 Src/main_screen.c \
 Src/info_screen.c \
+Src/filter_data.c \
 Src/output.c \
 Src/input.c \
 Src/buzzer.c \

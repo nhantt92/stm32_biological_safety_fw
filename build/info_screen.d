@@ -27,7 +27,8 @@ build/info_screen.o: Src/info_screen.c Inc/info_screen.h Inc/main.h \
  Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usb.h \
  Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd_ex.h u8g2/csrc/u8g2.h \
  u8g2/csrc/u8x8.h Inc/user_bitmap.h Inc/clock_rtc.h \
- Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc_ex.h
+ Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc_ex.h \
+ Inc/filter_data.h
 
 Inc/info_screen.h:
 
@@ -100,3 +101,5 @@ Inc/user_bitmap.h:
 Inc/clock_rtc.h:
 
 Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc_ex.h:
+
+Inc/filter_data.h:

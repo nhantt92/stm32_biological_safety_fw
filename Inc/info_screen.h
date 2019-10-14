@@ -3,9 +3,10 @@
 
 #include "main.h"
 
-#define D_Level 3 
+// #define D_Level 3
 
-typedef struct {
+typedef struct
+{
     uint8_t SysTime;
     uint8_t SysWork;
     uint8_t Filter_Pa;

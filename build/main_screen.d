@@ -26,7 +26,8 @@ build/main_screen.o: Src/main_screen.c Inc/main_screen.h Inc/main.h \
  Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd.h \
  Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usb.h \
  Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd_ex.h \
- Inc/user_bitmap.h u8g2/csrc/u8g2.h u8g2/csrc/u8x8.h Inc/key.h
+ Inc/user_bitmap.h u8g2/csrc/u8g2.h u8g2/csrc/u8x8.h Inc/key.h \
+ Inc/filter_data.h
 
 Inc/main_screen.h:
 
@@ -97,3 +98,5 @@ u8g2/csrc/u8g2.h:
 u8g2/csrc/u8x8.h:
 
 Inc/key.h:
+
+Inc/filter_data.h:

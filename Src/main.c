@@ -41,6 +41,7 @@
 #include "clock_rtc.h"
 #include "buzzer.h"
 #include "spi.h"
+#include "filter_data.h"
 
 int _write(int file, char *data, int len);
 
@@ -90,6 +91,7 @@ int main(void)
   Input_Init();
   buzzer_init();
   RTC_Init();
+  Filter_Data_Init();
   uint32_t timeRefesh = HAL_GetTick();
   uint32_t tick = HAL_GetTick();
   uint32_t timeSend;
@@ -98,21 +100,23 @@ int main(void)
     /* timeSend = HAL_GetTick();
     u8g2_SendBuffer(&u8g2);
     printf("Time Send Buff: %d \n", HAL_GetTick() - timeSend);*/
-    if (HAL_GetTick() - tick > 10000)
-    {
-      toggle = !toggle;
-      tick = HAL_GetTick();
-    }
-    if (toggle)
-    {
-      u8g2_ClearBuffer(&u8g2);
-      Main_Screen_Manage();
-    }
-    else
-    {
-      u8g2_ClearBuffer(&u8g2);
-      Info_Screen_Manage();
-    }
+    // if (HAL_GetTick() - tick > 10000)
+    // {
+    //   toggle = !toggle;
+    //   tick = HAL_GetTick();
+    // }
+    // if (toggle)
+    // {
+    //   u8g2_ClearBuffer(&u8g2);
+    //   Main_Screen_Manage();
+    // }
+    // else
+    // {
+    //   u8g2_ClearBuffer(&u8g2);
+    //   Info_Screen_Manage();
+    // }
+    Main_Screen_Manage();
+    // Info_Screen_Manage();
     KeyManage();
     Blink();
     Output_Manage();

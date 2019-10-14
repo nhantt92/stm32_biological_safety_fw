@@ -1,7 +1,8 @@
 #include "main_screen.h"
 #include "u8g2.h"
 #include "key.h"
-
+#include "filter_data.h"
+#include <stdlib.h>
 
 u8g2_t u8g2;
 
@@ -96,20 +97,49 @@ void Socket_Status(uint8_t sStatus)
 }
 void Filter(uint8_t FStatus)
 {
+    uint8_t perc[3];
+    uint8_t reverse;
+    u8g2_SetFont(&u8g2, u8g2_font_5x7_tf);
+    u8g2_DrawStr(&u8g2, 7, 10, "Filter:");
+    u8g2_DrawStr(&u8g2, 115, 10, "%");
     switch (FStatus)
     {
     case 1:
-        u8g2_SetFont(&u8g2, u8g2_font_5x7_tf);                   //
-        u8g2_DrawStr(&u8g2, 2, 19, "Please change the filter!"); // When Filter < 30%, show string char.
+        if (filt_data.val < Min_Pa)
+        {
+            u8g2_DrawStr(&u8g2, 98, 10, itoa(Max_Percent, perc, 10)); //variable x
+            u8g2_DrawBox(&u8g2, 45, 4, Max_Pixel, 6);                 //Value of filter
+            u8g2_DrawStr(&u8g2, 17, 19, "The filter is good!");       // When Filter = 100%, show string char.
+        }
+        if (filt_data.val == Max_Pa)
+        {
+            u8g2_DrawStr(&u8g2, 98, 10, itoa(Max_Percent / 5, perc, 10)); //variable x
+            u8g2_DrawBox(&u8g2, 45, 4, Min_Pixel, 6);                     //Value of filter
+            if (HAL_GetTick() - main_scr.tick > 1000)
+            {
+                reverse = ~reverse;
+                main_scr.tick = HAL_GetTick();
+                printf("reverse = %d\n", reverse);
+            }
+            if (reverse)
+            {
+                u8g2_DrawStr(&u8g2, 2, 19, "Please change the filter!"); // When Filter is 20%, show string char.
+                // printf("reverse = %d\n", reverse);
+            }
+            else
+            {
+                u8g2_DrawStr(&u8g2, 2, 19, " ");
+                // printf("reverse = %d\n", reverse);
+            }
+        }
         break;
     case 0:
-        u8g2_SetDrawColor(&u8g2, ~FStatus);
-        u8g2_SetFont(&u8g2, u8g2_font_5x7_tf);                   //
-        u8g2_DrawStr(&u8g2, 2, 19, "Please change the filter!"); // When Filter < 30%, show string char.
-        u8g2_DrawStr(&u8g2, 7, 10, "Filter:");
-        u8g2_DrawStr(&u8g2, 98, 10, "100"); //variable x
-        u8g2_DrawStr(&u8g2, 115, 10, "%");
-        u8g2_DrawBox(&u8g2, 45, 4, 50, 6); //Value of filter
+        // u8g2_SetDrawColor(&u8g2, ~FStatus);
+        u8g2_DrawStr(&u8g2, 98, 10, itoa(Max_Percent, perc, 10)); //variable x
+        u8g2_DrawBox(&u8g2, 45, 4, Max_Pixel, 6);                 //Value of filter
+        u8g2_DrawStr(&u8g2, 17, 19, "The filter is good!");       // When Filter = 100%, show string char.
+        break;
+    default:
         break;
     }
 }
@@ -129,6 +159,6 @@ void Main_Screen_Manage(void)
     UV_Status(main_scr.uvStatus);
     Fan_Status(main_scr.fanStatus);
     Socket_Status(main_scr.socketStatus);
-    Filter(0);
+    Filter(1);
     Horizontal();
 }
