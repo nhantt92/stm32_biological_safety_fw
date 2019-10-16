@@ -83,7 +83,7 @@ int main(void)
   LCD_RST_1;
 
   Logo();
-  HAL_Delay(3000);
+  HAL_Delay(500);
   main_screen_init();
   Info_Screen_Init();
   Led_Init();
@@ -100,22 +100,22 @@ int main(void)
     /* timeSend = HAL_GetTick();
     u8g2_SendBuffer(&u8g2);
     printf("Time Send Buff: %d \n", HAL_GetTick() - timeSend);*/
-    // if (HAL_GetTick() - tick > 10000)
-    // {
-    //   toggle = !toggle;
-    //   tick = HAL_GetTick();
-    // }
-    // if (toggle)
-    // {
-    //   u8g2_ClearBuffer(&u8g2);
-    //   Main_Screen_Manage();
-    // }
-    // else
-    // {
-    //   u8g2_ClearBuffer(&u8g2);
-    //   Info_Screen_Manage();
-    // }
-    Main_Screen_Manage();
+    if (HAL_GetTick() - tick > 10000)
+    {
+      toggle = !toggle;
+      tick = HAL_GetTick();
+    }
+    if (toggle)
+    {
+      u8g2_ClearBuffer(&u8g2);
+      Main_Screen_Manage();
+    }
+    else
+    {
+      u8g2_ClearBuffer(&u8g2);
+      Info_Screen_Manage();
+    }
+    // Main_Screen_Manage();
     // Info_Screen_Manage();
     KeyManage();
     Blink();
@@ -180,7 +180,7 @@ void SystemClock_Config(void)
     Error_Handler();
   }
 
-  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
+  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / 1000);
 
   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 

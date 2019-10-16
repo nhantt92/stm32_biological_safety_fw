@@ -67,7 +67,7 @@ void Filter_Pa(uint8_t PaStatus)
     case 0:
         u8g2_SetFont(&u8g2, u8g2_font_5x7_tr);
         // u8g2_DrawStr(&u8g2, 55, 51, "000"); //Variable
-        u8g2_DrawStr(&u8g2, 55, 51, buff); //Variable
+        u8g2_DrawStr(&u8g2, 55, 51, buff); //Get value from the filter.
         break;
     case 1:
         break;

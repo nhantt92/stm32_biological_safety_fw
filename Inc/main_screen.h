@@ -20,7 +20,8 @@ void Lamp_Status(uint8_t lampStatus);
 void UV_Status(uint8_t uvStatus);
 void Fan_Status(uint8_t fanStatus);
 void Socket_Status(uint8_t sStatus);
-void Filter(uint8_t FStatus);
+void Filter_Val(uint16_t val);
+// void Filter_Pcent(uint8_t percent);
 void Horizontal(void);
 void Main_Screen_Manage(void);
 

@@ -10,12 +10,17 @@
 #define Max_Percent 100
 #define Min_Pixel 10
 #define Max_Pixel 50
+#define Origin 1
 
 typedef struct
 {
-    uint16_t val;
+    volatile uint16_t val;
     uint8_t percent;
     uint8_t px;
+    uint8_t pc;
+    uint8_t reverse;
+    uint32_t tick;
+    uint8_t count;
 }DATA_FILTER;
 
 extern DATA_FILTER filt_data;
