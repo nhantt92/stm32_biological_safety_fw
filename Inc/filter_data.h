@@ -3,8 +3,8 @@
 
 #include "main.h"
 
-#define Min_Pa 15       //Value filter min
-#define Max_Pa 300     //Value filter max
+#define Max_Pa 500     //Value filter can setup
+#define Min_Pa (Max_Pa/20)       //Value filter min
 #define Pa_Inc 15   //Increase value of the filter
 #define Min_Percent 20
 #define Max_Percent 100

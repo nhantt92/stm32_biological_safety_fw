@@ -3,8 +3,6 @@
 
 #include "main.h"
 
-// #define D_Level 3
-
 typedef struct
 {
     uint8_t SysTime;
@@ -14,7 +12,9 @@ typedef struct
     uint8_t Flow;
     uint8_t UV;
     uint8_t Temp;
-    uint8_t Door;
+    uint8_t Door_Lv0;
+    uint8_t Door_Lv1;
+    uint8_t Door_Lv2;
     uint32_t tick;
 } INFO_SCREEN_STR;
 
@@ -25,7 +25,7 @@ void SysTime(uint8_t TimeStatus);
 void Filter_Pa(uint8_t PaStatus);
 void Flow(uint8_t FlowStatus);
 void Temperature(uint8_t TempStatus);
-void Door(uint8_t DStatus);
+void Door(void);
 void Frame_Door(void);
 void Info_Screen_Manage(void);
 // void SysWork(uint8_t WorkStatus);

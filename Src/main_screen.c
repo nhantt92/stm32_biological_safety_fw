@@ -24,21 +24,15 @@ void main_screen_init(void)
 
 void Lamp_Status(uint8_t lampStatus)
 {
+    u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
+    u8g2_DrawStr(&u8g2, 9, 33, "NEON");
     if (lampStatus)
     {
-        // u8g2_ClearBuffer(&u8g2);
         u8g2_DrawBitmap(&u8g2, 0, 33, bmp_neon_on.width / 8, bmp_neon_on.height, bmp_neon_on.data);
-        u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
-        // u8g2_SetDrawColor(&u8g2, ~lampStatus);
-        u8g2_DrawStr(&u8g2, 9, 33, "NEON");
     }
     else
     {
-        // u8g2_ClearBuffer(&u8g2);
         u8g2_DrawBitmap(&u8g2, 0, 33, bmp_neon_off.width / 8, bmp_neon_off.height, bmp_neon_off.data);
-        u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
-        // u8g2_SetDrawColor(&u8g2, ~lampStatus);
-        u8g2_DrawStr(&u8g2, 9, 33, "NEON");
     }
 }
 void UV_Status(uint8_t uvStatus)
@@ -57,6 +51,8 @@ void UV_Status(uint8_t uvStatus)
 
 void Fan_Status(uint8_t fanStatus)
 {
+    u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
+    u8g2_DrawStr(&u8g2, 75, 33, "FAN");
     if ((HAL_GetTick() - main_scr.tick > 200) && main_scr.fanStatus)
     {
         main_scr.fanRotate = ~main_scr.fanRotate;
@@ -64,14 +60,10 @@ void Fan_Status(uint8_t fanStatus)
     }
     if (main_scr.fanRotate)
     {
-        u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
-        u8g2_DrawStr(&u8g2, 75, 33, "FAN");
         u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_rotate.width / 8, bmp_fan_rotate.height, bmp_fan_rotate.data);
     }
     else
     {
-        u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
-        u8g2_DrawStr(&u8g2, 75, 33, "FAN");
         u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_origin.width / 8, bmp_fan_origin.height, bmp_fan_origin.data);
     }
 }
@@ -83,7 +75,6 @@ void Socket_Status(uint8_t sStatus)
         u8g2_SetFont(&u8g2, u8g2_font_u8glib_4_tf);
         u8g2_DrawStr(&u8g2, 108, 62, "ON");
         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
-        // u8g2_SetDrawColor(&u8g2, ~sStatus);
         u8g2_DrawStr(&u8g2, 101, 33, "SOCKET");
     }
     else
@@ -92,7 +83,6 @@ void Socket_Status(uint8_t sStatus)
         u8g2_SetFont(&u8g2, u8g2_font_u8glib_4_tf);
         u8g2_DrawStr(&u8g2, 105, 62, "OFF");
         u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
-        // u8g2_SetDrawColor(&u8g2, ~sStatus);
         u8g2_DrawStr(&u8g2, 101, 33, "SOCKET");
     }
 }
@@ -147,23 +137,25 @@ void Filter_Val(uint16_t val)
     u8g2_DrawFrame(&u8g2, 43, 2, 54, 10);
     if (val < Min_Pa)
     {
-        u8g2_DrawStr(&u8g2, 98, 10, itoa(Max_Percent, perc, 10)); //variable x
-        u8g2_DrawBox(&u8g2, 45, 4, Max_Pixel, 6);                 //Value of filter
+        u8g2_DrawStr(&u8g2, 98, 10, itoa(Max_Percent, perc, 10)); //Value percent of the filter
+        u8g2_DrawBox(&u8g2, 45, 4, Max_Pixel, 6);                 //Value pixel of the filter
         u8g2_DrawStr(&u8g2, 115, 10, "%");
         u8g2_DrawStr(&u8g2, 18, 21, "The filter is new!"); // When Filter = 100%, show string char.
         // printf("filter is good\n");
     }
-    if (val >= Min_Pa && val <= Min_Pa * 19)
+    if (val >= Min_Pa && val <= Min_Pa * (Max_Pa / Min_Pa - 1))
     {
-        for (uint8_t i = 1; i <= 19; i++)
+        for (uint8_t i = 1; i <= (Max_Pa / Min_Pa - 1); i++)
         {
             if ((val >= Min_Pa * i) && (val < Min_Pa * (i + 1)))
                 filt_data.count = i;
         }
         filt_data.pc = Max_Percent - (4 * filt_data.count);
         filt_data.px = Max_Pixel - (2 * filt_data.count);
-        u8g2_DrawStr(&u8g2, 99, 10, itoa(filt_data.pc, perc, 10)); //variable x
-        u8g2_DrawBox(&u8g2, 45, 4, filt_data.px, 6);               //Value of filter
+        // filt_data.pc = val * 50 / (Max_Pa/2);
+        // filt_data.px = val * 25 / (Max_Pa/2);
+        u8g2_DrawStr(&u8g2, 99, 10, itoa(filt_data.pc, perc, 10)); //Value percent of the filter
+        u8g2_DrawBox(&u8g2, 45, 4, filt_data.px, 6);               //Value pixel of the filter
         u8g2_DrawStr(&u8g2, 111, 10, "%");
         u8g2_DrawStr(&u8g2, 10, 21, "The filter is working!"); // When Filter = 100%, show string char.
         // printf("filter is working\n");
@@ -171,8 +163,8 @@ void Filter_Val(uint16_t val)
 
     if (val >= Max_Pa)
     {
-        u8g2_DrawStr(&u8g2, 99, 10, itoa(Min_Percent, perc, 10)); //variable x
-        u8g2_DrawBox(&u8g2, 45, 4, Min_Pixel, 6);                 //Value of filter
+        u8g2_DrawStr(&u8g2, 99, 10, itoa(Min_Percent, perc, 10)); //Value percent of the filter
+        u8g2_DrawBox(&u8g2, 45, 4, Min_Pixel, 6);                 //Value pixel of the filter
         u8g2_DrawStr(&u8g2, 111, 10, "%");
         // printf("The filter is Maximun!\n");
         if (HAL_GetTick() - filt_data.tick > 1000)
@@ -180,7 +172,8 @@ void Filter_Val(uint16_t val)
             filt_data.reverse = ~filt_data.reverse;
             filt_data.tick = HAL_GetTick();
         }
-        filt_data.reverse ? u8g2_DrawStr(&u8g2, 2, 21, "Please change the filter!") : u8g2_DrawStr(&u8g2, 2, 21, "                         ");
+        filt_data.reverse ? u8g2_DrawStr(&u8g2, 2, 21, "Please change the filter!")
+                          : u8g2_DrawStr(&u8g2, 2, 21, "                         ");
         // When Filter is 20%, show string char.
     }
 }
