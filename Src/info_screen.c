@@ -120,48 +120,27 @@ void Door(void)
 {
     u8g2_SetFont(&u8g2, u8g2_font_5x8_mf);
     u8g2_DrawStr(&u8g2, 108, 61, "Door");
+    u8g2_DrawBox(&u8g2, 113, 50, 9, 3); //Close the door at level 1
+    u8g2_DrawBox(&u8g2, 113, 46, 9, 3); //Close the door at level 2
+    u8g2_DrawBox(&u8g2, 113, 42, 9, 3); //Close the door at level 3
     if (Info_Scr.Door_Lv0)
     {
         u8g2_DrawStr(&u8g2, 113, 56, "   "); //Open the door at level 1
         printf("Cua mo muc 1\n");
     }
-    else
-    {
-        u8g2_DrawBox(&u8g2, 113, 50, 9, 3); //Close the door at level 1
-        u8g2_DrawBox(&u8g2, 113, 46, 9, 3); //Close the door at level 2
-        u8g2_DrawBox(&u8g2, 113, 42, 9, 3); //Close the door at level 3
-    }
 
     if (Info_Scr.Door_Lv1)
     {
-        u8g2_DrawStr(&u8g2, 113, 52, "   ");
+        u8g2_DrawStr(&u8g2, 113, 52, "   "); //Open the door at level 2
         printf("Cua mo muc 2\n");
     }
 
     if (Info_Scr.Door_Lv2)
     {
-        u8g2_DrawStr(&u8g2, 113, 48, "   ");
+        u8g2_DrawStr(&u8g2, 113, 48, "   "); //Open the door at level 3
         u8g2_DrawStr(&u8g2, 113, 56, "   ");
         printf("Cua mo muc 3\n");
     }
-
-    /*switch (DStatus)
-    {
-    case 0:
-        u8g2_DrawBox(&u8g2, 113, 50, 9, 3); //0
-        break;
-    case 1:
-        u8g2_DrawBox(&u8g2, 113, 50, 9, 3); //0
-        u8g2_DrawBox(&u8g2, 113, 46, 9, 3); //1
-        break;
-    case 2:
-        u8g2_DrawBox(&u8g2, 113, 50, 9, 3); //0
-        u8g2_DrawBox(&u8g2, 113, 46, 9, 3); //1
-        u8g2_DrawBox(&u8g2, 113, 42, 9, 3); //2
-        break;
-    default:
-        break;
-    }*/
 }
 void Info_Screen_Manage(void)
 {

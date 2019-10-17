@@ -6,7 +6,7 @@
 #include "stm32f1xx_hal_rtc.h"
 #include "stm32f1xx_hal_rtc_ex.h"
 
-#define	RTC_HOLDER	0xA5A5
+#define	RTC_HOLDER	0xA5A6
 
 typedef struct __attribute__((packed)){
 	int16_t year;				// year with all 4-digit (2011)

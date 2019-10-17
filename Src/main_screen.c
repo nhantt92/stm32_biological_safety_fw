@@ -8,6 +8,7 @@ u8g2_t u8g2;
 
 MAIN_SCREEN_STR main_scr;
 uint32_t Warn_Blink;
+// uint32_t Alarm_Uv;
 uint8_t blink = 1;
 
 void main_screen_init(void)
@@ -18,8 +19,11 @@ void main_screen_init(void)
     main_scr.socketStatus = 0;
     main_scr.fanRotate = 0;
     u8g2_ClearBuffer(&u8g2);
-    main_scr.tick = HAL_GetTick();
+    main_scr.tick.rotate_fan = HAL_GetTick();
+    main_scr.tick.t_uv = HAL_GetTick();
+    main_scr.tick.t_fan = 0;
     Warn_Blink = HAL_GetTick();
+    main_scr.tick.off_uv = Minute_1; // Setup timer off for UV
 }
 
 void Lamp_Status(uint8_t lampStatus)
@@ -42,6 +46,7 @@ void UV_Status(uint8_t uvStatus)
     if (uvStatus)
     {
         u8g2_DrawBitmap(&u8g2, 32, 33, bmp_uv_on.width / 8, bmp_uv_on.height, bmp_uv_on.data);
+        TimerOff_Uv(main_scr.tick.off_uv);
     }
     else
     {
@@ -49,23 +54,45 @@ void UV_Status(uint8_t uvStatus)
     }
 }
 
+void TimerOff_Uv(uint32_t time)
+{
+    if (time)
+    {
+        if (HAL_GetTick() - main_scr.tick.t_uv > time)
+        {
+            u8g2_DrawBitmap(&u8g2, 32, 33, bmp_uv_off.width / 8, bmp_uv_off.height, bmp_uv_off.data);
+            main_scr.uvStatus = 0;
+            printf("Time to off UV: %d \n", HAL_GetTick() - main_scr.tick.t_uv);
+            main_scr.tick.t_uv = HAL_GetTick();
+        }
+    }
+    else
+        return time = 0;
+}
 void Fan_Status(uint8_t fanStatus)
 {
     u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
     u8g2_DrawStr(&u8g2, 75, 33, "FAN");
-    if ((HAL_GetTick() - main_scr.tick > 200) && main_scr.fanStatus)
+    /* -------------Calculator time for operation of the Fan------------- */
+    if (fanStatus)
     {
-        main_scr.fanRotate = ~main_scr.fanRotate;
-        main_scr.tick = HAL_GetTick();
-    }
-    if (main_scr.fanRotate)
-    {
-        u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_rotate.width / 8, bmp_fan_rotate.height, bmp_fan_rotate.data);
+        main_scr.tick.t_fan = HAL_GetTick();
+        printf("Total time of the Fan working: %d\n", main_scr.tick.t_fan);
     }
     else
     {
         u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_origin.width / 8, bmp_fan_origin.height, bmp_fan_origin.data);
+        return main_scr.tick.t_fan = 0;
     }
+    /* ------------------Setup mode work for the Fan--------------------- */
+    if ((HAL_GetTick() - main_scr.tick.rotate_fan > 200) && fanStatus)
+    {
+        main_scr.fanRotate = ~main_scr.fanRotate;
+        main_scr.tick.rotate_fan = HAL_GetTick();
+    }
+    /* ----------------Operation of the Fan--------------- */
+    main_scr.fanRotate ? u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_rotate.width / 8, bmp_fan_rotate.height, bmp_fan_rotate.data)
+                       : u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_origin.width / 8, bmp_fan_origin.height, bmp_fan_origin.data);
 }
 void Socket_Status(uint8_t sStatus)
 {
@@ -177,6 +204,7 @@ void Filter_Val(uint16_t val)
         // When Filter is 20%, show string char.
     }
 }
+
 void Horizontal(void)
 {
     u8g2_SetDrawColor(&u8g2, 1);
@@ -186,6 +214,8 @@ void Horizontal(void)
     u8g2_DrawHVLine(&u8g2, 64, 24, 40, 1);
     u8g2_DrawHVLine(&u8g2, 96, 24, 40, 1);
 }
+
+/* Management devices|: Neon, UV, Fan, Socket, filter status */
 void Main_Screen_Manage(void)
 {
     Lamp_Status(main_scr.lampStatus);
@@ -193,6 +223,5 @@ void Main_Screen_Manage(void)
     Fan_Status(main_scr.fanStatus);
     Socket_Status(main_scr.socketStatus);
     Horizontal();
-    Filter_Val(filt_data.val); //Function get value from the filter and converter into percent.
-    // Filter_Val(500); //Test value of filter
+    Filter_Val(filt_data.val); //Function get value from the filter and converter into percent./*  */
 }

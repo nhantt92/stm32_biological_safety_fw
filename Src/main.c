@@ -100,22 +100,22 @@ int main(void)
     /* timeSend = HAL_GetTick();
     u8g2_SendBuffer(&u8g2);
     printf("Time Send Buff: %d \n", HAL_GetTick() - timeSend);*/
-    // if (HAL_GetTick() - tick > 10000)
-    // {
-    //   toggle = !toggle;
-    //   tick = HAL_GetTick();
-    // }
-    // if (toggle)
-    // {
-    //   u8g2_ClearBuffer(&u8g2);
-    //   Main_Screen_Manage();
-    // }
-    // else
-    // {
-    //   u8g2_ClearBuffer(&u8g2);
-    //   Info_Screen_Manage();
-    // }
-    Main_Screen_Manage();
+    if (HAL_GetTick() - tick > 15000)
+    {
+      toggle = !toggle;
+      tick = HAL_GetTick();
+    }
+    if (toggle)
+    {
+      u8g2_ClearBuffer(&u8g2);
+      Main_Screen_Manage();
+    }
+    else
+    {
+      u8g2_ClearBuffer(&u8g2);
+      Info_Screen_Manage();
+    }
+    // Main_Screen_Manage();
     // Info_Screen_Manage();
     KeyManage();
     Blink();

@@ -13,7 +13,7 @@
 #define key3_in HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_12)
 #define key4_in HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)
 
-#define NUM_OF_SAMPLE_KEY 5
+#define NUM_OF_SAMPLE_KEY 7
 #define NUM_KEY 4
 
 typedef enum

@@ -19,9 +19,9 @@ void RTC_Init(void)
     {
         localTime.year = 2019;
         localTime.month = 10;
-        localTime.mday = 14;
+        localTime.mday = 17;
         localTime.hour = 8 - 7;
-        localTime.min = 11;
+        localTime.min = 38;
         localTime.sec = 00;
         RTC_Sync(&localTime, +7);
         HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR1, RTC_HOLDER);   

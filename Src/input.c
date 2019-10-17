@@ -4,6 +4,8 @@
 #include "info_screen.h"
 
 INPUT_STRUCT input;
+extern uint8_t toggle;
+
 void Input_Init(void)
 {
     GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -174,14 +176,17 @@ void Input_Manage(void)
         switch (Input_Process())
         {
         case IN1_ON:
+            toggle = 0;
             Info_Scr.Door_Lv0 = 1;
             // printf("IN1 ON\n");
             break;
         case IN2_ON:
+        toggle =0;
             Info_Scr.Door_Lv1 = 1;
             // printf("IN2 ON\n");
             break;
         case IN3_ON:
+        toggle =0;
             Info_Scr.Door_Lv2 = 1;
             // printf("IN3 ON\n");
             break;
@@ -195,14 +200,17 @@ void Input_Manage(void)
             // printf("IN6 ON\n");
             break;
         case IN1_OFF:
+        toggle =0;
             Info_Scr.Door_Lv0 = 0;
             // printf("IN1 OFF \n");
             break;
         case IN2_OFF:
+        toggle =0;
             Info_Scr.Door_Lv1 = 0;
             // printf("IN2 OFF \n");
             break;
         case IN3_OFF:
+        toggle =0;
             Info_Scr.Door_Lv2 = 0;
             // printf("IN3 OFF \n");
             break;
