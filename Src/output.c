@@ -1,5 +1,6 @@
 #include "output.h"
 #include "main_screen.h"
+#include "system.h"
 
 void Output_Init(void)
 {
@@ -15,7 +16,7 @@ void Output_Init(void)
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9;
+    GPIO_InitStruct.Pin = GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -55,8 +56,12 @@ void SW_Socket(uint8_t socketStatus)
 }
 void Output_Manage(void)
 {
-    SW_Neon(main_scr.lampStatus);
-    SW_Uv(main_scr.uvStatus);
-    SW_Fan(main_scr.fanStatus);
-    SW_Socket(main_scr.socketStatus);
+    // SW_Neon(main_scr.lampStatus);
+    // SW_Uv(main_scr.uvStatus);
+    // SW_Fan(main_scr.fanStatus);
+    // SW_Socket(main_scr.socketStatus);
+    SW_Neon(dev.status.lamp);
+    SW_Uv(dev.status.uv);
+    SW_Fan(dev.status.fan);
+    SW_Socket(dev.status.socket);
 }

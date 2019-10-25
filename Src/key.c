@@ -2,6 +2,8 @@
 #include "u8g2.h"
 #include "main_screen.h"
 #include "buzzer.h"
+#include "system.h"
+#include "config.h"
 
 KEY_STRUCT key;
 extern uint8_t toggle;
@@ -12,7 +14,6 @@ void KeyInit(void)
 
 	__HAL_RCC_GPIOC_CLK_ENABLE();
 
-	/*Configure GPIO pins : PC13 PC10 PC11 PC12 */
 	GPIO_InitStruct.Pin = GPIO_PIN_13 | GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12;
 	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
 	GPIO_InitStruct.Pull = GPIO_PULLUP;
@@ -28,33 +29,28 @@ void KeyInit(void)
 
 void KeyGet(uint8_t port_id)
 {
-	uint16_t keyGet;
 	switch (port_id)
 	{
 	case 0:
-		keyGet = key1_in;
-		if (keyGet == !key1)
+		if (NEON_In() == !NEON_PIN)
 			key.ext[port_id].press = KEY_PRESS;
 		else
 			key.ext[port_id].press = KEY_RELEASE;
 		break;
 	case 1:
-		keyGet = key2_in;
-		if (keyGet == !key2)
+		if (UV_In() == !UV_PIN)
 			key.ext[port_id].press = KEY_PRESS;
 		else
 			key.ext[port_id].press = KEY_RELEASE;
 		break;
 	case 2:
-		keyGet = key3_in;
-		if (keyGet == !key3)
+		if (FAN_In() == !FAN_PIN)
 			key.ext[port_id].press = KEY_PRESS;
 		else
 			key.ext[port_id].press = KEY_RELEASE;
 		break;
 	case 3:
-		keyGet = key4_in;
-		if (keyGet == !key4)
+		if (SOCKET_In() == !SOCKET_PIN)
 			key.ext[port_id].press = KEY_PRESS;
 		else
 			key.ext[port_id].press = KEY_RELEASE;
@@ -83,7 +79,6 @@ BUTTON_ID KeyProcess(void)
 	for (key.name = 0; key.name < NUM_KEY; key.name++)
 	{
 		KeyGet(key.name);
-
 		if (key.ext[key.name].pressed == KEY_PRESS)
 		{
 			if (key.ext[key.name].waitRelease == 0)
@@ -92,19 +87,15 @@ BUTTON_ID KeyProcess(void)
 				{
 				case KEY_NEON:
 					currentState = NEON;
-					// printf("KEY NEON\n");
 					break;
 				case KEY_UV:
 					currentState = UV;
-					// printf("KEY UV\n");
 					break;
 				case KEY_FAN:
 					currentState = FAN;
-					// printf("KEY FAN\n");
 					break;
 				case KEY_SOCKET:
 					currentState = SOCKET;
-					// printf("KEY SOCKET\n");
 					break;
 				default:
 					currentState = NONE;
@@ -115,62 +106,46 @@ BUTTON_ID KeyProcess(void)
 		}
 		if (key.ext[key.name].pressed == KEY_RELEASE)
 		{
-			// if(key.ext[key.name].waitRelease == 1)
-			// {
-			// 	switch(key.name)
-			// 	{
-			// 		case KEY_NEON:
-			// 			//HD44780_Clear();
-			// 			HD44780_Puts(0,1,"MENU RELEASE");
-			// 			break;
-			// 		case KEY_UV:
-			// 			//HD44780_Clear();
-			// 			HD44780_Puts(0,1,"UP RELEASE");
-			// 			break;
-			// 		case KEY_FAN:
-			// 			//HD44780_Clear();
-			// 			HD44780_Puts(0,1,"DOWN RELEASE");
-			// 			break;
-			// 		case KEY_SOCKET:
-			// 			//HD44780_Clear();
-			// 			HD44780_Puts(0,1,"EXIT RELEASE");
-			// 			break;
-			// 	}
-			// }
 			key.ext[key.name].waitRelease = 0;
 		}
 	}
 	return currentState;
 }
 
+uint8_t key_press;
+
 void KeyManage(void)
 {
-	if (HAL_GetTick() - key.tick > 1)
+	if (HAL_GetTick() - key.tick >= 5)
 	{
 		switch (KeyProcess())
 		{
 		case NEON:
-			toggle = 1;
-			main_scr.lampStatus = ~main_scr.lampStatus;
-			BUZZER_ON();
+			toggle = 0;
+			dev.status.lamp = !dev.status.lamp;
+			Device_Save_Status();
+			buzzer_short_beep();
 			break;
 		case UV:
-			toggle = 1;
-			main_scr.uvStatus = ~main_scr.uvStatus;
-			BUZZER_ON();
+			toggle = 0;
+			dev.status.uv = !dev.status.uv;
+			dev.status.uv?UV_Init_Time(sys_cfg.uvMode):UV_Clear_Time();
+			Device_Save_Status();
+			buzzer_short_beep();
 			break;
 		case FAN:
-			toggle = 1;
-			main_scr.fanStatus = ~main_scr.fanStatus;
-			BUZZER_ON();
+			toggle = 0;
+			dev.status.fan = !dev.status.fan;
+			Device_Save_Status();
+			buzzer_short_beep();
 			break;
 		case SOCKET:
-			toggle = 1;
-			main_scr.socketStatus = ~main_scr.socketStatus;
-			BUZZER_ON();
+			toggle = 0;
+			dev.status.socket = !dev.status.socket;
+			Device_Save_Status();
+			buzzer_short_beep();
 			break;
 		default:
-			BUZZER_OFF();
 			break;
 		}
 		key.tick = HAL_GetTick();

@@ -1,211 +1,133 @@
 #include "info_screen.h"
 #include "u8g2.h"
 #include "user_bitmap.h"
-#include "clock_rtc.h"
-#include "filter_data.h"
-#include "input.h"
-#include <stdlib.h>
-
-u8g2_t u8g2;
+#include "sm5852.h"
+#include "system.h"
 
 INFO_SCREEN_STR Info_Scr;
 
 void Info_Screen_Init(void)
-{
-    Info_Scr.SysTime = 0;
-    Info_Scr.SysWork = 0;
-    Info_Scr.Filter_Pa = 0;
-    Info_Scr.Filter_Time = 0;
-    Info_Scr.Flow = 0;
-    Info_Scr.UV = 0;
-    Info_Scr.Temp = 0;
-    Info_Scr.Door_Lv0 = 0;
-    Info_Scr.Door_Lv1 = 0;
-    Info_Scr.Door_Lv2 = 0;
+{   
+    Info_Scr.dot = 0;
     Info_Scr.tick = HAL_GetTick();
 }
+void RTC_Time(DATE_TIME now)
+{   
+    uint8_t buff[30];
+    if(HAL_GetTick() - Info_Scr.tick > 300)
+    {   
+        Info_Scr.dot = !Info_Scr.dot;
+        Info_Scr.tick = HAL_GetTick();
+    }
+    Info_Scr.dot?sprintf(buff, "%02d:%02d", now.hour, now.min):sprintf(buff, "%02d %02d", now.hour, now.min);
+    u8g2_SetFont(&u8g2, u8g2_font_10x20_t_cyrillic);
+    u8g2_DrawStr(&u8g2, 5, 16, buff);
+    u8g2_DrawHVLine(&u8g2, 20, 22, 80, 22);
+    u8g2_SetFont(&u8g2, u8g2_font_5x7_tr);
+    sprintf(buff, "%02d/%02d/%04d", now.mday, now.month, now.year);
+    u8g2_DrawStr(&u8g2, 78, 12, buff);
+}
 
-void SysTime(uint8_t TimeStatus)
+void ExhaustFilter(float value)
 {
-    uint8_t buff[11];
-    uint8_t dot;
-    switch (TimeStatus)
-    {
-    case 0:
-        if (localTime.sec % 2 == 0)
-        {
-            dot = ~dot;
-        }
-        u8g2_SetFont(&u8g2, u8g2_font_inr21_mf);
-        if (dot)
-            sprintf(buff, "%02d:%02d", localTime.hour, localTime.min);
-        else
-            sprintf(buff, "%02d %02d", localTime.hour, localTime.min);
-        u8g2_DrawStr(&u8g2, 19, 24, buff); //Variable
-        // u8g2_DrawStr(&u8g2, 55, 24, ":");  //Blink for second
-        // u8g2_DrawStr(&u8g2, 73, 24, "59"); //Variable
-        u8g2_SetFont(&u8g2, u8g2_font_5x7_tr);
-        sprintf(buff, "%02d.%02d.%04d", localTime.mday, localTime.month, localTime.year);
-        u8g2_DrawStr(&u8g2, 40, 36, buff); //Variable
-        // u8g2_DrawStr(&u8g2, 50, 36, ".");
-        // u8g2_DrawStr(&u8g2, 54, 36, "12"); //Variable
-        // u8g2_DrawStr(&u8g2, 64, 36, ".");
-        // u8g2_DrawStr(&u8g2, 69, 36, "2019"); //Variable
-        break;
-    case 1:
-        break;
-    default:
-        break;
-    }
+    uint8_t buff[10];
+    u8g2_SetFont(&u8g2, u8g2_font_5x7_tr);
+    u8g2_DrawStr(&u8g2, 3, 34, "E.Filter:");
+    if(value > 999)
+        value = 999;
+    sprintf(buff, "%03.0f", value);
+    u8g2_DrawStr(&u8g2, 53, 34, buff);
+    u8g2_DrawStr(&u8g2, 77, 34, "Pa");
 }
-void Filter_Pa(uint8_t PaStatus)
+
+void DownflowFilter(float value)
 {
-    uint16_t buff[4];
-    itoa(filt_data.val, buff, 10);
-    u8g2_SetFont(&u8g2, u8g2_font_5x8_tr);
-    u8g2_DrawStr(&u8g2, 3, 51, "Filter:");
-    u8g2_DrawStr(&u8g2, 77, 51, "Pa");
-    switch (PaStatus)
-    {
-    case 0:
-        u8g2_SetFont(&u8g2, u8g2_font_5x7_tr);
-        // u8g2_DrawStr(&u8g2, 55, 51, "000"); //Variable
-        u8g2_DrawStr(&u8g2, 55, 51, buff); //Get value from the filter.
-        break;
-    case 1:
-        break;
-    default:
-        break;
-    }
+    uint8_t buff[10];
+    u8g2_SetFont(&u8g2, u8g2_font_5x7_tr);
+    u8g2_DrawStr(&u8g2, 3, 43, "D.Filter:");
+    if(value > 999)
+        value = 999;
+    sprintf(buff, "%03.0f", value);
+    u8g2_DrawStr(&u8g2, 53, 43, buff);
+    u8g2_DrawStr(&u8g2, 77, 43, "Pa");
 }
-void Flow(uint8_t FlowStatus)
+
+void InFlow(float value)
+{
+    uint8_t buff[10];
+    u8g2_SetFont(&u8g2, u8g2_font_5x7_tr);
+    u8g2_DrawStr(&u8g2, 2, 52, "InFlow:");
+    if(value > 999)
+        value = 999;
+    sprintf(buff, "%02.1f", (value*0.8/480));
+    u8g2_DrawStr(&u8g2, 53, 52, buff);
+    u8g2_DrawStr(&u8g2, 77, 52, "m/s");
+}
+
+void DownFlow(float value)
+{
+    uint8_t buff[10];
+    u8g2_SetFont(&u8g2, u8g2_font_5x7_tr);
+    u8g2_DrawStr(&u8g2, 2, 61, "D.Flow:");
+    if(value > 999)
+        value = 999;
+    sprintf(buff, "%02.1f", (value*0.8/480));
+    u8g2_DrawStr(&u8g2, 53, 61, buff);
+    u8g2_DrawStr(&u8g2, 77, 61, "m/s");
+}
+
+void Door(uint8_t DStatus)
 {
     u8g2_SetFont(&u8g2, u8g2_font_5x8_mf);
-    u8g2_DrawStr(&u8g2, 3, 61, "Flow  :");
-    u8g2_SetFont(&u8g2, u8g2_font_5x7_mf);
-    u8g2_DrawStr(&u8g2, 77, 61, "m/s");
-    switch (FlowStatus)
-    {
-    case 0:
-        u8g2_SetFont(&u8g2, u8g2_font_5x7_tr);
-        u8g2_DrawStr(&u8g2, 46, 61, "00"); //Variable
-        u8g2_DrawStr(&u8g2, 56, 61, ".");
-        u8g2_DrawStr(&u8g2, 60, 61, "00"); //Variable
-        break;
-    case 1:
-        break;
-    default:
-        break;
-    }
-}
-void Temperature(uint8_t TempStatus)
-{
-    u8g2_DrawBitmap(&u8g2, 97, 26, bmp_temp.width / 8, bmp_temp.height, bmp_temp.data);
-    u8g2_SetFont(&u8g2, u8g2_font_5x7_tr);
-    u8g2_DrawStr(&u8g2, 119, 29, ".");
-    u8g2_DrawStr(&u8g2, 122, 35, "C");
-    switch (TempStatus)
-    {
-    case 0:
-        u8g2_DrawStr(&u8g2, 110, 35, "75");
-        break;
-    case 1:
-        u8g2_DrawStr(&u8g2, 110, 35, "00"); //variable x
-        break;
-    default:
-        break;
-    }
-}
-void Door(void)
-{
     u8g2_SetFont(&u8g2, u8g2_font_5x8_mf);
     u8g2_DrawStr(&u8g2, 108, 61, "Door");
-    u8g2_DrawBox(&u8g2, 113, 50, 9, 3); //Close the door at level 1
-    u8g2_DrawBox(&u8g2, 113, 46, 9, 3); //Close the door at level 2
-    u8g2_DrawBox(&u8g2, 113, 42, 9, 3); //Close the door at level 3
-    if (Info_Scr.Door_Lv0)
-    {
-        u8g2_DrawStr(&u8g2, 113, 56, "   "); //Open the door at level 1
-        printf("Cua mo muc 1\n");
-    }
-
-    if (Info_Scr.Door_Lv1)
-    {
-        u8g2_DrawStr(&u8g2, 113, 52, "   "); //Open the door at level 2
-        printf("Cua mo muc 2\n");
-    }
-
-    if (Info_Scr.Door_Lv2)
-    {
-        u8g2_DrawStr(&u8g2, 113, 48, "   "); //Open the door at level 3
-        u8g2_DrawStr(&u8g2, 113, 56, "   ");
-        printf("Cua mo muc 3\n");
-    }
-}
-void Info_Screen_Manage(void)
-{
-    SysTime(Info_Scr.SysTime);
-    Filter_Pa(Info_Scr.Filter_Pa);
-    Flow(Info_Scr.Flow);
-    Door();
-    Temperature(Info_Scr.Temp);
-    u8g2_DrawHLine(&u8g2, 29, 40, 70);
-    Frame_Door();
-}
-void Frame_Door(void)
-{
     u8g2_DrawHVLine(&u8g2, 109, 40, 13, 1);
     u8g2_DrawHVLine(&u8g2, 125, 40, 13, 1);
     u8g2_DrawHLine(&u8g2, 110, 40, 16);
+    u8g2_DrawBox(&u8g2, 113, 50, 9, 3); //Close the door at level 1
+    u8g2_DrawBox(&u8g2, 113, 46, 9, 3); //Close the door at level 2
+    u8g2_DrawBox(&u8g2, 113, 42, 9, 3); //Close the door at level 3
+    switch (DStatus)
+    {
+        case 0:
+            u8g2_DrawBox(&u8g2, 113, 50, 9, 3); //Close the door at level 1
+            u8g2_DrawBox(&u8g2, 113, 46, 9, 3); //Close the door at level 2
+            u8g2_DrawBox(&u8g2, 113, 42, 9, 3); //Close the door at level 3
+            break;
+        case 1:
+            u8g2_DrawStr(&u8g2, 113, 56, "   "); //Open the door at level 1
+            break;
+        case 2:
+            u8g2_DrawStr(&u8g2, 113, 52, "   "); //Open the door at level 2
+            break;
+        case 3:
+            u8g2_DrawStr(&u8g2, 113, 48, "   "); //Open the door at level 3
+            u8g2_DrawStr(&u8g2, 113, 56, "   ");
+            break;
+        default:
+            break;
+    }
 }
-// void SysWork(uint8_t WorkStatus)
-// {
-//     switch(WorkStatus)
-//     {
-//         case 0:
-//             u8g2_SetFont(&u8g2, u8g2_font_5x8_mf  );
-//             u8g2_DrawStr(&u8g2, 7, 19, "System Work:");
-//             u8g2_SetFont(&u8g2, u8g2_font_5x7_tr);
-//             u8g2_DrawStr(&u8g2, 93, 19, "999999");
-//             u8g2_DrawStr(&u8g2, 124, 19, "h");
-//             break;
-//         case 1:
-//             break;
-//         default:
-//             break;
-//     }
-// }
 
-// void Filter_Time(uint8_t FTStatus)
-// {
-//     switch (FTStatus)
-//     {
-//         case 0:
-//             u8g2_SetFont(&u8g2, u8g2_font_5x7_tr);
-//             u8g2_DrawStr(&u8g2, 7, 39, "Filter Time:");
-//             u8g2_DrawStr(&u8g2, 96, 39, "0000");
-//             u8g2_DrawStr(&u8g2, 124, 39, "h");
-//             break;
-//         case 1:
-//             break;
-//         default:
-//             break;
-//     }
-// }
+void Temperature(float temp)
+{
+    uint8_t buff[10];
+    u8g2_DrawBitmap(&u8g2, 90, 22, bmp_temp.width / 8, bmp_temp.height, bmp_temp.data);
+    u8g2_SetFont(&u8g2, u8g2_font_5x7_tr);
+    u8g2_DrawStr(&u8g2, 110, 36, "C");
+    sprintf(buff, "%02.1f", temp);
+    u8g2_DrawStr(&u8g2, 105, 28, buff);
+    u8g2_SetFont(&u8g2, u8g2_font_unifont_t_symbols);
+    u8g2_DrawGlyph(&u8g2, 104, 44, 0x00b0);
+}
 
-// void UV_Time(uint8_t UvStatus)
-// {
-//     switch(UvStatus)
-//     {
-//         case 0:
-//             u8g2_SetFont(&u8g2, u8g2_font_5x7_tr);
-//             u8g2_DrawStr(&u8g2, 7, 59, "UV Time:");
-//             u8g2_DrawStr(&u8g2, 90, 59, "0000");
-//             u8g2_DrawStr(&u8g2, 124, 59, "h");
-//             break;
-//         case 1:
-//             break;
-//         default:
-//             break;
-//     }
-// }
+void Info_Screen_Manage(void)
+{
+    RTC_Time(localTime);
+    ExhaustFilter(sm5852_1.pressure);
+    DownflowFilter(sm5852_2.pressure);
+    InFlow(sm5852_1.pressure);
+    DownFlow(sm5852_2.pressure);
+    Temperature(sm5852_1.temp);
+    Door(dev.doorLevel);
+}

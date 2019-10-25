@@ -1,29 +1,18 @@
 #include "main_screen.h"
 #include "u8g2.h"
 #include "key.h"
-#include "filter_data.h"
 #include <stdlib.h>
+#include "system.h"
+#include "config.h"
+#include "sm5852.h"
 
-u8g2_t u8g2;
-
-MAIN_SCREEN_STR main_scr;
-uint32_t Warn_Blink;
-// uint32_t Alarm_Uv;
+MAIN_SCREEN_T main_scr;
 uint8_t blink = 1;
 
 void main_screen_init(void)
 {
-    main_scr.lampStatus = 0;
-    main_scr.uvStatus = 0;
-    main_scr.fanStatus = 0;
-    main_scr.socketStatus = 0;
-    main_scr.fanRotate = 0;
     u8g2_ClearBuffer(&u8g2);
-    main_scr.tick.rotate_fan = HAL_GetTick();
-    main_scr.tick.t_uv = HAL_GetTick();
-    main_scr.tick.t_fan = 0;
-    Warn_Blink = HAL_GetTick();
-    main_scr.tick.off_uv = Minute_1; // Setup timer off for UV
+    main_scr.tick = HAL_GetTick();
 }
 
 void Lamp_Status(uint8_t lampStatus)
@@ -39,6 +28,7 @@ void Lamp_Status(uint8_t lampStatus)
         u8g2_DrawBitmap(&u8g2, 0, 33, bmp_neon_off.width / 8, bmp_neon_off.height, bmp_neon_off.data);
     }
 }
+
 void UV_Status(uint8_t uvStatus)
 {
     u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
@@ -46,7 +36,6 @@ void UV_Status(uint8_t uvStatus)
     if (uvStatus)
     {
         u8g2_DrawBitmap(&u8g2, 32, 33, bmp_uv_on.width / 8, bmp_uv_on.height, bmp_uv_on.data);
-        TimerOff_Uv(main_scr.tick.off_uv);
     }
     else
     {
@@ -54,155 +43,67 @@ void UV_Status(uint8_t uvStatus)
     }
 }
 
-void TimerOff_Uv(uint32_t time)
-{
-    if (time)
-    {
-        if (HAL_GetTick() - main_scr.tick.t_uv > time)
-        {
-            u8g2_DrawBitmap(&u8g2, 32, 33, bmp_uv_off.width / 8, bmp_uv_off.height, bmp_uv_off.data);
-            main_scr.uvStatus = 0;
-            printf("Time to off UV: %d \n", HAL_GetTick() - main_scr.tick.t_uv);
-            main_scr.tick.t_uv = HAL_GetTick();
-        }
-    }
-    else
-        return time = 0;
-}
 void Fan_Status(uint8_t fanStatus)
 {
     u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
     u8g2_DrawStr(&u8g2, 75, 33, "FAN");
-    /* -------------Calculator time for operation of the Fan------------- */
-    if (fanStatus)
-    {
-        main_scr.tick.t_fan = HAL_GetTick();
-        printf("Total time of the Fan working: %d\n", main_scr.tick.t_fan);
-    }
-    else
-    {
-        u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_origin.width / 8, bmp_fan_origin.height, bmp_fan_origin.data);
-        return main_scr.tick.t_fan = 0;
-    }
-    /* ------------------Setup mode work for the Fan--------------------- */
-    if ((HAL_GetTick() - main_scr.tick.rotate_fan > 200) && fanStatus)
-    {
-        main_scr.fanRotate = ~main_scr.fanRotate;
-        main_scr.tick.rotate_fan = HAL_GetTick();
-    }
     /* ----------------Operation of the Fan--------------- */
-    main_scr.fanRotate ? u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_rotate.width / 8, bmp_fan_rotate.height, bmp_fan_rotate.data)
+    (main_scr.fanRotate & fanStatus) ? u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_rotate.width / 8, bmp_fan_rotate.height, bmp_fan_rotate.data)
                        : u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_origin.width / 8, bmp_fan_origin.height, bmp_fan_origin.data);
 }
+
 void Socket_Status(uint8_t sStatus)
 {
+    u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
+    u8g2_DrawStr(&u8g2, 101, 33, "SOCKET");
     if (sStatus)
     {
         u8g2_DrawBitmap(&u8g2, 98, 34, bmp_socket_on.width / 8, bmp_socket_on.height, bmp_socket_on.data);
         u8g2_SetFont(&u8g2, u8g2_font_u8glib_4_tf);
         u8g2_DrawStr(&u8g2, 108, 62, "ON");
-        u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
-        u8g2_DrawStr(&u8g2, 101, 33, "SOCKET");
     }
     else
     {
         u8g2_DrawBitmap(&u8g2, 98, 34, bmp_socket_off.width / 8, bmp_socket_off.height, bmp_socket_off.data);
         u8g2_SetFont(&u8g2, u8g2_font_u8glib_4_tf);
         u8g2_DrawStr(&u8g2, 105, 62, "OFF");
-        u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
-        u8g2_DrawStr(&u8g2, 101, 33, "SOCKET");
     }
 }
 
-/*void Filter_Pcent(uint8_t percent)
+void Filter_Pcent(float pressure, uint16_t threshold)
 {
+    uint8_t percent;
     uint8_t buff[5];
     uint8_t warnBuff[30];
     uint8_t line;
+    if(pressure > threshold) pressure = threshold;
+    percent = (uint8_t)((pressure * 100)/((float)threshold));
+    percent = fabs(100 - percent);
     line = percent * 50 / 100;
     u8g2_SetFont(&u8g2, u8g2_font_5x7_tf);
-    if((percent <= 100) && (percent >= 70))
+    if((percent == 100) && (percent >= 70))
         u8g2_DrawStr(&u8g2, 17, 21, "The filter is good!");
-    else if((percent <= 70) && (percent > 40))
+    else if((percent <= 70) && (percent > 30))
         u8g2_DrawStr(&u8g2, 17, 21, "The filter medium!");
-    else if((percent <= 40) && (percent > 10))
+    else if((percent <= 30) && (percent > 10))
         u8g2_DrawStr(&u8g2, 17, 21, "The filter low!");
     else
     {
-        if(HAL_GetTick() - Warn_Blink > 1000)
-        {
-            blink = !blink;
-            printf("Blinkd: %d \n", blink);
-            Warn_Blink = HAL_GetTick();
-        }
         u8g2_SetFont(&u8g2, u8g2_font_5x7_mf);
-        blink?u8g2_DrawStr(&u8g2, 17, 21, "Please change filter!"):u8g2_DrawStr(&u8g2, 17, 21, "                           ");
-        // blink?sprintf(warnBuff, "Please change filter!"):sprintf(warnBuff, "                 ");
-        // if(blink)
-        // {
-        //     u8g2_SetFont(&u8g2, u8g2_font_5x7_mf);
-        //     u8g2_DrawStr(&u8g2, 17, 21, "                      ");
-        // }
-        // else
-        // {
-        //     u8g2_SetFont(&u8g2, u8g2_font_5x7_mf);
-        //     u8g2_DrawStr(&u8g2, 17, 21, "Please change filter!");
-        // }
+        if(main_scr.warnCnt > F_WARNING)
+        {
+            u8g2_DrawStr(&u8g2, 17, 21, "Please change filter!");
+        }
+        else
+        {
+            u8g2_DrawStr(&u8g2, 17, 21, "                     ");
+        }
     }
     u8g2_DrawStr(&u8g2, 7, 10, "Filter:");
     u8g2_DrawFrame(&u8g2, 43, 2, 54, 10);
     sprintf(buff, "%d %%", percent);
     u8g2_DrawStr(&u8g2, 98, 10, buff);
-    u8g2_DrawBox(&u8g2, 45, 4, line, 6); 
-        
-}*/
-void Filter_Val(uint16_t val)
-{
-    uint8_t perc[3];
-    u8g2_SetFont(&u8g2, u8g2_font_5x7_mf);
-    u8g2_DrawStr(&u8g2, 7, 10, "Filter:");
-    u8g2_DrawFrame(&u8g2, 43, 2, 54, 10);
-    if (val < Min_Pa)
-    {
-        u8g2_DrawStr(&u8g2, 98, 10, itoa(Max_Percent, perc, 10)); //Value percent of the filter
-        u8g2_DrawBox(&u8g2, 45, 4, Max_Pixel, 6);                 //Value pixel of the filter
-        u8g2_DrawStr(&u8g2, 115, 10, "%");
-        u8g2_DrawStr(&u8g2, 18, 21, "The filter is new!"); // When Filter = 100%, show string char.
-        // printf("filter is good\n");
-    }
-    if (val >= Min_Pa && val <= Min_Pa * (Max_Pa / Min_Pa - 1))
-    {
-        for (uint8_t i = 1; i <= (Max_Pa / Min_Pa - 1); i++)
-        {
-            if ((val >= Min_Pa * i) && (val < Min_Pa * (i + 1)))
-                filt_data.count = i;
-        }
-        filt_data.pc = Max_Percent - (4 * filt_data.count);
-        filt_data.px = Max_Pixel - (2 * filt_data.count);
-        // filt_data.pc = val * 50 / (Max_Pa/2);
-        // filt_data.px = val * 25 / (Max_Pa/2);
-        u8g2_DrawStr(&u8g2, 99, 10, itoa(filt_data.pc, perc, 10)); //Value percent of the filter
-        u8g2_DrawBox(&u8g2, 45, 4, filt_data.px, 6);               //Value pixel of the filter
-        u8g2_DrawStr(&u8g2, 111, 10, "%");
-        u8g2_DrawStr(&u8g2, 10, 21, "The filter is working!"); // When Filter = 100%, show string char.
-        // printf("filter is working\n");
-    }
-
-    if (val >= Max_Pa)
-    {
-        u8g2_DrawStr(&u8g2, 99, 10, itoa(Min_Percent, perc, 10)); //Value percent of the filter
-        u8g2_DrawBox(&u8g2, 45, 4, Min_Pixel, 6);                 //Value pixel of the filter
-        u8g2_DrawStr(&u8g2, 111, 10, "%");
-        // printf("The filter is Maximun!\n");
-        if (HAL_GetTick() - filt_data.tick > 1000)
-        {
-            filt_data.reverse = ~filt_data.reverse;
-            filt_data.tick = HAL_GetTick();
-        }
-        filt_data.reverse ? u8g2_DrawStr(&u8g2, 2, 21, "Please change the filter!")
-                          : u8g2_DrawStr(&u8g2, 2, 21, "                         ");
-        // When Filter is 20%, show string char.
-    }
+    u8g2_DrawBox(&u8g2, 45, 4, line, 6);   
 }
 
 void Horizontal(void)
@@ -218,10 +119,17 @@ void Horizontal(void)
 /* Management devices|: Neon, UV, Fan, Socket, filter status */
 void Main_Screen_Manage(void)
 {
-    Lamp_Status(main_scr.lampStatus);
-    UV_Status(main_scr.uvStatus);
-    Fan_Status(main_scr.fanStatus);
-    Socket_Status(main_scr.socketStatus);
+    if (HAL_GetTick() - main_scr.tick > 200)
+    {
+        main_scr.fanRotate = ~main_scr.fanRotate;
+        if(++main_scr.warnCnt > F_WARNING*2) main_scr.warnCnt = 0;
+        main_scr.tick = HAL_GetTick();
+    }
+    u8g2_ClearBuffer(&u8g2);
+    Lamp_Status(dev.status.lamp);
+    UV_Status(dev.status.uv);
+    Fan_Status(dev.status.fan);
+    Socket_Status(dev.status.socket);
     Horizontal();
-    Filter_Val(filt_data.val); //Function get value from the filter and converter into percent./*  */
+    Filter_Pcent(sm5852_1.pressure, sys_cfg.pressureVal);
 }

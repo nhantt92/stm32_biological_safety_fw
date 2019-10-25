@@ -20,9 +20,9 @@ void RTC_Init(void)
         localTime.year = 2019;
         localTime.month = 10;
         localTime.mday = 17;
-        localTime.hour = 8 - 7;
-        localTime.min = 38;
-        localTime.sec = 00;
+        localTime.hour = 14 - 7;
+        localTime.min = 35;
+        localTime.sec = 20;
         RTC_Sync(&localTime, +7);
         HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR1, RTC_HOLDER);   
     }
@@ -96,7 +96,7 @@ void RTC_Now(DATE_TIME *dt)
 }
 
 
-void RTC_CalendarShow(void)
+void RTC_Show_Test(void)
 {
     if(HAL_GetTick() - timeRTC > 1000)
     {

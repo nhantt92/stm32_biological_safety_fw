@@ -6,7 +6,7 @@
 #include "stm32f1xx_hal_rtc.h"
 #include "stm32f1xx_hal_rtc_ex.h"
 
-#define	RTC_HOLDER	0xA5A6
+#define	RTC_HOLDER	0xA5A5
 
 typedef struct __attribute__((packed)){
 	int16_t year;				// year with all 4-digit (2011)
@@ -30,6 +30,5 @@ void RTC_Now(DATE_TIME *dt);
 int8_t TIME_AddSec(DATE_TIME *t, int32_t sec);
 int32_t TIME_GetSec(DATE_TIME *t);
 int8_t TIME_FromSec(DATE_TIME *t, int32_t sec);
-void RTC_CalendarShow(void);
-
+void RTC_Show_Test(void);
 #endif

@@ -1,23 +1,3 @@
-/* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
-  *
-  ******************************************************************************
-  */
-/* USER CODE END Header */
-
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "i2c.h"
@@ -25,7 +5,6 @@
 #include "usart.h"
 #include "usb_device.h"
 #include "gpio.h"
-#include "BlinkLed.h"
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
@@ -41,7 +20,10 @@
 #include "clock_rtc.h"
 #include "buzzer.h"
 #include "spi.h"
-#include "filter_data.h"
+#include "ir_decode.h"
+#include "menu.h"
+#include "system.h"
+#include "sm5852.h"
 
 int _write(int file, char *data, int len);
 
@@ -49,16 +31,15 @@ int _write(int file, char *data, int len);
 #define LCD_RST_0 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET)
 #define LCD_RS_1 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET)
 #define LCD_RS_0 HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET)
+#define USB_EN() HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, GPIO_PIN_SET)
 
 void SystemClock_Config(void);
 uint8_t u8g2_gpio_and_delay_stm32(U8X8_UNUSED u8x8_t *u8x8, U8X8_UNUSED uint8_t msg, U8X8_UNUSED uint8_t arg_int, U8X8_UNUSED void *arg_ptr);
 uint8_t u8x8_byte_4wire_hw_spi(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
-void MX_GPIO_Init(void);
-// void key_toggle(void);
-/*Variable for interface monitor*/
 
 u8g2_t u8g2;
-volatile uint8_t toggle = 0;
+SM5852_T sm5852_1;
+SM5852_T sm5852_2;
 
 int main(void)
 {
@@ -66,12 +47,14 @@ int main(void)
   SystemClock_Config();
   MX_GPIO_Init();
   MX_SPI1_Init();
-  // MX_I2C1_Init();
-  // MX_I2C2_Init();
-  // MX_IWDG_Init();
+  MX_IWDG_Init();
   // MX_USART1_UART_Init();
   // MX_USART2_UART_Init();
-
+  sm5852_1.i2cHandle.Instance = I2C1;
+  sm5852_2.i2cHandle.Instance = I2C2;
+  SM5852_Init(&sm5852_1);
+  SM5852_Init(&sm5852_2);
+  NEC_Receiver_Init();
   MX_USB_DEVICE_Init();
   KeyInit();
   u8g2_Setup_st7920_s_128x64_f(&u8g2, U8G2_R0, u8x8_byte_4wire_hw_spi, u8g2_gpio_and_delay_stm32); // init u8g2 structure
@@ -84,55 +67,47 @@ int main(void)
 
   Logo();
   HAL_Delay(500);
-  main_screen_init();
-  Info_Screen_Init();
-  Led_Init();
+  BUTTON_Init();
+  MX_TIM1_Init();
   Output_Init();
   Input_Init();
   buzzer_init();
   RTC_Init();
-  Filter_Data_Init();
+  System_Init();
   uint32_t timeRefesh = HAL_GetTick();
   uint32_t tick = HAL_GetTick();
-  uint32_t timeSend;
+  u8g2_ClearBuffer(&u8g2);
   while (1)
   {
-    /* timeSend = HAL_GetTick();
-    u8g2_SendBuffer(&u8g2);
-    printf("Time Send Buff: %d \n", HAL_GetTick() - timeSend);*/
-    if (HAL_GetTick() - tick > 15000)
-    {
-      toggle = !toggle;
-      tick = HAL_GetTick();
-    }
-    if (toggle)
-    {
-      u8g2_ClearBuffer(&u8g2);
-      Main_Screen_Manage();
-    }
-    else
-    {
-      u8g2_ClearBuffer(&u8g2);
-      Info_Screen_Manage();
-    }
-    // Main_Screen_Manage();
-    // Info_Screen_Manage();
+    /* Debug measure pressure */
+    // if(HAL_GetTick() - tick > 1000)
+    // {
+    //   printf("Pressure1: %.2f\n", sm5852_1.pressure);
+    //   printf("Temp1: %.2f\n", sm5852_1.temp);
+    //   printf("Pressure2: %.2f\n", sm5852_2.pressure);
+    //   printf("Temp2: %.2f\n", sm5852_2.temp);
+    //   tick = HAL_GetTick();
+    // }
+    /* Init meansure Time exec program */
+    //uint32_t time = HAL_GetTick();
+    System_Manager();
+    SM5852_Manager(&sm5852_1);
+    SM5852_Manager(&sm5852_2);
+    NEC_Manager();
+    BUTTON_Manage();
     KeyManage();
-    Blink();
     Output_Manage();
     Input_Manage();
-    // buzzer_manage(buzzer.short_Status);
-
+    handle_buzzer();
+    /* print meansure Time exec program */
+    //printf("Time ex: %d\n", HAL_GetTick() - time);
+    HAL_IWDG_Refresh(&hiwdg);
     if (HAL_GetTick() - timeRefesh > 100)
     {
       u8g2_SendBuffer(&u8g2);
       timeRefesh = HAL_GetTick();
     }
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
   }
-  /* USER CODE END 3 */
 }
 
 /**
@@ -192,91 +167,19 @@ void SystemClock_Config(void)
 /* USER CODE END 4 */
 uint8_t u8g2_gpio_and_delay_stm32(U8X8_UNUSED u8x8_t *u8x8, U8X8_UNUSED uint8_t msg, U8X8_UNUSED uint8_t arg_int, U8X8_UNUSED void *arg_ptr)
 {
-  //   GPIO_InitTypeDef  gpioinitstruct;
-
-  //   switch(msg){
-  //   //Function to define the logic level of the RESET line
-  // case U8X8_MSG_GPIO_RESET:
-  //   if (arg_int) LCD_RST_1;
-  //   else LCD_RST_0;
-
-  // break;
-
-  //   default:
-  //     return 0; //A message was received which is not implemented, return 0 to indicate an error
-  // }
+  switch(msg)
+  {
+    //Function to define the logic level of the RESET line
+    case U8X8_MSG_GPIO_RESET:
+      if (arg_int) LCD_RST_1;
+      else LCD_RST_0;
+      break;
+    default:
+      return 0; //A message was received which is not implemented, return 0 to indicate an error
+  }
 
   return 1; // command processed successfully.
 }
-
-// uint8_t u8g2_gpio_and_delay_stm32(U8X8_UNUSED u8x8_t *u8x8, U8X8_UNUSED uint8_t msg, U8X8_UNUSED uint8_t arg_int, U8X8_UNUSED void *arg_ptr)
-// {
-//     GPIO_InitTypeDef  gpioinitstruct;
-
-//     switch(msg){
-
-//     //Function which implements a delay, arg_int contains the amount of ms
-//     case U8X8_MSG_GPIO_AND_DELAY_INIT:
-
-//     __HAL_RCC_GPIOA_CLK_ENABLE();
-//     /* Configure the GPIO_LED pin */
-//     gpioinitstruct.Pin    = GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_7;
-//     gpioinitstruct.Mode   = GPIO_MODE_OUTPUT_PP;
-//     gpioinitstruct.Pull   = GPIO_NOPULL;
-//     gpioinitstruct.Speed  = GPIO_SPEED_FREQ_HIGH;
-//     HAL_GPIO_Init(GPIOA, &gpioinitstruct);
-//     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_7, GPIO_PIN_SET);
-
-//     break;
-//     //Function which implements a delay, arg_int contains the amount of ms
-//     case U8X8_MSG_DELAY_MILLI:
-//     HAL_Delay(arg_int);
-//     break;
-//     //Function which delays 10us
-//     case U8X8_MSG_DELAY_10MICRO:
-//     delay_us(10);
-//     break;
-//     //Function which delays 100ns
-//     case U8X8_MSG_DELAY_100NANO:
-//     __NOP();
-
-//     break;
-//     //Function to define the logic level of the clockline
-//     case U8X8_MSG_GPIO_SPI_CLOCK:
-//       if (arg_int) LCD_SCLK_1;
-//       else LCD_SCLK_0;
-
-//     break;
-//     //Function to define the logic level of the data line to the display
-//     case U8X8_MSG_GPIO_SPI_DATA:
-//       if (arg_int) LCD_SID_1;
-//       else LCD_SID_0;
-
-//     break;
-
-//     // Function to define the logic level of the CS line
-//     case U8X8_MSG_GPIO_CS1:
-//       if (arg_int) LCD_RS_1 ;
-//       else LCD_RS_0;
-
-//     break;
-//     //Function to define the logic level of the Data/ Command line
-//     case U8X8_MSG_GPIO_DC:
-
-//     break;
-//     //Function to define the logic level of the RESET line
-//     case U8X8_MSG_GPIO_RESET:
-//       if (arg_int) LCD_RST_1;
-//       else LCD_RST_0;
-
-//     break;
-
-//     default:
-//       return 0; //A message was received which is not implemented, return 0 to indicate an error
-//   }
-
-//   return 1; // command processed successfully.
-// }
 
 uint8_t u8x8_byte_4wire_hw_spi(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)
 {
@@ -310,32 +213,17 @@ uint8_t u8x8_byte_4wire_hw_spi(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void 
   }
   return 1;
 }
-/**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
+
 void Error_Handler(void)
 {
-  /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-
-  /* USER CODE END Error_Handler_Debug */
+  printf("Error!");
 }
 
 #ifdef USE_FULL_ASSERT
-/**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
+
 void assert_failed(uint8_t *file, uint32_t line)
 {
-  /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
-     tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* USER CODE END 6 */
+
 }
 #endif /* USE_FULL_ASSERT */
 

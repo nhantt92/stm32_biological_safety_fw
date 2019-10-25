@@ -30,7 +30,9 @@ extern "C"
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
+#include "u8g2.h"
 
+extern u8g2_t u8g2;
   /* Private includes ----------------------------------------------------------*/
   /* USER CODE BEGIN Includes */
 

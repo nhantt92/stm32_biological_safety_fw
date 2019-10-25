@@ -3,17 +3,17 @@
 
 #include "main.h"
 
-#define key1 GPIO_PIN_10
-#define key2 GPIO_PIN_11
-#define key3 GPIO_PIN_12
-#define key4 GPIO_PIN_13
+#define 	NEON_PIN 		GPIO_PIN_10
+#define 	UV_PIN 			GPIO_PIN_11
+#define 	FAN_PIN 		GPIO_PIN_12
+#define 	SOCKET_PIN		GPIO_PIN_13
 
-#define key1_in HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_10)
-#define key2_in HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_11)
-#define key3_in HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_12)
-#define key4_in HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)
+#define		NEON_In() 		HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_10)
+#define 	UV_In() 		HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_11)
+#define 	FAN_In() 		HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_12)
+#define 	SOCKET_In() 	HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13)
 
-#define NUM_OF_SAMPLE_KEY 7
+#define NUM_OF_SAMPLE_KEY 5
 #define NUM_KEY 4
 
 typedef enum

@@ -60,14 +60,21 @@ BUILD_DIR = build
 C_SOURCES =  \
 Src/main.c \
 Src/gpio.c \
-Src/blinkled.c \
 Src/key.c \
 Src/user_bitmap.c \
+Src/lcd_backlight.c \
+Src/kalman_filter.c \
+Src/sm5852.c \
 Src/logo.c \
+Src/config.c \
+Src/system.c \
 Src/main_screen.c \
 Src/info_screen.c \
-Src/filter_data.c \
 Src/output.c \
+Src/ir_decode.c \
+Src/tick_us.c \
+Src/menu.c \
+Src/menu_handler.c \
 Src/input.c \
 Src/buzzer.c \
 Src/clock_rtc.c \

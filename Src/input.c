@@ -2,9 +2,9 @@
 #include "output.h"
 #include "main_screen.h"
 #include "info_screen.h"
+#include "system.h"
 
 INPUT_STRUCT input;
-extern uint8_t toggle;
 
 void Input_Init(void)
 {
@@ -176,19 +176,16 @@ void Input_Manage(void)
         switch (Input_Process())
         {
         case IN1_ON:
-            toggle = 0;
-            Info_Scr.Door_Lv0 = 1;
-            // printf("IN1 ON\n");
+            toggle = TIME_PAGE;
+            dev.doorLevel = 1;
             break;
         case IN2_ON:
-        toggle =0;
-            Info_Scr.Door_Lv1 = 1;
-            // printf("IN2 ON\n");
+            toggle = TIME_PAGE;
+            dev.doorLevel = 2;
             break;
         case IN3_ON:
-        toggle =0;
-            Info_Scr.Door_Lv2 = 1;
-            // printf("IN3 ON\n");
+            toggle = TIME_PAGE;
+            dev.doorLevel = 3;
             break;
         case IN4_ON:
             // printf("IN4 ON\n");
@@ -200,28 +197,22 @@ void Input_Manage(void)
             // printf("IN6 ON\n");
             break;
         case IN1_OFF:
-        toggle =0;
-            Info_Scr.Door_Lv0 = 0;
-            // printf("IN1 OFF \n");
+            dev.doorLevel--;
+            toggle = TIME_PAGE;
             break;
         case IN2_OFF:
-        toggle =0;
-            Info_Scr.Door_Lv1 = 0;
-            // printf("IN2 OFF \n");
+            dev.doorLevel--;
+            toggle = TIME_PAGE;
             break;
         case IN3_OFF:
-        toggle =0;
-            Info_Scr.Door_Lv2 = 0;
-            // printf("IN3 OFF \n");
+            dev.doorLevel--;
+            toggle = TIME_PAGE;
             break;
         case IN4_OFF:
-            // printf("IN4 OFF \n");
             break;
         case IN5_OFF:
-            // printf("IN5 OFF \n");
             break;
         case IN6_OFF:
-            // printf("IN6 OFF \n");
             break;
         default:
             break;
