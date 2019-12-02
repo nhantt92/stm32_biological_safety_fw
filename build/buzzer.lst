@@ -1,0 +1,539 @@
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"buzzer.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.buzzer_short_beep,"ax",%progbits
+  16              		.align	1
+  17              		.global	buzzer_short_beep
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  21              		.fpu softvfp
+  23              	buzzer_short_beep:
+  24              	.LFB66:
+  25              		.file 1 "Src/buzzer.c"
+   1:Src/buzzer.c  **** #include "buzzer.h"
+   2:Src/buzzer.c  **** #include "key.h"
+   3:Src/buzzer.c  **** #include "config.h"
+   4:Src/buzzer.c  **** 
+   5:Src/buzzer.c  **** BUZZER_T buzzer;
+   6:Src/buzzer.c  **** 
+   7:Src/buzzer.c  **** void buzzer_short_beep(void)
+   8:Src/buzzer.c  **** {
+  26              		.loc 1 8 0
+  27              		.cfi_startproc
+  28              		@ args = 0, pretend = 0, frame = 0
+  29              		@ frame_needed = 0, uses_anonymous_args = 0
+  30 0000 08B5     		push	{r3, lr}
+  31              	.LCFI0:
+  32              		.cfi_def_cfa_offset 8
+  33              		.cfi_offset 3, -8
+  34              		.cfi_offset 14, -4
+   9:Src/buzzer.c  **** 	buzzer.state = STATE_SB;
+  35              		.loc 1 9 0
+  36 0002 094B     		ldr	r3, .L5
+  37 0004 0022     		movs	r2, #0
+  38 0006 1A71     		strb	r2, [r3, #4]
+  10:Src/buzzer.c  **** 	if(sys_cfg.speaker)
+  39              		.loc 1 10 0
+  40 0008 084B     		ldr	r3, .L5+4
+  41 000a 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+  42 000c 03B9     		cbnz	r3, .L4
+  43              	.L1:
+  11:Src/buzzer.c  **** 	{
+  12:Src/buzzer.c  **** 		BUZZER_ON();
+  13:Src/buzzer.c  **** 		buzzer.tick = HAL_GetTick();
+  14:Src/buzzer.c  **** 	}
+  15:Src/buzzer.c  **** }
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s 			page 2
+
+
+  44              		.loc 1 15 0
+  45 000e 08BD     		pop	{r3, pc}
+  46              	.L4:
+  12:Src/buzzer.c  **** 		buzzer.tick = HAL_GetTick();
+  47              		.loc 1 12 0
+  48 0010 0122     		movs	r2, #1
+  49 0012 4FF48071 		mov	r1, #256
+  50 0016 0648     		ldr	r0, .L5+8
+  51 0018 FFF7FEFF 		bl	HAL_GPIO_WritePin
+  52              	.LVL0:
+  13:Src/buzzer.c  **** 	}
+  53              		.loc 1 13 0
+  54 001c FFF7FEFF 		bl	HAL_GetTick
+  55              	.LVL1:
+  56 0020 014B     		ldr	r3, .L5
+  57 0022 1860     		str	r0, [r3]
+  58              		.loc 1 15 0
+  59 0024 F3E7     		b	.L1
+  60              	.L6:
+  61 0026 00BF     		.align	2
+  62              	.L5:
+  63 0028 00000000 		.word	buzzer
+  64 002c 00000000 		.word	sys_cfg
+  65 0030 000C0140 		.word	1073810432
+  66              		.cfi_endproc
+  67              	.LFE66:
+  69              		.section	.text.buzzer_long_beep,"ax",%progbits
+  70              		.align	1
+  71              		.global	buzzer_long_beep
+  72              		.syntax unified
+  73              		.thumb
+  74              		.thumb_func
+  75              		.fpu softvfp
+  77              	buzzer_long_beep:
+  78              	.LFB67:
+  16:Src/buzzer.c  **** 
+  17:Src/buzzer.c  **** void buzzer_long_beep(void)
+  18:Src/buzzer.c  **** {
+  79              		.loc 1 18 0
+  80              		.cfi_startproc
+  81              		@ args = 0, pretend = 0, frame = 0
+  82              		@ frame_needed = 0, uses_anonymous_args = 0
+  83 0000 08B5     		push	{r3, lr}
+  84              	.LCFI1:
+  85              		.cfi_def_cfa_offset 8
+  86              		.cfi_offset 3, -8
+  87              		.cfi_offset 14, -4
+  19:Src/buzzer.c  **** 	buzzer.state = STATE_LB;
+  88              		.loc 1 19 0
+  89 0002 084B     		ldr	r3, .L11
+  90 0004 0122     		movs	r2, #1
+  91 0006 1A71     		strb	r2, [r3, #4]
+  20:Src/buzzer.c  **** 	if(sys_cfg.speaker)
+  92              		.loc 1 20 0
+  93 0008 074B     		ldr	r3, .L11+4
+  94 000a 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+  95 000c 03B9     		cbnz	r3, .L10
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s 			page 3
+
+
+  96              	.L7:
+  21:Src/buzzer.c  **** 	{
+  22:Src/buzzer.c  **** 		BUZZER_ON();
+  23:Src/buzzer.c  **** 		buzzer.tick = HAL_GetTick();
+  24:Src/buzzer.c  **** 	}
+  25:Src/buzzer.c  **** }
+  97              		.loc 1 25 0
+  98 000e 08BD     		pop	{r3, pc}
+  99              	.L10:
+  22:Src/buzzer.c  **** 		buzzer.tick = HAL_GetTick();
+ 100              		.loc 1 22 0
+ 101 0010 4FF48071 		mov	r1, #256
+ 102 0014 0548     		ldr	r0, .L11+8
+ 103 0016 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 104              	.LVL2:
+  23:Src/buzzer.c  **** 	}
+ 105              		.loc 1 23 0
+ 106 001a FFF7FEFF 		bl	HAL_GetTick
+ 107              	.LVL3:
+ 108 001e 014B     		ldr	r3, .L11
+ 109 0020 1860     		str	r0, [r3]
+ 110              		.loc 1 25 0
+ 111 0022 F4E7     		b	.L7
+ 112              	.L12:
+ 113              		.align	2
+ 114              	.L11:
+ 115 0024 00000000 		.word	buzzer
+ 116 0028 00000000 		.word	sys_cfg
+ 117 002c 000C0140 		.word	1073810432
+ 118              		.cfi_endproc
+ 119              	.LFE67:
+ 121              		.section	.text.buzzer_alarm_start,"ax",%progbits
+ 122              		.align	1
+ 123              		.global	buzzer_alarm_start
+ 124              		.syntax unified
+ 125              		.thumb
+ 126              		.thumb_func
+ 127              		.fpu softvfp
+ 129              	buzzer_alarm_start:
+ 130              	.LFB68:
+  26:Src/buzzer.c  **** 
+  27:Src/buzzer.c  **** void buzzer_alarm_start(void)
+  28:Src/buzzer.c  **** {
+ 131              		.loc 1 28 0
+ 132              		.cfi_startproc
+ 133              		@ args = 0, pretend = 0, frame = 0
+ 134              		@ frame_needed = 0, uses_anonymous_args = 0
+ 135              		@ link register save eliminated.
+  29:Src/buzzer.c  **** 	buzzer.state = STATE_AL;
+ 136              		.loc 1 29 0
+ 137 0000 014B     		ldr	r3, .L14
+ 138 0002 0222     		movs	r2, #2
+ 139 0004 1A71     		strb	r2, [r3, #4]
+  30:Src/buzzer.c  **** }
+ 140              		.loc 1 30 0
+ 141 0006 7047     		bx	lr
+ 142              	.L15:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s 			page 4
+
+
+ 143              		.align	2
+ 144              	.L14:
+ 145 0008 00000000 		.word	buzzer
+ 146              		.cfi_endproc
+ 147              	.LFE68:
+ 149              		.section	.text.buzzer_alarm_stop,"ax",%progbits
+ 150              		.align	1
+ 151              		.global	buzzer_alarm_stop
+ 152              		.syntax unified
+ 153              		.thumb
+ 154              		.thumb_func
+ 155              		.fpu softvfp
+ 157              	buzzer_alarm_stop:
+ 158              	.LFB69:
+  31:Src/buzzer.c  **** 
+  32:Src/buzzer.c  **** void buzzer_alarm_stop(void)
+  33:Src/buzzer.c  **** {
+ 159              		.loc 1 33 0
+ 160              		.cfi_startproc
+ 161              		@ args = 0, pretend = 0, frame = 0
+ 162              		@ frame_needed = 0, uses_anonymous_args = 0
+ 163 0000 08B5     		push	{r3, lr}
+ 164              	.LCFI2:
+ 165              		.cfi_def_cfa_offset 8
+ 166              		.cfi_offset 3, -8
+ 167              		.cfi_offset 14, -4
+  34:Src/buzzer.c  **** 	buzzer.state = STATE_IDLE;
+ 168              		.loc 1 34 0
+ 169 0002 054B     		ldr	r3, .L18
+ 170 0004 0322     		movs	r2, #3
+ 171 0006 1A71     		strb	r2, [r3, #4]
+  35:Src/buzzer.c  **** 	BUZZER_OFF();
+ 172              		.loc 1 35 0
+ 173 0008 0022     		movs	r2, #0
+ 174 000a 4FF48071 		mov	r1, #256
+ 175 000e 0348     		ldr	r0, .L18+4
+ 176 0010 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 177              	.LVL4:
+  36:Src/buzzer.c  **** }
+ 178              		.loc 1 36 0
+ 179 0014 08BD     		pop	{r3, pc}
+ 180              	.L19:
+ 181 0016 00BF     		.align	2
+ 182              	.L18:
+ 183 0018 00000000 		.word	buzzer
+ 184 001c 000C0140 		.word	1073810432
+ 185              		.cfi_endproc
+ 186              	.LFE69:
+ 188              		.section	.text.handle_buzzer,"ax",%progbits
+ 189              		.align	1
+ 190              		.global	handle_buzzer
+ 191              		.syntax unified
+ 192              		.thumb
+ 193              		.thumb_func
+ 194              		.fpu softvfp
+ 196              	handle_buzzer:
+ 197              	.LFB70:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s 			page 5
+
+
+  37:Src/buzzer.c  **** 
+  38:Src/buzzer.c  **** void handle_buzzer(void)
+  39:Src/buzzer.c  **** {
+ 198              		.loc 1 39 0
+ 199              		.cfi_startproc
+ 200              		@ args = 0, pretend = 0, frame = 0
+ 201              		@ frame_needed = 0, uses_anonymous_args = 0
+ 202 0000 08B5     		push	{r3, lr}
+ 203              	.LCFI3:
+ 204              		.cfi_def_cfa_offset 8
+ 205              		.cfi_offset 3, -8
+ 206              		.cfi_offset 14, -4
+  40:Src/buzzer.c  **** 	uint32_t delta = HAL_GetTick() - buzzer.tick;
+ 207              		.loc 1 40 0
+ 208 0002 FFF7FEFF 		bl	HAL_GetTick
+ 209              	.LVL5:
+ 210 0006 184A     		ldr	r2, .L26
+ 211 0008 1368     		ldr	r3, [r2]
+ 212 000a C01A     		subs	r0, r0, r3
+ 213              	.LVL6:
+  41:Src/buzzer.c  **** 	switch (buzzer.state)
+ 214              		.loc 1 41 0
+ 215 000c 1379     		ldrb	r3, [r2, #4]	@ zero_extendqisi2
+ 216 000e 012B     		cmp	r3, #1
+ 217 0010 0FD0     		beq	.L22
+ 218 0012 13B1     		cbz	r3, .L23
+ 219 0014 022B     		cmp	r3, #2
+ 220 0016 1AD0     		beq	.L24
+ 221              	.LVL7:
+ 222              	.L20:
+  42:Src/buzzer.c  **** 	{
+  43:Src/buzzer.c  **** 		case STATE_SB:
+  44:Src/buzzer.c  **** 			if(delta > SHORT_BEEP)
+  45:Src/buzzer.c  **** 			{
+  46:Src/buzzer.c  **** 				BUZZER_OFF();
+  47:Src/buzzer.c  **** 				buzzer.state = STATE_IDLE;
+  48:Src/buzzer.c  **** 			}
+  49:Src/buzzer.c  **** 			break;
+  50:Src/buzzer.c  **** 		case STATE_LB:
+  51:Src/buzzer.c  **** 			if (delta > LONG_BEEP)
+  52:Src/buzzer.c  **** 			{
+  53:Src/buzzer.c  **** 				BUZZER_OFF();
+  54:Src/buzzer.c  **** 				buzzer.state = STATE_IDLE;
+  55:Src/buzzer.c  **** 			}
+  56:Src/buzzer.c  **** 			break;
+  57:Src/buzzer.c  **** 		case STATE_AL:
+  58:Src/buzzer.c  **** 			if (delta > ALARM)
+  59:Src/buzzer.c  **** 			{
+  60:Src/buzzer.c  **** 				BUZZER_TOGGLE();
+  61:Src/buzzer.c  **** 				buzzer.tick = HAL_GetTick();
+  62:Src/buzzer.c  **** 			}
+  63:Src/buzzer.c  **** 			break;
+  64:Src/buzzer.c  **** 		default:
+  65:Src/buzzer.c  **** 			break;
+  66:Src/buzzer.c  **** 	}
+  67:Src/buzzer.c  **** }
+ 223              		.loc 1 67 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s 			page 6
+
+
+ 224 0018 08BD     		pop	{r3, pc}
+ 225              	.LVL8:
+ 226              	.L23:
+  44:Src/buzzer.c  **** 			{
+ 227              		.loc 1 44 0
+ 228 001a 6428     		cmp	r0, #100
+ 229 001c FCD9     		bls	.L20
+  46:Src/buzzer.c  **** 				buzzer.state = STATE_IDLE;
+ 230              		.loc 1 46 0
+ 231 001e 0022     		movs	r2, #0
+ 232 0020 4FF48071 		mov	r1, #256
+ 233 0024 1148     		ldr	r0, .L26+4
+ 234              	.LVL9:
+ 235 0026 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 236              	.LVL10:
+  47:Src/buzzer.c  **** 			}
+ 237              		.loc 1 47 0
+ 238 002a 0F4B     		ldr	r3, .L26
+ 239 002c 0322     		movs	r2, #3
+ 240 002e 1A71     		strb	r2, [r3, #4]
+ 241 0030 F2E7     		b	.L20
+ 242              	.LVL11:
+ 243              	.L22:
+  51:Src/buzzer.c  **** 			{
+ 244              		.loc 1 51 0
+ 245 0032 40F2DC53 		movw	r3, #1500
+ 246 0036 9842     		cmp	r0, r3
+ 247 0038 EED9     		bls	.L20
+  53:Src/buzzer.c  **** 				buzzer.state = STATE_IDLE;
+ 248              		.loc 1 53 0
+ 249 003a 0022     		movs	r2, #0
+ 250 003c 4FF48071 		mov	r1, #256
+ 251 0040 0A48     		ldr	r0, .L26+4
+ 252              	.LVL12:
+ 253 0042 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 254              	.LVL13:
+  54:Src/buzzer.c  **** 			}
+ 255              		.loc 1 54 0
+ 256 0046 084B     		ldr	r3, .L26
+ 257 0048 0322     		movs	r2, #3
+ 258 004a 1A71     		strb	r2, [r3, #4]
+ 259 004c E4E7     		b	.L20
+ 260              	.LVL14:
+ 261              	.L24:
+  58:Src/buzzer.c  **** 			{
+ 262              		.loc 1 58 0
+ 263 004e B0F57A7F 		cmp	r0, #1000
+ 264 0052 E1D9     		bls	.L20
+  60:Src/buzzer.c  **** 				buzzer.tick = HAL_GetTick();
+ 265              		.loc 1 60 0
+ 266 0054 4FF48071 		mov	r1, #256
+ 267 0058 0448     		ldr	r0, .L26+4
+ 268              	.LVL15:
+ 269 005a FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 270              	.LVL16:
+  61:Src/buzzer.c  **** 			}
+ 271              		.loc 1 61 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s 			page 7
+
+
+ 272 005e FFF7FEFF 		bl	HAL_GetTick
+ 273              	.LVL17:
+ 274 0062 014B     		ldr	r3, .L26
+ 275 0064 1860     		str	r0, [r3]
+ 276              		.loc 1 67 0
+ 277 0066 D7E7     		b	.L20
+ 278              	.L27:
+ 279              		.align	2
+ 280              	.L26:
+ 281 0068 00000000 		.word	buzzer
+ 282 006c 000C0140 		.word	1073810432
+ 283              		.cfi_endproc
+ 284              	.LFE70:
+ 286              		.section	.text.buzzer_init,"ax",%progbits
+ 287              		.align	1
+ 288              		.global	buzzer_init
+ 289              		.syntax unified
+ 290              		.thumb
+ 291              		.thumb_func
+ 292              		.fpu softvfp
+ 294              	buzzer_init:
+ 295              	.LFB71:
+  68:Src/buzzer.c  **** 
+  69:Src/buzzer.c  **** // void buzzer_manage(uint8_t status)
+  70:Src/buzzer.c  **** // {
+  71:Src/buzzer.c  **** // 	switch (status)
+  72:Src/buzzer.c  **** // 	{
+  73:Src/buzzer.c  **** // 	case 1:
+  74:Src/buzzer.c  **** // 		//buzzer_short_beep();
+  75:Src/buzzer.c  **** // 		handle_buzzer();
+  76:Src/buzzer.c  **** // 		break;
+  77:Src/buzzer.c  **** // 	case 2:
+  78:Src/buzzer.c  **** // 		//buzzer_long_beep();
+  79:Src/buzzer.c  **** // 		handle_buzzer();
+  80:Src/buzzer.c  **** // 	case 3:
+  81:Src/buzzer.c  **** // 		//buzzer_alarm_start();
+  82:Src/buzzer.c  **** // 		handle_buzzer();
+  83:Src/buzzer.c  **** // 	default:
+  84:Src/buzzer.c  **** // 		break;
+  85:Src/buzzer.c  **** // 	}
+  86:Src/buzzer.c  **** // }
+  87:Src/buzzer.c  **** 
+  88:Src/buzzer.c  **** void buzzer_init(void)
+  89:Src/buzzer.c  **** {
+ 296              		.loc 1 89 0
+ 297              		.cfi_startproc
+ 298              		@ args = 0, pretend = 0, frame = 24
+ 299              		@ frame_needed = 0, uses_anonymous_args = 0
+ 300 0000 70B5     		push	{r4, r5, r6, lr}
+ 301              	.LCFI4:
+ 302              		.cfi_def_cfa_offset 16
+ 303              		.cfi_offset 4, -16
+ 304              		.cfi_offset 5, -12
+ 305              		.cfi_offset 6, -8
+ 306              		.cfi_offset 14, -4
+ 307 0002 86B0     		sub	sp, sp, #24
+ 308              	.LCFI5:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s 			page 8
+
+
+ 309              		.cfi_def_cfa_offset 40
+  90:Src/buzzer.c  **** 	GPIO_InitTypeDef GPIO_InitStruct = {0};
+ 310              		.loc 1 90 0
+ 311 0004 0026     		movs	r6, #0
+ 312 0006 0496     		str	r6, [sp, #16]
+ 313              	.LBB2:
+  91:Src/buzzer.c  **** 
+  92:Src/buzzer.c  **** 	/* GPIO Ports Clock Enable */
+  93:Src/buzzer.c  **** 	__HAL_RCC_GPIOB_CLK_ENABLE();
+ 314              		.loc 1 93 0
+ 315 0008 0E4B     		ldr	r3, .L30
+ 316 000a 9A69     		ldr	r2, [r3, #24]
+ 317 000c 42F00802 		orr	r2, r2, #8
+ 318 0010 9A61     		str	r2, [r3, #24]
+ 319 0012 9B69     		ldr	r3, [r3, #24]
+ 320 0014 03F00803 		and	r3, r3, #8
+ 321 0018 0193     		str	r3, [sp, #4]
+ 322 001a 019B     		ldr	r3, [sp, #4]
+ 323              	.LBE2:
+  94:Src/buzzer.c  **** 
+  95:Src/buzzer.c  **** 	GPIO_InitStruct.Pin = BUZZER_PIN;
+ 324              		.loc 1 95 0
+ 325 001c 4FF48075 		mov	r5, #256
+ 326 0020 0295     		str	r5, [sp, #8]
+  96:Src/buzzer.c  **** 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+ 327              		.loc 1 96 0
+ 328 0022 0123     		movs	r3, #1
+ 329 0024 0393     		str	r3, [sp, #12]
+  97:Src/buzzer.c  **** 	GPIO_InitStruct.Pull = GPIO_NOPULL;
+  98:Src/buzzer.c  **** 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+ 330              		.loc 1 98 0
+ 331 0026 0223     		movs	r3, #2
+ 332 0028 0593     		str	r3, [sp, #20]
+  99:Src/buzzer.c  **** 	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 333              		.loc 1 99 0
+ 334 002a 074C     		ldr	r4, .L30+4
+ 335 002c 02A9     		add	r1, sp, #8
+ 336 002e 2046     		mov	r0, r4
+ 337 0030 FFF7FEFF 		bl	HAL_GPIO_Init
+ 338              	.LVL18:
+ 100:Src/buzzer.c  **** 	BUZZER_OFF();
+ 339              		.loc 1 100 0
+ 340 0034 3246     		mov	r2, r6
+ 341 0036 2946     		mov	r1, r5
+ 342 0038 2046     		mov	r0, r4
+ 343 003a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 344              	.LVL19:
+ 101:Src/buzzer.c  **** }...
+ 345              		.loc 1 101 0
+ 346 003e 06B0     		add	sp, sp, #24
+ 347              	.LCFI6:
+ 348              		.cfi_def_cfa_offset 16
+ 349              		@ sp needed
+ 350 0040 70BD     		pop	{r4, r5, r6, pc}
+ 351              	.L31:
+ 352 0042 00BF     		.align	2
+ 353              	.L30:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s 			page 9
+
+
+ 354 0044 00100240 		.word	1073876992
+ 355 0048 000C0140 		.word	1073810432
+ 356              		.cfi_endproc
+ 357              	.LFE71:
+ 359              		.comm	buzzer,8,4
+ 360              		.text
+ 361              	.Letext0:
+ 362              		.file 2 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_defau
+ 363              		.file 3 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_stdint.h"
+ 364              		.file 4 "Drivers/CMSIS/Include/core_cm3.h"
+ 365              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h"
+ 366              		.file 6 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
+ 367              		.file 7 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/lock.h"
+ 368              		.file 8 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_types.h"
+ 369              		.file 9 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/
+ 370              		.file 10 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/reent.h"
+ 371              		.file 11 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ 372              		.file 12 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h"
+ 373              		.file 13 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 374              		.file 14 "u8g2/csrc/u8x8.h"
+ 375              		.file 15 "u8g2/csrc/u8g2.h"
+ 376              		.file 16 "Inc/main.h"
+ 377              		.file 17 "Inc/buzzer.h"
+ 378              		.file 18 "Inc/system.h"
+ 379              		.file 19 "Inc/config.h"
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 buzzer.c
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s:16     .text.buzzer_short_beep:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s:23     .text.buzzer_short_beep:0000000000000000 buzzer_short_beep
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s:63     .text.buzzer_short_beep:0000000000000028 $d
+                            *COM*:0000000000000008 buzzer
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s:70     .text.buzzer_long_beep:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s:77     .text.buzzer_long_beep:0000000000000000 buzzer_long_beep
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s:115    .text.buzzer_long_beep:0000000000000024 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s:122    .text.buzzer_alarm_start:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s:129    .text.buzzer_alarm_start:0000000000000000 buzzer_alarm_start
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s:145    .text.buzzer_alarm_start:0000000000000008 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s:150    .text.buzzer_alarm_stop:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s:157    .text.buzzer_alarm_stop:0000000000000000 buzzer_alarm_stop
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s:183    .text.buzzer_alarm_stop:0000000000000018 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s:189    .text.handle_buzzer:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s:196    .text.handle_buzzer:0000000000000000 handle_buzzer
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s:281    .text.handle_buzzer:0000000000000068 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s:287    .text.buzzer_init:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s:294    .text.buzzer_init:0000000000000000 buzzer_init
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccmMTRbs.s:354    .text.buzzer_init:0000000000000044 $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_WritePin
+HAL_GetTick
+sys_cfg
+HAL_GPIO_TogglePin
+HAL_GPIO_Init

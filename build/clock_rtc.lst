@@ -1,0 +1,971 @@
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"clock_rtc.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.RTC_GetUnixTimestamp,"ax",%progbits
+  16              		.align	1
+  17              		.global	RTC_GetUnixTimestamp
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  21              		.fpu softvfp
+  23              	RTC_GetUnixTimestamp:
+  24              	.LFB67:
+  25              		.file 1 "Src/clock_rtc.c"
+   1:Src/clock_rtc.c **** #include "clock_rtc.h"
+   2:Src/clock_rtc.c **** 
+   3:Src/clock_rtc.c **** DATE_TIME localTime;
+   4:Src/clock_rtc.c **** RTC_HandleTypeDef hrtc;
+   5:Src/clock_rtc.c **** 
+   6:Src/clock_rtc.c **** uint32_t timeRTC;
+   7:Src/clock_rtc.c **** 
+   8:Src/clock_rtc.c **** void RTC_Init(void)
+   9:Src/clock_rtc.c **** {
+  10:Src/clock_rtc.c ****     timeRTC = HAL_GetTick();
+  11:Src/clock_rtc.c ****     hrtc.Instance = RTC;
+  12:Src/clock_rtc.c ****     hrtc.Init.AsynchPrediv = RTC_AUTO_1_SECOND;
+  13:Src/clock_rtc.c ****     hrtc.Init.OutPut = RTC_OUTPUTSOURCE_NONE;
+  14:Src/clock_rtc.c **** 	if (HAL_RTC_Init(&hrtc) != HAL_OK)
+  15:Src/clock_rtc.c ****     {
+  16:Src/clock_rtc.c ****         Error_Handler();
+  17:Src/clock_rtc.c ****     }
+  18:Src/clock_rtc.c ****     if (HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR1) != RTC_HOLDER) 
+  19:Src/clock_rtc.c ****     {
+  20:Src/clock_rtc.c ****         localTime.year = 2019;
+  21:Src/clock_rtc.c ****         localTime.month = 10;
+  22:Src/clock_rtc.c ****         localTime.mday = 17;
+  23:Src/clock_rtc.c ****         localTime.hour = 14 - 7;
+  24:Src/clock_rtc.c ****         localTime.min = 35;
+  25:Src/clock_rtc.c ****         localTime.sec = 20;
+  26:Src/clock_rtc.c ****         RTC_Sync(&localTime, +7);
+  27:Src/clock_rtc.c ****         HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR1, RTC_HOLDER);   
+  28:Src/clock_rtc.c ****     }
+  29:Src/clock_rtc.c ****     else
+  30:Src/clock_rtc.c ****     {
+  31:Src/clock_rtc.c ****         if (__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST) != RESET)
+  32:Src/clock_rtc.c ****         {
+  33:Src/clock_rtc.c ****         }
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s 			page 2
+
+
+  34:Src/clock_rtc.c ****         if (__HAL_RCC_GET_FLAG(RCC_FLAG_PINRST) != RESET)
+  35:Src/clock_rtc.c ****         {
+  36:Src/clock_rtc.c ****         }
+  37:Src/clock_rtc.c ****         /* Clear source Reset Flag */
+  38:Src/clock_rtc.c ****         __HAL_RCC_CLEAR_RESET_FLAGS();
+  39:Src/clock_rtc.c ****     }
+  40:Src/clock_rtc.c ****     HAL_RTCEx_SetSecond_IT(&hrtc);
+  41:Src/clock_rtc.c **** }
+  42:Src/clock_rtc.c **** 
+  43:Src/clock_rtc.c **** uint32_t RTC_GetUnixTimestamp(DATE_TIME *dt)
+  44:Src/clock_rtc.c **** {
+  26              		.loc 1 44 0
+  27              		.cfi_startproc
+  28              		@ args = 0, pretend = 0, frame = 40
+  29              		@ frame_needed = 0, uses_anonymous_args = 0
+  30              	.LVL0:
+  31 0000 00B5     		push	{lr}
+  32              	.LCFI0:
+  33              		.cfi_def_cfa_offset 4
+  34              		.cfi_offset 14, -4
+  35 0002 8BB0     		sub	sp, sp, #44
+  36              	.LCFI1:
+  37              		.cfi_def_cfa_offset 48
+  45:Src/clock_rtc.c **** 	struct tm t;
+  46:Src/clock_rtc.c **** 	time_t t_of_day;
+  47:Src/clock_rtc.c **** 	t.tm_year = dt->year - 1900;
+  38              		.loc 1 47 0
+  39 0004 B0F90030 		ldrsh	r3, [r0]	@ unaligned
+  40 0008 A3F26C73 		subw	r3, r3, #1900
+  41 000c 0693     		str	r3, [sp, #24]
+  48:Src/clock_rtc.c **** 	t.tm_mon = dt->month - 1; 				// Month, 0 - jan
+  42              		.loc 1 48 0
+  43 000e 90F90230 		ldrsb	r3, [r0, #2]
+  44 0012 013B     		subs	r3, r3, #1
+  45 0014 0593     		str	r3, [sp, #20]
+  49:Src/clock_rtc.c **** 	t.tm_mday = dt->mday; 					// Day of the month
+  46              		.loc 1 49 0
+  47 0016 90F90330 		ldrsb	r3, [r0, #3]
+  48 001a 0493     		str	r3, [sp, #16]
+  50:Src/clock_rtc.c **** 	t.tm_hour = dt->hour;
+  49              		.loc 1 50 0
+  50 001c 90F90530 		ldrsb	r3, [r0, #5]
+  51 0020 0393     		str	r3, [sp, #12]
+  51:Src/clock_rtc.c **** 	t.tm_min = dt->min;
+  52              		.loc 1 51 0
+  53 0022 90F90630 		ldrsb	r3, [r0, #6]
+  54 0026 0293     		str	r3, [sp, #8]
+  52:Src/clock_rtc.c **** 	t.tm_sec = dt->sec;
+  55              		.loc 1 52 0
+  56 0028 90F90730 		ldrsb	r3, [r0, #7]
+  57 002c 0193     		str	r3, [sp, #4]
+  53:Src/clock_rtc.c **** 	t.tm_isdst = -1; 						// Is DST on? 1 = yes, 0 = no, -1 = unknown
+  58              		.loc 1 53 0
+  59 002e 4FF0FF33 		mov	r3, #-1
+  60 0032 0993     		str	r3, [sp, #36]
+  54:Src/clock_rtc.c **** 	t_of_day = mktime(&t);
+  61              		.loc 1 54 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s 			page 3
+
+
+  62 0034 01A8     		add	r0, sp, #4
+  63              	.LVL1:
+  64 0036 FFF7FEFF 		bl	mktime
+  65              	.LVL2:
+  55:Src/clock_rtc.c **** 	return (uint32_t)t_of_day; 
+  56:Src/clock_rtc.c **** }
+  66              		.loc 1 56 0
+  67 003a 0BB0     		add	sp, sp, #44
+  68              	.LCFI2:
+  69              		.cfi_def_cfa_offset 4
+  70              		@ sp needed
+  71 003c 5DF804FB 		ldr	pc, [sp], #4
+  72              		.cfi_endproc
+  73              	.LFE67:
+  75              		.section	.text.RTC_Sync,"ax",%progbits
+  76              		.align	1
+  77              		.global	RTC_Sync
+  78              		.syntax unified
+  79              		.thumb
+  80              		.thumb_func
+  81              		.fpu softvfp
+  83              	RTC_Sync:
+  84              	.LFB68:
+  57:Src/clock_rtc.c **** 
+  58:Src/clock_rtc.c **** void RTC_Sync(DATE_TIME *dt, uint8_t timeZone)
+  59:Src/clock_rtc.c **** {
+  85              		.loc 1 59 0
+  86              		.cfi_startproc
+  87              		@ args = 0, pretend = 0, frame = 0
+  88              		@ frame_needed = 0, uses_anonymous_args = 0
+  89              	.LVL3:
+  90 0000 38B5     		push	{r3, r4, r5, lr}
+  91              	.LCFI3:
+  92              		.cfi_def_cfa_offset 16
+  93              		.cfi_offset 3, -16
+  94              		.cfi_offset 4, -12
+  95              		.cfi_offset 5, -8
+  96              		.cfi_offset 14, -4
+  97 0002 0D46     		mov	r5, r1
+  60:Src/clock_rtc.c **** 	uint32_t tt;
+  61:Src/clock_rtc.c **** 	uint32_t number;
+  62:Src/clock_rtc.c ****     __HAL_RTC_SECOND_DISABLE_IT(&hrtc, RTC_IT_SEC);
+  98              		.loc 1 62 0
+  99 0004 0A4C     		ldr	r4, .L5
+ 100 0006 2268     		ldr	r2, [r4]
+ 101 0008 1368     		ldr	r3, [r2]
+ 102 000a 23F00103 		bic	r3, r3, #1
+ 103 000e 1360     		str	r3, [r2]
+  63:Src/clock_rtc.c **** 	tt = RTC_GetUnixTimestamp(dt);
+ 104              		.loc 1 63 0
+ 105 0010 FFF7FEFF 		bl	RTC_GetUnixTimestamp
+ 106              	.LVL4:
+  64:Src/clock_rtc.c **** 	tt += timeZone * 60 * 60;
+  65:Src/clock_rtc.c ****     RTC_WriteTimeCounter(&hrtc, (uint32_t)tt) ;  // ghi vao thanh ghi gia tri Timestamp
+ 107              		.loc 1 65 0
+ 108 0014 4FF46161 		mov	r1, #3600
+ 109 0018 01FB0501 		mla	r1, r1, r5, r0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s 			page 4
+
+
+ 110              	.LVL5:
+ 111 001c 2046     		mov	r0, r4
+ 112 001e FFF7FEFF 		bl	RTC_WriteTimeCounter
+ 113              	.LVL6:
+  66:Src/clock_rtc.c **** 	__HAL_RTC_SECOND_ENABLE_IT(&hrtc, RTC_IT_SEC);
+ 114              		.loc 1 66 0
+ 115 0022 2268     		ldr	r2, [r4]
+ 116 0024 1368     		ldr	r3, [r2]
+ 117 0026 43F00103 		orr	r3, r3, #1
+ 118 002a 1360     		str	r3, [r2]
+  67:Src/clock_rtc.c **** }
+ 119              		.loc 1 67 0
+ 120 002c 38BD     		pop	{r3, r4, r5, pc}
+ 121              	.L6:
+ 122 002e 00BF     		.align	2
+ 123              	.L5:
+ 124 0030 00000000 		.word	hrtc
+ 125              		.cfi_endproc
+ 126              	.LFE68:
+ 128              		.section	.text.RTC_Init,"ax",%progbits
+ 129              		.align	1
+ 130              		.global	RTC_Init
+ 131              		.syntax unified
+ 132              		.thumb
+ 133              		.thumb_func
+ 134              		.fpu softvfp
+ 136              	RTC_Init:
+ 137              	.LFB66:
+   9:Src/clock_rtc.c ****     timeRTC = HAL_GetTick();
+ 138              		.loc 1 9 0
+ 139              		.cfi_startproc
+ 140              		@ args = 0, pretend = 0, frame = 0
+ 141              		@ frame_needed = 0, uses_anonymous_args = 0
+ 142 0000 08B5     		push	{r3, lr}
+ 143              	.LCFI4:
+ 144              		.cfi_def_cfa_offset 8
+ 145              		.cfi_offset 3, -8
+ 146              		.cfi_offset 14, -4
+  10:Src/clock_rtc.c ****     hrtc.Instance = RTC;
+ 147              		.loc 1 10 0
+ 148 0002 FFF7FEFF 		bl	HAL_GetTick
+ 149              	.LVL7:
+ 150 0006 1D4B     		ldr	r3, .L14
+ 151 0008 1860     		str	r0, [r3]
+  11:Src/clock_rtc.c ****     hrtc.Init.AsynchPrediv = RTC_AUTO_1_SECOND;
+ 152              		.loc 1 11 0
+ 153 000a 1D48     		ldr	r0, .L14+4
+ 154 000c 1D4B     		ldr	r3, .L14+8
+ 155 000e 0360     		str	r3, [r0]
+  12:Src/clock_rtc.c ****     hrtc.Init.OutPut = RTC_OUTPUTSOURCE_NONE;
+ 156              		.loc 1 12 0
+ 157 0010 4FF0FF33 		mov	r3, #-1
+ 158 0014 4360     		str	r3, [r0, #4]
+  13:Src/clock_rtc.c **** 	if (HAL_RTC_Init(&hrtc) != HAL_OK)
+ 159              		.loc 1 13 0
+ 160 0016 0023     		movs	r3, #0
+ 161 0018 8360     		str	r3, [r0, #8]
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s 			page 5
+
+
+  14:Src/clock_rtc.c ****     {
+ 162              		.loc 1 14 0
+ 163 001a FFF7FEFF 		bl	HAL_RTC_Init
+ 164              	.LVL8:
+ 165 001e 88B9     		cbnz	r0, .L12
+ 166              	.L8:
+  18:Src/clock_rtc.c ****     {
+ 167              		.loc 1 18 0
+ 168 0020 0121     		movs	r1, #1
+ 169 0022 1748     		ldr	r0, .L14+4
+ 170 0024 FFF7FEFF 		bl	HAL_RTCEx_BKUPRead
+ 171              	.LVL9:
+ 172 0028 4AF2A553 		movw	r3, #42405
+ 173 002c 9842     		cmp	r0, r3
+ 174 002e 0CD1     		bne	.L13
+  31:Src/clock_rtc.c ****         {
+ 175              		.loc 1 31 0
+ 176 0030 154B     		ldr	r3, .L14+12
+ 177 0032 5A6A     		ldr	r2, [r3, #36]
+  34:Src/clock_rtc.c ****         {
+ 178              		.loc 1 34 0
+ 179 0034 5B6A     		ldr	r3, [r3, #36]
+  38:Src/clock_rtc.c ****     }
+ 180              		.loc 1 38 0
+ 181 0036 154B     		ldr	r3, .L14+16
+ 182 0038 0122     		movs	r2, #1
+ 183 003a 1A60     		str	r2, [r3]
+ 184              	.L10:
+  40:Src/clock_rtc.c **** }
+ 185              		.loc 1 40 0
+ 186 003c 1048     		ldr	r0, .L14+4
+ 187 003e FFF7FEFF 		bl	HAL_RTCEx_SetSecond_IT
+ 188              	.LVL10:
+  41:Src/clock_rtc.c **** 
+ 189              		.loc 1 41 0
+ 190 0042 08BD     		pop	{r3, pc}
+ 191              	.L12:
+  16:Src/clock_rtc.c ****     }
+ 192              		.loc 1 16 0
+ 193 0044 FFF7FEFF 		bl	Error_Handler
+ 194              	.LVL11:
+ 195 0048 EAE7     		b	.L8
+ 196              	.L13:
+  20:Src/clock_rtc.c ****         localTime.month = 10;
+ 197              		.loc 1 20 0
+ 198 004a 1148     		ldr	r0, .L14+20
+ 199 004c 6FF01C03 		mvn	r3, #28
+ 200 0050 0370     		strb	r3, [r0]
+ 201 0052 0723     		movs	r3, #7
+ 202 0054 4370     		strb	r3, [r0, #1]
+  21:Src/clock_rtc.c ****         localTime.mday = 17;
+ 203              		.loc 1 21 0
+ 204 0056 0A23     		movs	r3, #10
+ 205 0058 8370     		strb	r3, [r0, #2]
+  22:Src/clock_rtc.c ****         localTime.hour = 14 - 7;
+ 206              		.loc 1 22 0
+ 207 005a 1123     		movs	r3, #17
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s 			page 6
+
+
+ 208 005c C370     		strb	r3, [r0, #3]
+  23:Src/clock_rtc.c ****         localTime.min = 35;
+ 209              		.loc 1 23 0
+ 210 005e 0721     		movs	r1, #7
+ 211 0060 4171     		strb	r1, [r0, #5]
+  24:Src/clock_rtc.c ****         localTime.sec = 20;
+ 212              		.loc 1 24 0
+ 213 0062 2323     		movs	r3, #35
+ 214 0064 8371     		strb	r3, [r0, #6]
+  25:Src/clock_rtc.c ****         RTC_Sync(&localTime, +7);
+ 215              		.loc 1 25 0
+ 216 0066 1423     		movs	r3, #20
+ 217 0068 C371     		strb	r3, [r0, #7]
+  26:Src/clock_rtc.c ****         HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR1, RTC_HOLDER);   
+ 218              		.loc 1 26 0
+ 219 006a FFF7FEFF 		bl	RTC_Sync
+ 220              	.LVL12:
+  27:Src/clock_rtc.c ****     }
+ 221              		.loc 1 27 0
+ 222 006e 4AF2A552 		movw	r2, #42405
+ 223 0072 0121     		movs	r1, #1
+ 224 0074 0248     		ldr	r0, .L14+4
+ 225 0076 FFF7FEFF 		bl	HAL_RTCEx_BKUPWrite
+ 226              	.LVL13:
+ 227 007a DFE7     		b	.L10
+ 228              	.L15:
+ 229              		.align	2
+ 230              	.L14:
+ 231 007c 00000000 		.word	timeRTC
+ 232 0080 00000000 		.word	hrtc
+ 233 0084 00280040 		.word	1073752064
+ 234 0088 00100240 		.word	1073876992
+ 235 008c E0044242 		.word	1111622880
+ 236 0090 00000000 		.word	localTime
+ 237              		.cfi_endproc
+ 238              	.LFE66:
+ 240              		.section	.text.RTC_CalcTime,"ax",%progbits
+ 241              		.align	1
+ 242              		.global	RTC_CalcTime
+ 243              		.syntax unified
+ 244              		.thumb
+ 245              		.thumb_func
+ 246              		.fpu softvfp
+ 248              	RTC_CalcTime:
+ 249              	.LFB69:
+  68:Src/clock_rtc.c **** 
+  69:Src/clock_rtc.c **** void RTC_CalcTime(DATE_TIME *dt, uint32_t unixTime)
+  70:Src/clock_rtc.c **** {
+ 250              		.loc 1 70 0
+ 251              		.cfi_startproc
+ 252              		@ args = 0, pretend = 0, frame = 8
+ 253              		@ frame_needed = 0, uses_anonymous_args = 0
+ 254              	.LVL14:
+ 255 0000 10B5     		push	{r4, lr}
+ 256              	.LCFI5:
+ 257              		.cfi_def_cfa_offset 8
+ 258              		.cfi_offset 4, -8
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s 			page 7
+
+
+ 259              		.cfi_offset 14, -4
+ 260 0002 82B0     		sub	sp, sp, #8
+ 261              	.LCFI6:
+ 262              		.cfi_def_cfa_offset 16
+ 263 0004 0446     		mov	r4, r0
+  71:Src/clock_rtc.c **** 	struct tm *gt;
+  72:Src/clock_rtc.c **** 	time_t epoch;
+  73:Src/clock_rtc.c **** 	epoch = unixTime;
+ 264              		.loc 1 73 0
+ 265 0006 0091     		str	r1, [sp]
+ 266 0008 0023     		movs	r3, #0
+ 267 000a 0193     		str	r3, [sp, #4]
+  74:Src/clock_rtc.c **** 	gt = localtime(&epoch);			
+ 268              		.loc 1 74 0
+ 269 000c 6846     		mov	r0, sp
+ 270              	.LVL15:
+ 271 000e FFF7FEFF 		bl	localtime
+ 272              	.LVL16:
+  75:Src/clock_rtc.c **** 	dt->sec = gt->tm_sec;
+ 273              		.loc 1 75 0
+ 274 0012 0368     		ldr	r3, [r0]
+ 275 0014 E371     		strb	r3, [r4, #7]
+  76:Src/clock_rtc.c **** 	dt->min = gt->tm_min;
+ 276              		.loc 1 76 0
+ 277 0016 4368     		ldr	r3, [r0, #4]
+ 278 0018 A371     		strb	r3, [r4, #6]
+  77:Src/clock_rtc.c **** 	dt->hour = gt->tm_hour;
+ 279              		.loc 1 77 0
+ 280 001a 8368     		ldr	r3, [r0, #8]
+ 281 001c 6371     		strb	r3, [r4, #5]
+  78:Src/clock_rtc.c **** 	dt->mday = gt->tm_mday;
+ 282              		.loc 1 78 0
+ 283 001e C368     		ldr	r3, [r0, #12]
+ 284 0020 E370     		strb	r3, [r4, #3]
+  79:Src/clock_rtc.c **** 	dt->wday = gt->tm_wday + 1;				// tm_wday 0 - 6 (0 = sunday)
+ 285              		.loc 1 79 0
+ 286 0022 8369     		ldr	r3, [r0, #24]
+ 287 0024 0133     		adds	r3, r3, #1
+ 288 0026 2371     		strb	r3, [r4, #4]
+  80:Src/clock_rtc.c **** 	dt->month = gt->tm_mon + 1;				// tm_mon 0 - 11 (0 = Jan)
+ 289              		.loc 1 80 0
+ 290 0028 0369     		ldr	r3, [r0, #16]
+ 291 002a 0133     		adds	r3, r3, #1
+ 292 002c A370     		strb	r3, [r4, #2]
+  81:Src/clock_rtc.c **** 	dt->year = gt->tm_year + 1900;		    // tm_year = current year - 1900
+ 293              		.loc 1 81 0
+ 294 002e 4369     		ldr	r3, [r0, #20]
+ 295 0030 03F26C73 		addw	r3, r3, #1900
+ 296 0034 2380     		strh	r3, [r4]	@ unaligned
+  82:Src/clock_rtc.c **** }
+ 297              		.loc 1 82 0
+ 298 0036 02B0     		add	sp, sp, #8
+ 299              	.LCFI7:
+ 300              		.cfi_def_cfa_offset 8
+ 301              		@ sp needed
+ 302 0038 10BD     		pop	{r4, pc}
+ 303              		.cfi_endproc
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s 			page 8
+
+
+ 304              	.LFE69:
+ 306              		.section	.text.HAL_RTCEx_RTCEventCallback,"ax",%progbits
+ 307              		.align	1
+ 308              		.global	HAL_RTCEx_RTCEventCallback
+ 309              		.syntax unified
+ 310              		.thumb
+ 311              		.thumb_func
+ 312              		.fpu softvfp
+ 314              	HAL_RTCEx_RTCEventCallback:
+ 315              	.LFB70:
+  83:Src/clock_rtc.c **** 
+  84:Src/clock_rtc.c **** void HAL_RTCEx_RTCEventCallback(RTC_HandleTypeDef *hrtc)
+  85:Src/clock_rtc.c **** {
+ 316              		.loc 1 85 0
+ 317              		.cfi_startproc
+ 318              		@ args = 0, pretend = 0, frame = 8
+ 319              		@ frame_needed = 0, uses_anonymous_args = 0
+ 320              	.LVL17:
+ 321 0000 00B5     		push	{lr}
+ 322              	.LCFI8:
+ 323              		.cfi_def_cfa_offset 4
+ 324              		.cfi_offset 14, -4
+ 325 0002 83B0     		sub	sp, sp, #12
+ 326              	.LCFI9:
+ 327              		.cfi_def_cfa_offset 16
+  86:Src/clock_rtc.c ****     volatile uint32_t number;
+  87:Src/clock_rtc.c ****     number = RTC_ReadTimeCounter(hrtc);
+ 328              		.loc 1 87 0
+ 329 0004 FFF7FEFF 		bl	RTC_ReadTimeCounter
+ 330              	.LVL18:
+ 331 0008 0190     		str	r0, [sp, #4]
+  88:Src/clock_rtc.c ****     RTC_CalcTime(&localTime, number); 
+ 332              		.loc 1 88 0
+ 333 000a 0199     		ldr	r1, [sp, #4]
+ 334 000c 0248     		ldr	r0, .L20
+ 335 000e FFF7FEFF 		bl	RTC_CalcTime
+ 336              	.LVL19:
+  89:Src/clock_rtc.c **** }
+ 337              		.loc 1 89 0
+ 338 0012 03B0     		add	sp, sp, #12
+ 339              	.LCFI10:
+ 340              		.cfi_def_cfa_offset 4
+ 341              		@ sp needed
+ 342 0014 5DF804FB 		ldr	pc, [sp], #4
+ 343              	.L21:
+ 344              		.align	2
+ 345              	.L20:
+ 346 0018 00000000 		.word	localTime
+ 347              		.cfi_endproc
+ 348              	.LFE70:
+ 350              		.section	.text.RTC_Now,"ax",%progbits
+ 351              		.align	1
+ 352              		.global	RTC_Now
+ 353              		.syntax unified
+ 354              		.thumb
+ 355              		.thumb_func
+ 356              		.fpu softvfp
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s 			page 9
+
+
+ 358              	RTC_Now:
+ 359              	.LFB71:
+  90:Src/clock_rtc.c **** 
+  91:Src/clock_rtc.c **** void RTC_Now(DATE_TIME *dt)
+  92:Src/clock_rtc.c **** {
+ 360              		.loc 1 92 0
+ 361              		.cfi_startproc
+ 362              		@ args = 0, pretend = 0, frame = 0
+ 363              		@ frame_needed = 0, uses_anonymous_args = 0
+ 364              		@ link register save eliminated.
+ 365              	.LVL20:
+  93:Src/clock_rtc.c **** 	__HAL_RTC_SECOND_DISABLE_IT(&hrtc, RTC_IT_SEC);
+ 366              		.loc 1 93 0
+ 367 0000 084A     		ldr	r2, .L23
+ 368 0002 1168     		ldr	r1, [r2]
+ 369 0004 0B68     		ldr	r3, [r1]
+ 370 0006 23F00103 		bic	r3, r3, #1
+ 371 000a 0B60     		str	r3, [r1]
+  94:Src/clock_rtc.c **** 	*dt = localTime;
+ 372              		.loc 1 94 0
+ 373 000c 064B     		ldr	r3, .L23+4
+ 374 000e 1968     		ldr	r1, [r3]	@ unaligned
+ 375 0010 5B68     		ldr	r3, [r3, #4]	@ unaligned
+ 376 0012 0160     		str	r1, [r0]	@ unaligned
+ 377 0014 4360     		str	r3, [r0, #4]	@ unaligned
+  95:Src/clock_rtc.c **** 	__HAL_RTC_SECOND_ENABLE_IT(&hrtc, RTC_IT_SEC);
+ 378              		.loc 1 95 0
+ 379 0016 1268     		ldr	r2, [r2]
+ 380 0018 1368     		ldr	r3, [r2]
+ 381 001a 43F00103 		orr	r3, r3, #1
+ 382 001e 1360     		str	r3, [r2]
+  96:Src/clock_rtc.c **** }
+ 383              		.loc 1 96 0
+ 384 0020 7047     		bx	lr
+ 385              	.L24:
+ 386 0022 00BF     		.align	2
+ 387              	.L23:
+ 388 0024 00000000 		.word	hrtc
+ 389 0028 00000000 		.word	localTime
+ 390              		.cfi_endproc
+ 391              	.LFE71:
+ 393              		.section	.text.RTC_Show_Test,"ax",%progbits
+ 394              		.align	1
+ 395              		.global	RTC_Show_Test
+ 396              		.syntax unified
+ 397              		.thumb
+ 398              		.thumb_func
+ 399              		.fpu softvfp
+ 401              	RTC_Show_Test:
+ 402              	.LFB72:
+  97:Src/clock_rtc.c **** 
+  98:Src/clock_rtc.c **** 
+  99:Src/clock_rtc.c **** void RTC_Show_Test(void)
+ 100:Src/clock_rtc.c **** {
+ 403              		.loc 1 100 0
+ 404              		.cfi_startproc
+ 405              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s 			page 10
+
+
+ 406              		@ frame_needed = 0, uses_anonymous_args = 0
+ 407 0000 10B5     		push	{r4, lr}
+ 408              	.LCFI11:
+ 409              		.cfi_def_cfa_offset 8
+ 410              		.cfi_offset 4, -8
+ 411              		.cfi_offset 14, -4
+ 101:Src/clock_rtc.c ****     if(HAL_GetTick() - timeRTC > 1000)
+ 412              		.loc 1 101 0
+ 413 0002 FFF7FEFF 		bl	HAL_GetTick
+ 414              	.LVL21:
+ 415 0006 0F4B     		ldr	r3, .L29
+ 416 0008 1B68     		ldr	r3, [r3]
+ 417 000a C01A     		subs	r0, r0, r3
+ 418 000c B0F57A7F 		cmp	r0, #1000
+ 419 0010 00D8     		bhi	.L28
+ 420              	.L25:
+ 102:Src/clock_rtc.c ****     {
+ 103:Src/clock_rtc.c ****         printf("Date: %02d: %02d: %04d \n", localTime.mday, localTime.month, localTime.year);
+ 104:Src/clock_rtc.c ****         printf("Time: %02d: %02d: %02d \n", localTime.hour, localTime.min, localTime.sec);
+ 105:Src/clock_rtc.c ****         timeRTC = HAL_GetTick();
+ 106:Src/clock_rtc.c ****     }
+ 107:Src/clock_rtc.c **** }
+ 421              		.loc 1 107 0
+ 422 0012 10BD     		pop	{r4, pc}
+ 423              	.L28:
+ 103:Src/clock_rtc.c ****         printf("Time: %02d: %02d: %02d \n", localTime.hour, localTime.min, localTime.sec);
+ 424              		.loc 1 103 0
+ 425 0014 0C4C     		ldr	r4, .L29+4
+ 426 0016 B4F90030 		ldrsh	r3, [r4]	@ unaligned
+ 427 001a 94F90220 		ldrsb	r2, [r4, #2]
+ 428 001e 94F90310 		ldrsb	r1, [r4, #3]
+ 429 0022 0A48     		ldr	r0, .L29+8
+ 430 0024 FFF7FEFF 		bl	printf
+ 431              	.LVL22:
+ 104:Src/clock_rtc.c ****         timeRTC = HAL_GetTick();
+ 432              		.loc 1 104 0
+ 433 0028 94F90730 		ldrsb	r3, [r4, #7]
+ 434 002c 94F90620 		ldrsb	r2, [r4, #6]
+ 435 0030 94F90510 		ldrsb	r1, [r4, #5]
+ 436 0034 0648     		ldr	r0, .L29+12
+ 437 0036 FFF7FEFF 		bl	printf
+ 438              	.LVL23:
+ 105:Src/clock_rtc.c ****     }
+ 439              		.loc 1 105 0
+ 440 003a FFF7FEFF 		bl	HAL_GetTick
+ 441              	.LVL24:
+ 442 003e 014B     		ldr	r3, .L29
+ 443 0040 1860     		str	r0, [r3]
+ 444              		.loc 1 107 0
+ 445 0042 E6E7     		b	.L25
+ 446              	.L30:
+ 447              		.align	2
+ 448              	.L29:
+ 449 0044 00000000 		.word	timeRTC
+ 450 0048 00000000 		.word	localTime
+ 451 004c 00000000 		.word	.LC0
+ 452 0050 1C000000 		.word	.LC1
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s 			page 11
+
+
+ 453              		.cfi_endproc
+ 454              	.LFE72:
+ 456              		.section	.text.TIME_GetSec,"ax",%progbits
+ 457              		.align	1
+ 458              		.global	TIME_GetSec
+ 459              		.syntax unified
+ 460              		.thumb
+ 461              		.thumb_func
+ 462              		.fpu softvfp
+ 464              	TIME_GetSec:
+ 465              	.LFB74:
+ 108:Src/clock_rtc.c **** 
+ 109:Src/clock_rtc.c **** // add number of secs to a DATE_TIME struct
+ 110:Src/clock_rtc.c **** int8_t TIME_AddSec(DATE_TIME *t, int32_t sec)
+ 111:Src/clock_rtc.c **** {
+ 112:Src/clock_rtc.c **** 	if(t == NULL) return -1;
+ 113:Src/clock_rtc.c **** 	if(sec == 0) return 0;	
+ 114:Src/clock_rtc.c **** 	TIME_FromSec(t, TIME_GetSec(t) + sec);	
+ 115:Src/clock_rtc.c **** 	return 0;
+ 116:Src/clock_rtc.c **** }
+ 117:Src/clock_rtc.c **** 
+ 118:Src/clock_rtc.c **** // find the number of sec since 00:00 hours, Jan 1, 1970 UTC
+ 119:Src/clock_rtc.c **** int32_t TIME_GetSec(DATE_TIME *t)
+ 120:Src/clock_rtc.c **** {
+ 466              		.loc 1 120 0
+ 467              		.cfi_startproc
+ 468              		@ args = 0, pretend = 0, frame = 40
+ 469              		@ frame_needed = 0, uses_anonymous_args = 0
+ 470              	.LVL25:
+ 121:Src/clock_rtc.c **** 	struct tm tx;
+ 122:Src/clock_rtc.c **** 	if(t == NULL) return -1;	
+ 471              		.loc 1 122 0
+ 472 0000 10B3     		cbz	r0, .L33
+ 120:Src/clock_rtc.c **** 	struct tm tx;
+ 473              		.loc 1 120 0
+ 474 0002 00B5     		push	{lr}
+ 475              	.LCFI12:
+ 476              		.cfi_def_cfa_offset 4
+ 477              		.cfi_offset 14, -4
+ 478 0004 8BB0     		sub	sp, sp, #44
+ 479              	.LCFI13:
+ 480              		.cfi_def_cfa_offset 48
+ 123:Src/clock_rtc.c **** 	tx.tm_sec = t->sec;
+ 481              		.loc 1 123 0
+ 482 0006 90F90730 		ldrsb	r3, [r0, #7]
+ 483 000a 0193     		str	r3, [sp, #4]
+ 124:Src/clock_rtc.c **** 	tx.tm_min = t->min;
+ 484              		.loc 1 124 0
+ 485 000c 90F90630 		ldrsb	r3, [r0, #6]
+ 486 0010 0293     		str	r3, [sp, #8]
+ 125:Src/clock_rtc.c **** 	tx.tm_hour = t->hour;
+ 487              		.loc 1 125 0
+ 488 0012 90F90530 		ldrsb	r3, [r0, #5]
+ 489 0016 0393     		str	r3, [sp, #12]
+ 126:Src/clock_rtc.c **** 	tx.tm_mday = t->mday;
+ 490              		.loc 1 126 0
+ 491 0018 90F90330 		ldrsb	r3, [r0, #3]
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s 			page 12
+
+
+ 492 001c 0493     		str	r3, [sp, #16]
+ 127:Src/clock_rtc.c **** 	tx.tm_mday = t->mday;
+ 128:Src/clock_rtc.c **** 	tx.tm_wday = t->wday - 1;
+ 493              		.loc 1 128 0
+ 494 001e 90F90430 		ldrsb	r3, [r0, #4]
+ 495 0022 013B     		subs	r3, r3, #1
+ 496 0024 0793     		str	r3, [sp, #28]
+ 129:Src/clock_rtc.c **** 	tx.tm_mon = t->month - 1;
+ 497              		.loc 1 129 0
+ 498 0026 90F90230 		ldrsb	r3, [r0, #2]
+ 499 002a 013B     		subs	r3, r3, #1
+ 500 002c 0593     		str	r3, [sp, #20]
+ 130:Src/clock_rtc.c **** 	tx.tm_year = t->year - 1900;
+ 501              		.loc 1 130 0
+ 502 002e B0F90030 		ldrsh	r3, [r0]	@ unaligned
+ 503 0032 A3F26C73 		subw	r3, r3, #1900
+ 504 0036 0693     		str	r3, [sp, #24]
+ 131:Src/clock_rtc.c **** 	tx.tm_isdst = 0;
+ 505              		.loc 1 131 0
+ 506 0038 0023     		movs	r3, #0
+ 507 003a 0993     		str	r3, [sp, #36]
+ 132:Src/clock_rtc.c **** 	return mktime(&tx);
+ 508              		.loc 1 132 0
+ 509 003c 01A8     		add	r0, sp, #4
+ 510              	.LVL26:
+ 511 003e FFF7FEFF 		bl	mktime
+ 512              	.LVL27:
+ 133:Src/clock_rtc.c **** }
+ 513              		.loc 1 133 0
+ 514 0042 0BB0     		add	sp, sp, #44
+ 515              	.LCFI14:
+ 516              		.cfi_def_cfa_offset 4
+ 517              		@ sp needed
+ 518 0044 5DF804FB 		ldr	pc, [sp], #4
+ 519              	.LVL28:
+ 520              	.L33:
+ 521              	.LCFI15:
+ 522              		.cfi_def_cfa_offset 0
+ 523              		.cfi_restore 14
+ 122:Src/clock_rtc.c **** 	tx.tm_sec = t->sec;
+ 524              		.loc 1 122 0
+ 525 0048 4FF0FF30 		mov	r0, #-1
+ 526              	.LVL29:
+ 527              		.loc 1 133 0
+ 528 004c 7047     		bx	lr
+ 529              		.cfi_endproc
+ 530              	.LFE74:
+ 532              		.section	.text.TIME_FromSec,"ax",%progbits
+ 533              		.align	1
+ 534              		.global	TIME_FromSec
+ 535              		.syntax unified
+ 536              		.thumb
+ 537              		.thumb_func
+ 538              		.fpu softvfp
+ 540              	TIME_FromSec:
+ 541              	.LFB75:
+ 134:Src/clock_rtc.c **** 
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s 			page 13
+
+
+ 135:Src/clock_rtc.c **** int8_t TIME_FromSec(DATE_TIME *t, int32_t sec)
+ 136:Src/clock_rtc.c **** {
+ 542              		.loc 1 136 0
+ 543              		.cfi_startproc
+ 544              		@ args = 0, pretend = 0, frame = 8
+ 545              		@ frame_needed = 0, uses_anonymous_args = 0
+ 546              	.LVL30:
+ 547 0000 10B5     		push	{r4, lr}
+ 548              	.LCFI16:
+ 549              		.cfi_def_cfa_offset 8
+ 550              		.cfi_offset 4, -8
+ 551              		.cfi_offset 14, -4
+ 552 0002 82B0     		sub	sp, sp, #8
+ 553              	.LCFI17:
+ 554              		.cfi_def_cfa_offset 16
+ 555 0004 0191     		str	r1, [sp, #4]
+ 137:Src/clock_rtc.c **** 	struct tm *gt;
+ 138:Src/clock_rtc.c **** 	if(t == NULL) return -1;
+ 556              		.loc 1 138 0
+ 557 0006 C0B1     		cbz	r0, .L40
+ 558 0008 0446     		mov	r4, r0
+ 139:Src/clock_rtc.c **** 	gt = localtime((const time_t*)&sec);
+ 559              		.loc 1 139 0
+ 560 000a 01A8     		add	r0, sp, #4
+ 561              	.LVL31:
+ 562 000c FFF7FEFF 		bl	localtime
+ 563              	.LVL32:
+ 140:Src/clock_rtc.c **** 	t->sec = gt->tm_sec;
+ 564              		.loc 1 140 0
+ 565 0010 0368     		ldr	r3, [r0]
+ 566 0012 E371     		strb	r3, [r4, #7]
+ 141:Src/clock_rtc.c **** 	t->min = gt->tm_min;
+ 567              		.loc 1 141 0
+ 568 0014 4368     		ldr	r3, [r0, #4]
+ 569 0016 A371     		strb	r3, [r4, #6]
+ 142:Src/clock_rtc.c **** 	t->hour = gt->tm_hour;
+ 570              		.loc 1 142 0
+ 571 0018 8368     		ldr	r3, [r0, #8]
+ 572 001a 6371     		strb	r3, [r4, #5]
+ 143:Src/clock_rtc.c **** 	t->mday = gt->tm_mday;
+ 573              		.loc 1 143 0
+ 574 001c C368     		ldr	r3, [r0, #12]
+ 575 001e E370     		strb	r3, [r4, #3]
+ 144:Src/clock_rtc.c **** 	t->wday = gt->tm_wday + 1;			// tm_wday 0 - 6 (0 = sunday)
+ 576              		.loc 1 144 0
+ 577 0020 8369     		ldr	r3, [r0, #24]
+ 578 0022 0133     		adds	r3, r3, #1
+ 579 0024 2371     		strb	r3, [r4, #4]
+ 145:Src/clock_rtc.c **** 	t->month = gt->tm_mon + 1;			// tm_mon 0 - 11 (0 = Jan)
+ 580              		.loc 1 145 0
+ 581 0026 0369     		ldr	r3, [r0, #16]
+ 582 0028 0133     		adds	r3, r3, #1
+ 583 002a A370     		strb	r3, [r4, #2]
+ 146:Src/clock_rtc.c **** 	t->year = gt->tm_year + 1900;		// tm_year = current year - 1900
+ 584              		.loc 1 146 0
+ 585 002c 4369     		ldr	r3, [r0, #20]
+ 586 002e 03F26C73 		addw	r3, r3, #1900
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s 			page 14
+
+
+ 587 0032 2380     		strh	r3, [r4]	@ unaligned
+ 147:Src/clock_rtc.c **** 	return 0;
+ 588              		.loc 1 147 0
+ 589 0034 0020     		movs	r0, #0
+ 590              	.LVL33:
+ 591              	.L39:
+ 148:Src/clock_rtc.c **** }...
+ 592              		.loc 1 148 0
+ 593 0036 02B0     		add	sp, sp, #8
+ 594              	.LCFI18:
+ 595              		.cfi_remember_state
+ 596              		.cfi_def_cfa_offset 8
+ 597              		@ sp needed
+ 598 0038 10BD     		pop	{r4, pc}
+ 599              	.LVL34:
+ 600              	.L40:
+ 601              	.LCFI19:
+ 602              		.cfi_restore_state
+ 138:Src/clock_rtc.c **** 	if(t == NULL) return -1;
+ 603              		.loc 1 138 0
+ 604 003a 4FF0FF30 		mov	r0, #-1
+ 605              	.LVL35:
+ 606 003e FAE7     		b	.L39
+ 607              		.cfi_endproc
+ 608              	.LFE75:
+ 610              		.section	.text.TIME_AddSec,"ax",%progbits
+ 611              		.align	1
+ 612              		.global	TIME_AddSec
+ 613              		.syntax unified
+ 614              		.thumb
+ 615              		.thumb_func
+ 616              		.fpu softvfp
+ 618              	TIME_AddSec:
+ 619              	.LFB73:
+ 111:Src/clock_rtc.c **** {
+ 620              		.loc 1 111 0
+ 621              		.cfi_startproc
+ 622              		@ args = 0, pretend = 0, frame = 0
+ 623              		@ frame_needed = 0, uses_anonymous_args = 0
+ 624              	.LVL36:
+ 112:Src/clock_rtc.c **** 	if(t == NULL) return -1;
+ 625              		.loc 1 112 0
+ 626 0000 68B1     		cbz	r0, .L44
+ 111:Src/clock_rtc.c **** {
+ 627              		.loc 1 111 0
+ 628 0002 38B5     		push	{r3, r4, r5, lr}
+ 629              	.LCFI20:
+ 630              		.cfi_def_cfa_offset 16
+ 631              		.cfi_offset 3, -16
+ 632              		.cfi_offset 4, -12
+ 633              		.cfi_offset 5, -8
+ 634              		.cfi_offset 14, -4
+ 635 0004 0546     		mov	r5, r0
+ 113:Src/clock_rtc.c **** 	if(sec == 0) return 0;	
+ 636              		.loc 1 113 0
+ 637 0006 09B9     		cbnz	r1, .L50
+ 638 0008 0020     		movs	r0, #0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s 			page 15
+
+
+ 639              	.LVL37:
+ 640              	.L43:
+ 116:Src/clock_rtc.c **** }
+ 641              		.loc 1 116 0
+ 642 000a 38BD     		pop	{r3, r4, r5, pc}
+ 643              	.LVL38:
+ 644              	.L50:
+ 645 000c 0C46     		mov	r4, r1
+ 114:Src/clock_rtc.c **** 	TIME_FromSec(t, TIME_GetSec(t) + sec);	
+ 646              		.loc 1 114 0
+ 647 000e FFF7FEFF 		bl	TIME_GetSec
+ 648              	.LVL39:
+ 649 0012 0119     		adds	r1, r0, r4
+ 650 0014 2846     		mov	r0, r5
+ 651 0016 FFF7FEFF 		bl	TIME_FromSec
+ 652              	.LVL40:
+ 115:Src/clock_rtc.c **** 	return 0;
+ 653              		.loc 1 115 0
+ 654 001a 0020     		movs	r0, #0
+ 655 001c F5E7     		b	.L43
+ 656              	.LVL41:
+ 657              	.L44:
+ 658              	.LCFI21:
+ 659              		.cfi_def_cfa_offset 0
+ 660              		.cfi_restore 3
+ 661              		.cfi_restore 4
+ 662              		.cfi_restore 5
+ 663              		.cfi_restore 14
+ 112:Src/clock_rtc.c **** 	if(t == NULL) return -1;
+ 664              		.loc 1 112 0
+ 665 001e 4FF0FF30 		mov	r0, #-1
+ 666              	.LVL42:
+ 116:Src/clock_rtc.c **** }
+ 667              		.loc 1 116 0
+ 668 0022 7047     		bx	lr
+ 669              		.cfi_endproc
+ 670              	.LFE73:
+ 672              		.comm	timeRTC,4,4
+ 673              		.comm	hrtc,20,4
+ 674              		.comm	localTime,8,4
+ 675              		.section	.rodata.RTC_Show_Test.str1.4,"aMS",%progbits,1
+ 676              		.align	2
+ 677              	.LC0:
+ 678 0000 44617465 		.ascii	"Date: %02d: %02d: %04d \012\000"
+ 678      3A202530 
+ 678      32643A20 
+ 678      25303264 
+ 678      3A202530 
+ 679 0019 000000   		.space	3
+ 680              	.LC1:
+ 681 001c 54696D65 		.ascii	"Time: %02d: %02d: %02d \012\000"
+ 681      3A202530 
+ 681      32643A20 
+ 681      25303264 
+ 681      3A202530 
+ 682              		.text
+ 683              	.Letext0:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s 			page 16
+
+
+ 684              		.file 2 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_defau
+ 685              		.file 3 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_stdint.h"
+ 686              		.file 4 "Drivers/CMSIS/Include/core_cm3.h"
+ 687              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h"
+ 688              		.file 6 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
+ 689              		.file 7 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h"
+ 690              		.file 8 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/lock.h"
+ 691              		.file 9 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_types.h"
+ 692              		.file 10 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include
+ 693              		.file 11 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/reent.h"
+ 694              		.file 12 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_timeval.
+ 695              		.file 13 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 696              		.file 14 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc.h"
+ 697              		.file 15 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 698              		.file 16 "u8g2/csrc/u8x8.h"
+ 699              		.file 17 "u8g2/csrc/u8g2.h"
+ 700              		.file 18 "Inc/main.h"
+ 701              		.file 19 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/time.h"
+ 702              		.file 20 "Inc/clock_rtc.h"
+ 703              		.file 21 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/stdio.h"
+ 704              		.file 22 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc_ex.h"
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s 			page 17
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 clock_rtc.c
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:16     .text.RTC_GetUnixTimestamp:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:23     .text.RTC_GetUnixTimestamp:0000000000000000 RTC_GetUnixTimestamp
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:76     .text.RTC_Sync:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:83     .text.RTC_Sync:0000000000000000 RTC_Sync
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:124    .text.RTC_Sync:0000000000000030 $d
+                            *COM*:0000000000000014 hrtc
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:129    .text.RTC_Init:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:136    .text.RTC_Init:0000000000000000 RTC_Init
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:231    .text.RTC_Init:000000000000007c $d
+                            *COM*:0000000000000004 timeRTC
+                            *COM*:0000000000000008 localTime
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:241    .text.RTC_CalcTime:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:248    .text.RTC_CalcTime:0000000000000000 RTC_CalcTime
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:307    .text.HAL_RTCEx_RTCEventCallback:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:314    .text.HAL_RTCEx_RTCEventCallback:0000000000000000 HAL_RTCEx_RTCEventCallback
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:346    .text.HAL_RTCEx_RTCEventCallback:0000000000000018 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:351    .text.RTC_Now:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:358    .text.RTC_Now:0000000000000000 RTC_Now
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:388    .text.RTC_Now:0000000000000024 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:394    .text.RTC_Show_Test:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:401    .text.RTC_Show_Test:0000000000000000 RTC_Show_Test
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:449    .text.RTC_Show_Test:0000000000000044 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:457    .text.TIME_GetSec:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:464    .text.TIME_GetSec:0000000000000000 TIME_GetSec
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:533    .text.TIME_FromSec:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:540    .text.TIME_FromSec:0000000000000000 TIME_FromSec
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:611    .text.TIME_AddSec:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:618    .text.TIME_AddSec:0000000000000000 TIME_AddSec
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccF9SjpE.s:676    .rodata.RTC_Show_Test.str1.4:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+mktime
+RTC_WriteTimeCounter
+HAL_GetTick
+HAL_RTC_Init
+HAL_RTCEx_BKUPRead
+HAL_RTCEx_SetSecond_IT
+Error_Handler
+HAL_RTCEx_BKUPWrite
+localtime
+RTC_ReadTimeCounter
+printf

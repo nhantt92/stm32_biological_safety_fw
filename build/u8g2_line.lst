@@ -1,0 +1,334 @@
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHEvSyE.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"u8g2_line.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.u8g2_DrawLine,"ax",%progbits
+  16              		.align	1
+  17              		.global	u8g2_DrawLine
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  21              		.fpu softvfp
+  23              	u8g2_DrawLine:
+  24              	.LFB0:
+  25              		.file 1 "u8g2/csrc/u8g2_line.c"
+   1:u8g2/csrc/u8g2_line.c **** /*
+   2:u8g2/csrc/u8g2_line.c **** 
+   3:u8g2/csrc/u8g2_line.c ****   u8g2_box.c
+   4:u8g2/csrc/u8g2_line.c **** 
+   5:u8g2/csrc/u8g2_line.c ****   Universal 8bit Graphics Library (https://github.com/olikraus/u8g2/)
+   6:u8g2/csrc/u8g2_line.c **** 
+   7:u8g2/csrc/u8g2_line.c ****   Copyright (c) 2016, olikraus@gmail.com
+   8:u8g2/csrc/u8g2_line.c ****   All rights reserved.
+   9:u8g2/csrc/u8g2_line.c **** 
+  10:u8g2/csrc/u8g2_line.c ****   Redistribution and use in source and binary forms, with or without modification, 
+  11:u8g2/csrc/u8g2_line.c ****   are permitted provided that the following conditions are met:
+  12:u8g2/csrc/u8g2_line.c **** 
+  13:u8g2/csrc/u8g2_line.c ****   * Redistributions of source code must retain the above copyright notice, this list 
+  14:u8g2/csrc/u8g2_line.c ****     of conditions and the following disclaimer.
+  15:u8g2/csrc/u8g2_line.c ****     
+  16:u8g2/csrc/u8g2_line.c ****   * Redistributions in binary form must reproduce the above copyright notice, this 
+  17:u8g2/csrc/u8g2_line.c ****     list of conditions and the following disclaimer in the documentation and/or other 
+  18:u8g2/csrc/u8g2_line.c ****     materials provided with the distribution.
+  19:u8g2/csrc/u8g2_line.c **** 
+  20:u8g2/csrc/u8g2_line.c ****   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+  21:u8g2/csrc/u8g2_line.c ****   CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+  22:u8g2/csrc/u8g2_line.c ****   INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+  23:u8g2/csrc/u8g2_line.c ****   MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+  24:u8g2/csrc/u8g2_line.c ****   DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+  25:u8g2/csrc/u8g2_line.c ****   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+  26:u8g2/csrc/u8g2_line.c ****   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+  27:u8g2/csrc/u8g2_line.c ****   NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+  28:u8g2/csrc/u8g2_line.c ****   LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+  29:u8g2/csrc/u8g2_line.c ****   CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+  30:u8g2/csrc/u8g2_line.c ****   STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+  31:u8g2/csrc/u8g2_line.c ****   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+  32:u8g2/csrc/u8g2_line.c ****   ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
+  33:u8g2/csrc/u8g2_line.c **** 
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHEvSyE.s 			page 2
+
+
+  34:u8g2/csrc/u8g2_line.c **** */
+  35:u8g2/csrc/u8g2_line.c **** 
+  36:u8g2/csrc/u8g2_line.c **** #include "u8g2.h"
+  37:u8g2/csrc/u8g2_line.c **** 
+  38:u8g2/csrc/u8g2_line.c **** 
+  39:u8g2/csrc/u8g2_line.c **** void u8g2_DrawLine(u8g2_t *u8g2, u8g2_uint_t x1, u8g2_uint_t y1, u8g2_uint_t x2, u8g2_uint_t y2)
+  40:u8g2/csrc/u8g2_line.c **** {
+  26              		.loc 1 40 0
+  27              		.cfi_startproc
+  28              		@ args = 4, pretend = 0, frame = 8
+  29              		@ frame_needed = 0, uses_anonymous_args = 0
+  30              	.LVL0:
+  31 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  32              	.LCFI0:
+  33              		.cfi_def_cfa_offset 36
+  34              		.cfi_offset 4, -36
+  35              		.cfi_offset 5, -32
+  36              		.cfi_offset 6, -28
+  37              		.cfi_offset 7, -24
+  38              		.cfi_offset 8, -20
+  39              		.cfi_offset 9, -16
+  40              		.cfi_offset 10, -12
+  41              		.cfi_offset 11, -8
+  42              		.cfi_offset 14, -4
+  43 0004 83B0     		sub	sp, sp, #12
+  44              	.LCFI1:
+  45              		.cfi_def_cfa_offset 48
+  46 0006 0190     		str	r0, [sp, #4]
+  47 0008 1746     		mov	r7, r2
+  48 000a 1E46     		mov	r6, r3
+  49 000c 9DF83040 		ldrb	r4, [sp, #48]	@ zero_extendqisi2
+  50              	.LVL1:
+  41:u8g2/csrc/u8g2_line.c ****   u8g2_uint_t tmp;
+  42:u8g2/csrc/u8g2_line.c ****   u8g2_uint_t x,y;
+  43:u8g2/csrc/u8g2_line.c ****   u8g2_uint_t dx, dy;
+  44:u8g2/csrc/u8g2_line.c ****   u8g2_int_t err;
+  45:u8g2/csrc/u8g2_line.c ****   u8g2_int_t ystep;
+  46:u8g2/csrc/u8g2_line.c **** 
+  47:u8g2/csrc/u8g2_line.c ****   uint8_t swapxy = 0;
+  48:u8g2/csrc/u8g2_line.c ****   
+  49:u8g2/csrc/u8g2_line.c ****   /* no intersection check at the moment, should be added... */
+  50:u8g2/csrc/u8g2_line.c **** 
+  51:u8g2/csrc/u8g2_line.c ****   if ( x1 > x2 ) dx = x1-x2; else dx = x2-x1;
+  51              		.loc 1 51 0
+  52 0010 9942     		cmp	r1, r3
+  53 0012 29D9     		bls	.L2
+  54              		.loc 1 51 0 is_stmt 0 discriminator 1
+  55 0014 A1EB0308 		sub	r8, r1, r3
+  56 0018 5FFA88F8 		uxtb	r8, r8
+  57              	.LVL2:
+  58              	.L3:
+  52:u8g2/csrc/u8g2_line.c ****   if ( y1 > y2 ) dy = y1-y2; else dy = y2-y1;
+  59              		.loc 1 52 0 is_stmt 1
+  60 001c A742     		cmp	r7, r4
+  61 001e 28D9     		bls	.L4
+  62              		.loc 1 52 0 is_stmt 0 discriminator 1
+  63 0020 A7EB0409 		sub	r9, r7, r4
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHEvSyE.s 			page 3
+
+
+  64 0024 5FFA89F9 		uxtb	r9, r9
+  65              	.LVL3:
+  66              	.L5:
+  53:u8g2/csrc/u8g2_line.c **** 
+  54:u8g2/csrc/u8g2_line.c ****   if ( dy > dx ) 
+  67              		.loc 1 54 0 is_stmt 1
+  68 0028 C845     		cmp	r8, r9
+  69 002a 27D3     		bcc	.L15
+  70 002c 4B46     		mov	r3, r9
+  71              	.LVL4:
+  72 002e C146     		mov	r9, r8
+  73              	.LVL5:
+  74 0030 9846     		mov	r8, r3
+  75              	.LVL6:
+  76 0032 2346     		mov	r3, r4
+  77 0034 3446     		mov	r4, r6
+  78 0036 1E46     		mov	r6, r3
+  79 0038 3B46     		mov	r3, r7
+  80 003a 0F46     		mov	r7, r1
+  81 003c 1946     		mov	r1, r3
+  82              	.LVL7:
+  47:u8g2/csrc/u8g2_line.c ****   
+  83              		.loc 1 47 0
+  84 003e 4FF0000A 		mov	r10, #0
+  85              	.L6:
+  86              	.LVL8:
+  55:u8g2/csrc/u8g2_line.c ****   {
+  56:u8g2/csrc/u8g2_line.c ****     swapxy = 1;
+  57:u8g2/csrc/u8g2_line.c ****     tmp = dx; dx =dy; dy = tmp;
+  58:u8g2/csrc/u8g2_line.c ****     tmp = x1; x1 =y1; y1 = tmp;
+  59:u8g2/csrc/u8g2_line.c ****     tmp = x2; x2 =y2; y2 = tmp;
+  60:u8g2/csrc/u8g2_line.c ****   }
+  61:u8g2/csrc/u8g2_line.c ****   if ( x1 > x2 ) 
+  87              		.loc 1 61 0
+  88 0042 A742     		cmp	r7, r4
+  89 0044 05D8     		bhi	.L7
+  90 0046 3346     		mov	r3, r6
+  91 0048 0E46     		mov	r6, r1
+  92              	.LVL9:
+  93 004a 1946     		mov	r1, r3
+  94              	.LVL10:
+  95 004c 2346     		mov	r3, r4
+  96 004e 3C46     		mov	r4, r7
+  97              	.LVL11:
+  98 0050 1F46     		mov	r7, r3
+  99              	.LVL12:
+ 100              	.L7:
+  62:u8g2/csrc/u8g2_line.c ****   {
+  63:u8g2/csrc/u8g2_line.c ****     tmp = x1; x1 =x2; x2 = tmp;
+  64:u8g2/csrc/u8g2_line.c ****     tmp = y1; y1 =y2; y2 = tmp;
+  65:u8g2/csrc/u8g2_line.c ****   }
+  66:u8g2/csrc/u8g2_line.c ****   err = dx >> 1;
+ 101              		.loc 1 66 0
+ 102 0052 49F34705 		sbfx	r5, r9, #1, #8
+ 103              	.LVL13:
+  67:u8g2/csrc/u8g2_line.c ****   if ( y2 > y1 ) ystep = 1; else ystep = -1;
+ 104              		.loc 1 67 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHEvSyE.s 			page 4
+
+
+ 105 0056 8E42     		cmp	r6, r1
+ 106 0058 13D2     		bcs	.L16
+ 107 005a 4FF0010B 		mov	fp, #1
+ 108              	.L8:
+ 109              	.LVL14:
+  68:u8g2/csrc/u8g2_line.c ****   y = y1;
+  69:u8g2/csrc/u8g2_line.c **** 
+  70:u8g2/csrc/u8g2_line.c **** #ifndef  U8G2_16BIT
+  71:u8g2/csrc/u8g2_line.c ****   if ( x2 == 255 )
+ 110              		.loc 1 71 0
+ 111 005e FF2F     		cmp	r7, #255
+ 112 0060 1FD1     		bne	.L10
+  72:u8g2/csrc/u8g2_line.c ****     x2--;
+ 113              		.loc 1 72 0
+ 114 0062 013F     		subs	r7, r7, #1
+ 115              	.LVL15:
+ 116 0064 FFB2     		uxtb	r7, r7
+ 117              	.LVL16:
+  73:u8g2/csrc/u8g2_line.c **** #else
+  74:u8g2/csrc/u8g2_line.c ****   if ( x2 == 0xffff )
+  75:u8g2/csrc/u8g2_line.c ****     x2--;
+  76:u8g2/csrc/u8g2_line.c **** #endif
+  77:u8g2/csrc/u8g2_line.c **** 
+  78:u8g2/csrc/u8g2_line.c ****   for( x = x1; x <= x2; x++ )
+ 118              		.loc 1 78 0
+ 119 0066 1CE0     		b	.L10
+ 120              	.LVL17:
+ 121              	.L2:
+  51:u8g2/csrc/u8g2_line.c ****   if ( y1 > y2 ) dy = y1-y2; else dy = y2-y1;
+ 122              		.loc 1 51 0 discriminator 2
+ 123 0068 A3EB0108 		sub	r8, r3, r1
+ 124 006c 5FFA88F8 		uxtb	r8, r8
+ 125              	.LVL18:
+ 126 0070 D4E7     		b	.L3
+ 127              	.L4:
+  52:u8g2/csrc/u8g2_line.c **** 
+ 128              		.loc 1 52 0 discriminator 2
+ 129 0072 A4EB0709 		sub	r9, r4, r7
+ 130 0076 5FFA89F9 		uxtb	r9, r9
+ 131              	.LVL19:
+ 132 007a D5E7     		b	.L5
+ 133              	.L15:
+  56:u8g2/csrc/u8g2_line.c ****     tmp = dx; dx =dy; dy = tmp;
+ 134              		.loc 1 56 0
+ 135 007c 4FF0010A 		mov	r10, #1
+ 136 0080 DFE7     		b	.L6
+ 137              	.LVL20:
+ 138              	.L16:
+  67:u8g2/csrc/u8g2_line.c ****   y = y1;
+ 139              		.loc 1 67 0
+ 140 0082 4FF0FF3B 		mov	fp, #-1
+ 141 0086 EAE7     		b	.L8
+ 142              	.LVL21:
+ 143              	.L11:
+  79:u8g2/csrc/u8g2_line.c ****   {
+  80:u8g2/csrc/u8g2_line.c ****     if ( swapxy == 0 ) 
+  81:u8g2/csrc/u8g2_line.c ****       u8g2_DrawPixel(u8g2, x, y); 
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHEvSyE.s 			page 5
+
+
+  82:u8g2/csrc/u8g2_line.c ****     else 
+  83:u8g2/csrc/u8g2_line.c ****       u8g2_DrawPixel(u8g2, y, x); 
+ 144              		.loc 1 83 0
+ 145 0088 2246     		mov	r2, r4
+ 146 008a 3146     		mov	r1, r6
+ 147 008c 0198     		ldr	r0, [sp, #4]
+ 148 008e FFF7FEFF 		bl	u8g2_DrawPixel
+ 149              	.LVL22:
+ 150              	.L12:
+  84:u8g2/csrc/u8g2_line.c ****     err -= (uint8_t)dy;
+ 151              		.loc 1 84 0
+ 152 0092 A5EB0805 		sub	r5, r5, r8
+ 153              	.LVL23:
+ 154 0096 EBB2     		uxtb	r3, r5
+ 155 0098 5DB2     		sxtb	r5, r3
+ 156              	.LVL24:
+  85:u8g2/csrc/u8g2_line.c ****     if ( err < 0 ) 
+ 157              		.loc 1 85 0
+ 158 009a 002D     		cmp	r5, #0
+ 159 009c 0CDB     		blt	.L18
+ 160              	.L13:
+  78:u8g2/csrc/u8g2_line.c ****   {
+ 161              		.loc 1 78 0 discriminator 2
+ 162 009e 0134     		adds	r4, r4, #1
+ 163              	.LVL25:
+ 164 00a0 E4B2     		uxtb	r4, r4
+ 165              	.LVL26:
+ 166              	.L10:
+  78:u8g2/csrc/u8g2_line.c ****   {
+ 167              		.loc 1 78 0 is_stmt 0 discriminator 1
+ 168 00a2 A742     		cmp	r7, r4
+ 169 00a4 10D3     		bcc	.L19
+  80:u8g2/csrc/u8g2_line.c ****       u8g2_DrawPixel(u8g2, x, y); 
+ 170              		.loc 1 80 0 is_stmt 1
+ 171 00a6 BAF1000F 		cmp	r10, #0
+ 172 00aa EDD1     		bne	.L11
+  81:u8g2/csrc/u8g2_line.c ****     else 
+ 173              		.loc 1 81 0
+ 174 00ac 3246     		mov	r2, r6
+ 175 00ae 2146     		mov	r1, r4
+ 176 00b0 0198     		ldr	r0, [sp, #4]
+ 177 00b2 FFF7FEFF 		bl	u8g2_DrawPixel
+ 178              	.LVL27:
+ 179 00b6 ECE7     		b	.L12
+ 180              	.L18:
+  86:u8g2/csrc/u8g2_line.c ****     {
+  87:u8g2/csrc/u8g2_line.c ****       y += (u8g2_uint_t)ystep;
+ 181              		.loc 1 87 0
+ 182 00b8 5FFA8BF2 		uxtb	r2, fp
+ 183 00bc 1644     		add	r6, r6, r2
+ 184              	.LVL28:
+ 185 00be F6B2     		uxtb	r6, r6
+ 186              	.LVL29:
+  88:u8g2/csrc/u8g2_line.c ****       err += (u8g2_uint_t)dx;
+ 187              		.loc 1 88 0
+ 188 00c0 03EB0905 		add	r5, r3, r9
+ 189              	.LVL30:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHEvSyE.s 			page 6
+
+
+ 190 00c4 6DB2     		sxtb	r5, r5
+ 191              	.LVL31:
+ 192 00c6 EAE7     		b	.L13
+ 193              	.L19:
+  89:u8g2/csrc/u8g2_line.c ****     }
+  90:u8g2/csrc/u8g2_line.c ****   }
+  91:u8g2/csrc/u8g2_line.c **** }
+ 194              		.loc 1 91 0
+ 195 00c8 03B0     		add	sp, sp, #12
+ 196              	.LCFI2:
+ 197              		.cfi_def_cfa_offset 36
+ 198              		@ sp needed
+ 199 00ca BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 200              		.cfi_endproc
+ 201              	.LFE0:
+ 203              		.text
+ 204              	.Letext0:
+ 205              		.file 2 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_defau
+ 206              		.file 3 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_stdint.h"
+ 207              		.file 4 "u8g2/csrc/u8x8.h"
+ 208              		.file 5 "u8g2/csrc/u8g2.h"
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHEvSyE.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 u8g2_line.c
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHEvSyE.s:16     .text.u8g2_DrawLine:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHEvSyE.s:23     .text.u8g2_DrawLine:0000000000000000 u8g2_DrawLine
+
+UNDEFINED SYMBOLS
+u8g2_DrawPixel

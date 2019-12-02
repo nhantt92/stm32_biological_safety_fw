@@ -1,0 +1,383 @@
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"config.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.CFG_Save,"ax",%progbits
+  16              		.align	1
+  17              		.global	CFG_Save
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  21              		.fpu softvfp
+  23              	CFG_Save:
+  24              	.LFB66:
+  25              		.file 1 "Src/config.c"
+   1:Src/config.c  **** #include "config.h"
+   2:Src/config.c  **** #include <string.h>
+   3:Src/config.c  **** #include <stdio.h>
+   4:Src/config.c  **** 
+   5:Src/config.c  **** CFG_STRUCT sys_cfg;
+   6:Src/config.c  **** 
+   7:Src/config.c  **** #define ADDR_FLASH_PAGE_188 	((uint32_t)0x0805E000)
+   8:Src/config.c  **** #define ADDR_FLASH_PAGE_189		((uint32_t)0x0805E800)
+   9:Src/config.c  **** 
+  10:Src/config.c  **** #define FLASH_USER_START_ADDR   ADDR_FLASH_PAGE_188   /* Start @ of user Flash area */
+  11:Src/config.c  **** #define FLASH_USER_END_ADDR     ADDR_FLASH_PAGE_189 + FLASH_PAGE_SIZE   /* End @ of user Flash area
+  12:Src/config.c  **** 
+  13:Src/config.c  **** #define DATA_32                 ((uint32_t)0x12345678)
+  14:Src/config.c  **** 
+  15:Src/config.c  **** uint32_t Address = 0, PAGEError = 0;
+  16:Src/config.c  **** __IO uint32_t data32 = 0 , MemoryProgramStatus = 0;
+  17:Src/config.c  **** 
+  18:Src/config.c  **** /*Variable used for Erase procedure*/
+  19:Src/config.c  **** static FLASH_EraseInitTypeDef EraseInitStruct;
+  20:Src/config.c  **** 
+  21:Src/config.c  **** void CFG_Save(void)
+  22:Src/config.c  **** {
+  26              		.loc 1 22 0
+  27              		.cfi_startproc
+  28              		@ args = 0, pretend = 0, frame = 0
+  29              		@ frame_needed = 0, uses_anonymous_args = 0
+  30 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  31              	.LCFI0:
+  32              		.cfi_def_cfa_offset 24
+  33              		.cfi_offset 3, -24
+  34              		.cfi_offset 4, -20
+  35              		.cfi_offset 5, -16
+  36              		.cfi_offset 6, -12
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s 			page 2
+
+
+  37              		.cfi_offset 7, -8
+  38              		.cfi_offset 14, -4
+  23:Src/config.c  **** 	uint32_t *cfgdest, i;
+  24:Src/config.c  **** 	sys_cfg.systemTime = sys;
+  39              		.loc 1 24 0
+  40 0002 184B     		ldr	r3, .L9
+  41 0004 184C     		ldr	r4, .L9+4
+  42 0006 0FCB     		ldm	r3, {r0, r1, r2, r3}
+  43 0008 84E80F00 		stm	r4, {r0, r1, r2, r3}
+  44              	.LVL0:
+  25:Src/config.c  **** 	cfgdest = (uint32_t*)&sys_cfg;
+  26:Src/config.c  **** 	HAL_FLASH_Unlock();
+  45              		.loc 1 26 0
+  46 000c FFF7FEFF 		bl	HAL_FLASH_Unlock
+  47              	.LVL1:
+  27:Src/config.c  **** 	EraseInitStruct.TypeErase   = FLASH_TYPEERASE_PAGES;
+  48              		.loc 1 27 0
+  49 0010 164B     		ldr	r3, .L9+8
+  50 0012 0024     		movs	r4, #0
+  51 0014 1C60     		str	r4, [r3]
+  28:Src/config.c  ****   	EraseInitStruct.PageAddress = FLASH_USER_START_ADDR;
+  52              		.loc 1 28 0
+  53 0016 164A     		ldr	r2, .L9+12
+  54 0018 9A60     		str	r2, [r3, #8]
+  29:Src/config.c  ****   	EraseInitStruct.NbPages     = (FLASH_USER_END_ADDR - FLASH_USER_START_ADDR) / FLASH_PAGE_SIZE;
+  55              		.loc 1 29 0
+  56 001a 0222     		movs	r2, #2
+  57 001c DA60     		str	r2, [r3, #12]
+  58              	.LVL2:
+  59              	.L2:
+  30:Src/config.c  **** 	
+  31:Src/config.c  **** 	// printf("sizeof cfg: %d\n", sizeof(CFG_STRUCT));
+  32:Src/config.c  **** 	// for(i = 0; i <= sizeof(CFG_STRUCT); i+=4)
+  33:Src/config.c  **** 	// {
+  34:Src/config.c  **** 	// 	printf("%d: 0x%.8x\n", i, *(uint32_t*)(cfgdest + i/4));
+  35:Src/config.c  **** 	// }
+  36:Src/config.c  **** 	for(i = 0; i <= sizeof(CFG_STRUCT)/PAGE_SIZE; i++)
+  60              		.loc 1 36 0 discriminator 1
+  61 001e BCB1     		cbz	r4, .L3
+  37:Src/config.c  **** 	{
+  38:Src/config.c  **** 		if (HAL_FLASHEx_Erase(&EraseInitStruct, &PAGEError) != HAL_OK)
+  39:Src/config.c  **** 	  	{
+  40:Src/config.c  **** 	  	}
+  41:Src/config.c  **** 	}
+  42:Src/config.c  **** 	Address = FLASH_USER_START_ADDR;
+  62              		.loc 1 42 0
+  63 0020 144B     		ldr	r3, .L9+16
+  64 0022 134A     		ldr	r2, .L9+12
+  65 0024 1A60     		str	r2, [r3]
+  66              	.LVL3:
+  43:Src/config.c  **** 	for(i = 0; i <= sizeof(CFG_STRUCT); i+=4)
+  67              		.loc 1 43 0
+  68 0026 0024     		movs	r4, #0
+  69              	.LVL4:
+  70              	.L4:
+  71              		.loc 1 43 0 is_stmt 0 discriminator 1
+  72 0028 202C     		cmp	r4, #32
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s 			page 3
+
+
+  73 002a 17D8     		bhi	.L8
+  44:Src/config.c  **** 	{
+  45:Src/config.c  **** 		//printf("%d: 0x%.8x\n", i, *(uint32_t*)(cfgdest + i/4));
+  46:Src/config.c  **** 		if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, Address + i, *(uint32_t*)(cfgdest + i/4)) == HAL_OK
+  74              		.loc 1 46 0 is_stmt 1
+  75 002c 24F00305 		bic	r5, r4, #3
+  76 0030 114F     		ldr	r7, .L9+20
+  77 0032 104E     		ldr	r6, .L9+16
+  78 0034 3168     		ldr	r1, [r6]
+  79 0036 7A59     		ldr	r2, [r7, r5]
+  80 0038 0023     		movs	r3, #0
+  81 003a 2144     		add	r1, r1, r4
+  82 003c 0220     		movs	r0, #2
+  83 003e FFF7FEFF 		bl	HAL_FLASH_Program
+  84              	.LVL5:
+  47:Src/config.c  **** 		if(*(uint32_t*)(cfgdest + i/4) != *(uint32_t*)(Address + i))
+  85              		.loc 1 47 0
+  86 0042 EA59     		ldr	r2, [r5, r7]
+  87 0044 3368     		ldr	r3, [r6]
+  88 0046 E358     		ldr	r3, [r4, r3]
+  89 0048 9A42     		cmp	r2, r3
+  90 004a 09D1     		bne	.L1
+  43:Src/config.c  **** 	for(i = 0; i <= sizeof(CFG_STRUCT); i+=4)
+  91              		.loc 1 43 0 discriminator 2
+  92 004c 0434     		adds	r4, r4, #4
+  93              	.LVL6:
+  94 004e EBE7     		b	.L4
+  95              	.L3:
+  38:Src/config.c  **** 	  	{
+  96              		.loc 1 38 0
+  97 0050 0A49     		ldr	r1, .L9+24
+  98 0052 0648     		ldr	r0, .L9+8
+  99 0054 FFF7FEFF 		bl	HAL_FLASHEx_Erase
+ 100              	.LVL7:
+  36:Src/config.c  **** 	{
+ 101              		.loc 1 36 0
+ 102 0058 0134     		adds	r4, r4, #1
+ 103              	.LVL8:
+ 104 005a E0E7     		b	.L2
+ 105              	.L8:
+  48:Src/config.c  **** 			return;
+  49:Src/config.c  **** 	}
+  50:Src/config.c  **** 	HAL_FLASH_Lock();
+ 106              		.loc 1 50 0
+ 107 005c FFF7FEFF 		bl	HAL_FLASH_Lock
+ 108              	.LVL9:
+ 109              	.L1:
+  51:Src/config.c  **** }
+ 110              		.loc 1 51 0
+ 111 0060 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 112              	.LVL10:
+ 113              	.L10:
+ 114 0062 00BF     		.align	2
+ 115              	.L9:
+ 116 0064 00000000 		.word	sys
+ 117 0068 0C000000 		.word	sys_cfg+12
+ 118 006c 00000000 		.word	.LANCHOR0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s 			page 4
+
+
+ 119 0070 00E00508 		.word	134602752
+ 120 0074 00000000 		.word	.LANCHOR2
+ 121 0078 00000000 		.word	sys_cfg
+ 122 007c 00000000 		.word	.LANCHOR1
+ 123              		.cfi_endproc
+ 124              	.LFE66:
+ 126              		.section	.text.CFG_Load,"ax",%progbits
+ 127              		.align	1
+ 128              		.global	CFG_Load
+ 129              		.syntax unified
+ 130              		.thumb
+ 131              		.thumb_func
+ 132              		.fpu softvfp
+ 134              	CFG_Load:
+ 135              	.LFB67:
+  52:Src/config.c  **** 
+  53:Src/config.c  **** void CFG_Load(void)
+  54:Src/config.c  **** {
+ 136              		.loc 1 54 0
+ 137              		.cfi_startproc
+ 138              		@ args = 0, pretend = 0, frame = 0
+ 139              		@ frame_needed = 0, uses_anonymous_args = 0
+ 140 0000 70B5     		push	{r4, r5, r6, lr}
+ 141              	.LCFI1:
+ 142              		.cfi_def_cfa_offset 16
+ 143              		.cfi_offset 4, -16
+ 144              		.cfi_offset 5, -12
+ 145              		.cfi_offset 6, -8
+ 146              		.cfi_offset 14, -4
+  55:Src/config.c  **** 	memcpy(&sys_cfg, (void*)FLASH_USER_START_ADDR, sizeof(CFG_STRUCT));
+ 147              		.loc 1 55 0
+ 148 0002 124E     		ldr	r6, .L14
+ 149 0004 3446     		mov	r4, r6
+ 150 0006 124D     		ldr	r5, .L14+4
+ 151 0008 0FCD     		ldmia	r5!, {r0, r1, r2, r3}
+ 152 000a 0FC4     		stmia	r4!, {r0, r1, r2, r3}
+ 153 000c 95E80F00 		ldm	r5, {r0, r1, r2, r3}
+ 154 0010 84E80F00 		stm	r4, {r0, r1, r2, r3}
+  56:Src/config.c  **** 	// printf("modeUV: %d\n", sys_cfg.uvMode);
+  57:Src/config.c  **** 	// printf("viewPage: %d\n", sys_cfg.viewPage);
+  58:Src/config.c  **** 	// printf("brightness: %d\n", sys_cfg.brightness);
+  59:Src/config.c  **** 	// printf("backlight: %d\n", sys_cfg.backlight);
+  60:Src/config.c  **** 	// printf("speaker: %d\n", sys_cfg.speaker);
+  61:Src/config.c  **** 	// printf("pressure: %d\n", sys_cfg.pressureVal);
+  62:Src/config.c  **** 	// printf("passWord: %d\n", sys_cfg.passWord);
+  63:Src/config.c  **** 	// printf("tick: %d\n", sys_cfg.systemTime.tick);
+  64:Src/config.c  **** 	// printf("UVTime: %d\n", sys_cfg.systemTime.UVTime);
+  65:Src/config.c  **** 	// printf("FilterTime: %d\n", sys_cfg.systemTime.FilterTime);
+  66:Src/config.c  **** 	// printf("SysTime: %d\n", sys_cfg.systemTime.SysTime);
+  67:Src/config.c  **** 	if(sys_cfg.cfg_holder != CFG_HOLDER)
+ 155              		.loc 1 67 0
+ 156 0014 F269     		ldr	r2, [r6, #28]
+ 157 0016 0F4B     		ldr	r3, .L14+8
+ 158 0018 9A42     		cmp	r2, r3
+ 159 001a 16D0     		beq	.L11
+  68:Src/config.c  **** 	{
+  69:Src/config.c  **** 		memset(&sys_cfg, 0x00, sizeof sys_cfg);
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s 			page 5
+
+
+ 160              		.loc 1 69 0
+ 161 001c 0022     		movs	r2, #0
+ 162 001e 3260     		str	r2, [r6]
+ 163 0020 7260     		str	r2, [r6, #4]
+ 164 0022 B260     		str	r2, [r6, #8]
+ 165 0024 F260     		str	r2, [r6, #12]
+ 166 0026 3261     		str	r2, [r6, #16]
+ 167 0028 7261     		str	r2, [r6, #20]
+ 168 002a B261     		str	r2, [r6, #24]
+  70:Src/config.c  **** 		sys_cfg.uvMode = 0;
+  71:Src/config.c  **** 		sys_cfg.viewPage = 0;
+  72:Src/config.c  **** 		sys_cfg.brightness = 50;
+ 169              		.loc 1 72 0
+ 170 002c 3222     		movs	r2, #50
+ 171 002e B270     		strb	r2, [r6, #2]
+  73:Src/config.c  **** 		sys_cfg.backlight = 1;
+ 172              		.loc 1 73 0
+ 173 0030 0122     		movs	r2, #1
+ 174 0032 F270     		strb	r2, [r6, #3]
+  74:Src/config.c  **** 
+  75:Src/config.c  **** 		sys_cfg.speaker = 1;
+ 175              		.loc 1 75 0
+ 176 0034 3271     		strb	r2, [r6, #4]
+  76:Src/config.c  **** 		sys_cfg.pressureVal = 300;
+ 177              		.loc 1 76 0
+ 178 0036 4FF49672 		mov	r2, #300
+ 179 003a F280     		strh	r2, [r6, #6]	@ movhi
+  77:Src/config.c  **** 		sys_cfg.passWord = 1234;
+ 180              		.loc 1 77 0
+ 181 003c 40F2D242 		movw	r2, #1234
+ 182 0040 3281     		strh	r2, [r6, #8]	@ movhi
+  78:Src/config.c  **** 		sys_cfg.cfg_holder = 0x00FF55A1;
+ 183              		.loc 1 78 0
+ 184 0042 044A     		ldr	r2, .L14+8
+ 185 0044 F261     		str	r2, [r6, #28]
+  79:Src/config.c  **** 
+  80:Src/config.c  **** 		sys_cfg.systemTime.tick = 0;
+  81:Src/config.c  **** 		sys_cfg.systemTime.UVTime = 0;
+  82:Src/config.c  **** 		sys_cfg.systemTime.FilterTime = 0;
+  83:Src/config.c  **** 		sys_cfg.systemTime.SysTime = 0;
+  84:Src/config.c  **** 
+  85:Src/config.c  **** 		CFG_Save();
+ 186              		.loc 1 85 0
+ 187 0046 FFF7FEFF 		bl	CFG_Save
+ 188              	.LVL11:
+ 189              	.L11:
+  86:Src/config.c  **** 	}
+  87:Src/config.c  **** }
+ 190              		.loc 1 87 0
+ 191 004a 70BD     		pop	{r4, r5, r6, pc}
+ 192              	.L15:
+ 193              		.align	2
+ 194              	.L14:
+ 195 004c 00000000 		.word	sys_cfg
+ 196 0050 00E00508 		.word	134602752
+ 197 0054 A155FF00 		.word	16733601
+ 198              		.cfi_endproc
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s 			page 6
+
+
+ 199              	.LFE67:
+ 201              		.global	MemoryProgramStatus
+ 202              		.global	data32
+ 203              		.global	PAGEError
+ 204              		.global	Address
+ 205              		.comm	sys_cfg,32,4
+ 206              		.section	.bss.Address,"aw",%nobits
+ 207              		.align	2
+ 208              		.set	.LANCHOR2,. + 0
+ 211              	Address:
+ 212 0000 00000000 		.space	4
+ 213              		.section	.bss.EraseInitStruct,"aw",%nobits
+ 214              		.align	2
+ 215              		.set	.LANCHOR0,. + 0
+ 218              	EraseInitStruct:
+ 219 0000 00000000 		.space	16
+ 219      00000000 
+ 219      00000000 
+ 219      00000000 
+ 220              		.section	.bss.MemoryProgramStatus,"aw",%nobits
+ 221              		.align	2
+ 224              	MemoryProgramStatus:
+ 225 0000 00000000 		.space	4
+ 226              		.section	.bss.PAGEError,"aw",%nobits
+ 227              		.align	2
+ 228              		.set	.LANCHOR1,. + 0
+ 231              	PAGEError:
+ 232 0000 00000000 		.space	4
+ 233              		.section	.bss.data32,"aw",%nobits
+ 234              		.align	2
+ 237              	data32:
+ 238 0000 00000000 		.space	4
+ 239              		.text
+ 240              	.Letext0:
+ 241              		.file 2 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_defau
+ 242              		.file 3 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_stdint.h"
+ 243              		.file 4 "Drivers/CMSIS/Include/core_cm3.h"
+ 244              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h"
+ 245              		.file 6 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/lock.h"
+ 246              		.file 7 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_types.h"
+ 247              		.file 8 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/
+ 248              		.file 9 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/reent.h"
+ 249              		.file 10 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h"
+ 250              		.file 11 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 251              		.file 12 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 252              		.file 13 "u8g2/csrc/u8x8.h"
+ 253              		.file 14 "u8g2/csrc/u8g2.h"
+ 254              		.file 15 "Inc/main.h"
+ 255              		.file 16 "Inc/system.h"
+ 256              		.file 17 "Inc/config.h"
+ 257              		.file 18 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash.h"
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 config.c
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s:16     .text.CFG_Save:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s:23     .text.CFG_Save:0000000000000000 CFG_Save
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s:116    .text.CFG_Save:0000000000000064 $d
+                            *COM*:0000000000000020 sys_cfg
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s:127    .text.CFG_Load:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s:134    .text.CFG_Load:0000000000000000 CFG_Load
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s:195    .text.CFG_Load:000000000000004c $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s:224    .bss.MemoryProgramStatus:0000000000000000 MemoryProgramStatus
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s:237    .bss.data32:0000000000000000 data32
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s:231    .bss.PAGEError:0000000000000000 PAGEError
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s:211    .bss.Address:0000000000000000 Address
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s:207    .bss.Address:0000000000000000 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s:214    .bss.EraseInitStruct:0000000000000000 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s:218    .bss.EraseInitStruct:0000000000000000 EraseInitStruct
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s:221    .bss.MemoryProgramStatus:0000000000000000 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s:227    .bss.PAGEError:0000000000000000 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccdlsqEZ.s:234    .bss.data32:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+HAL_FLASH_Unlock
+HAL_FLASH_Program
+HAL_FLASHEx_Erase
+HAL_FLASH_Lock
+sys

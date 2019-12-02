@@ -1,0 +1,2074 @@
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"menu.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.BUTTON_Setup,"ax",%progbits
+  16              		.align	1
+  17              		.global	BUTTON_Setup
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  21              		.fpu softvfp
+  23              	BUTTON_Setup:
+  24              	.LFB66:
+  25              		.file 1 "Src/menu.c"
+   1:Src/menu.c    **** #include "menu.h"
+   2:Src/menu.c    **** #include "main.h"
+   3:Src/menu.c    **** #include "menu_handler.h"
+   4:Src/menu.c    **** #include <string.h>
+   5:Src/menu.c    **** #include "lcd_backlight.h"
+   6:Src/menu.c    **** #include "config.h"
+   7:Src/menu.c    **** #include "iwdg.h"
+   8:Src/menu.c    **** #include "system.h"
+   9:Src/menu.c    **** 
+  10:Src/menu.c    **** const TREE_VIEW treeView[] = {
+  11:Src/menu.c    ****   {0x0000, " ", normalEvt, 0},
+  12:Src/menu.c    ****   {0x0100, " 1.Date Time \n 2.Setup UV \n 3.Setup Pressure \n 4.View Page ", Dis1Evt, 0},
+  13:Src/menu.c    ****     {0x0100+1, " Set Date Time \n", SetTimeEvt, &treeView[1]},
+  14:Src/menu.c    ****     {0x0100+2, " Setup UV \n", SetUVEvt, &treeView[1]},
+  15:Src/menu.c    ****     {0x0100+3, " Setup Pressure \n", SetPressureEvt, &treeView[1]},
+  16:Src/menu.c    ****     {0x0100+4, " Select Display \n", SetDisplayEvt, &treeView[1]},
+  17:Src/menu.c    ****   {0x0200, " 5.Set brighness \n 6.Backlight \n 7.View Time UV \n 8.View Time Filter", Dis2Evt, 0},
+  18:Src/menu.c    ****     {0x0200+1, " Brighness \n", SetBrighnessEvt, &treeView[6]},
+  19:Src/menu.c    ****     {0x0200+2, " Backlight \n", SetBackLightEvt, &treeView[6]},
+  20:Src/menu.c    ****     {0x0200+3, " UV Time \n", ViewUVTimeEvt, &treeView[6]},
+  21:Src/menu.c    ****     {0x0200+4, " Filter Time \n", ViewFilterTimeEvt, &treeView[6]},
+  22:Src/menu.c    ****   {0x0300, " 9.View Time System \n 10.Reset UV Time \n 11.Reset Filter Time \n 12.Reset System Time
+  23:Src/menu.c    ****     {0x0300+1, " System Time ", ViewSystemTimeEvt, &treeView[11]},
+  24:Src/menu.c    ****     {0x0300+2, " Reset UV Time ", ResetUVTimeEvt, &treeView[11]},
+  25:Src/menu.c    ****     {0x0300+3, " Reset Filter Time ", ResetFilterTimeEvt, &treeView[11]},
+  26:Src/menu.c    ****     {0x0300+4, " Reset System Time ", ResetSystemTimeEvt, &treeView[11]},
+  27:Src/menu.c    ****   {0x0400, " 13.Speaker \n", Dis4Evt, 0},
+  28:Src/menu.c    ****     {0x0400+1, " Speaker \n", SetSpeakerEvt, &treeView[16]},
+  29:Src/menu.c    **** };
+  30:Src/menu.c    **** 
+  31:Src/menu.c    **** uint32_t btnTime;
+  32:Src/menu.c    **** BUTTON keyPress[5];
+  33:Src/menu.c    **** uint16_t menuIdx = 0;
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 2
+
+
+  34:Src/menu.c    **** uint16_t menuIdxLast = 0;
+  35:Src/menu.c    **** uint8_t menuIdxCh = 1;
+  36:Src/menu.c    **** uint16_t menuValueSet;
+  37:Src/menu.c    **** uint16_t menuCursor;
+  38:Src/menu.c    **** uint16_t menuTimePress = 0;
+  39:Src/menu.c    **** uint16_t menuTimeOut = 0;
+  40:Src/menu.c    **** uint16_t menuTimeNext = 0;
+  41:Src/menu.c    **** 
+  42:Src/menu.c    **** void BUTTON_Setup(BUTTON* btn, KeyHandler pressEvt, KeyHandler releaseEvt)
+  43:Src/menu.c    **** {
+  26              		.loc 1 43 0
+  27              		.cfi_startproc
+  28              		@ args = 0, pretend = 0, frame = 0
+  29              		@ frame_needed = 0, uses_anonymous_args = 0
+  30              		@ link register save eliminated.
+  31              	.LVL0:
+  44:Src/menu.c    ****   btn->PressedEventHandler = pressEvt;
+  32              		.loc 1 44 0
+  33 0000 0160     		str	r1, [r0]
+  45:Src/menu.c    ****   btn->ReleasedEventHandler = releaseEvt;
+  34              		.loc 1 45 0
+  35 0002 4260     		str	r2, [r0, #4]
+  46:Src/menu.c    ****   btn->pressed = 1;
+  36              		.loc 1 46 0
+  37 0004 0123     		movs	r3, #1
+  38 0006 0372     		strb	r3, [r0, #8]
+  47:Src/menu.c    ****   btn->press = 0;
+  39              		.loc 1 47 0
+  40 0008 0023     		movs	r3, #0
+  41 000a 4372     		strb	r3, [r0, #9]
+  48:Src/menu.c    ****   btn->cnt = 0;
+  42              		.loc 1 48 0
+  43 000c C372     		strb	r3, [r0, #11]
+  49:Src/menu.c    **** }
+  44              		.loc 1 49 0
+  45 000e 7047     		bx	lr
+  46              		.cfi_endproc
+  47              	.LFE66:
+  49              		.section	.text.BUTTON_Init,"ax",%progbits
+  50              		.align	1
+  51              		.global	BUTTON_Init
+  52              		.syntax unified
+  53              		.thumb
+  54              		.thumb_func
+  55              		.fpu softvfp
+  57              	BUTTON_Init:
+  58              	.LFB67:
+  50:Src/menu.c    **** 
+  51:Src/menu.c    **** void BUTTON_Init(void)
+  52:Src/menu.c    **** {
+  59              		.loc 1 52 0
+  60              		.cfi_startproc
+  61              		@ args = 0, pretend = 0, frame = 32
+  62              		@ frame_needed = 0, uses_anonymous_args = 0
+  63 0000 70B5     		push	{r4, r5, r6, lr}
+  64              	.LCFI0:
+  65              		.cfi_def_cfa_offset 16
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 3
+
+
+  66              		.cfi_offset 4, -16
+  67              		.cfi_offset 5, -12
+  68              		.cfi_offset 6, -8
+  69              		.cfi_offset 14, -4
+  70 0002 88B0     		sub	sp, sp, #32
+  71              	.LCFI1:
+  72              		.cfi_def_cfa_offset 48
+  53:Src/menu.c    ****   GPIO_InitTypeDef GPIO_InitStruct = {0};
+  73              		.loc 1 53 0
+  74 0004 0024     		movs	r4, #0
+  75 0006 0594     		str	r4, [sp, #20]
+  76 0008 0694     		str	r4, [sp, #24]
+  77 000a 0794     		str	r4, [sp, #28]
+  78              	.LBB2:
+  54:Src/menu.c    **** 
+  55:Src/menu.c    ****   __HAL_RCC_GPIOC_CLK_ENABLE();
+  79              		.loc 1 55 0
+  80 000c 2D4B     		ldr	r3, .L4
+  81 000e 9A69     		ldr	r2, [r3, #24]
+  82 0010 42F01002 		orr	r2, r2, #16
+  83 0014 9A61     		str	r2, [r3, #24]
+  84 0016 9A69     		ldr	r2, [r3, #24]
+  85 0018 02F01002 		and	r2, r2, #16
+  86 001c 0192     		str	r2, [sp, #4]
+  87 001e 019A     		ldr	r2, [sp, #4]
+  88              	.LBE2:
+  89              	.LBB3:
+  56:Src/menu.c    ****   __HAL_RCC_GPIOD_CLK_ENABLE();
+  90              		.loc 1 56 0
+  91 0020 9A69     		ldr	r2, [r3, #24]
+  92 0022 42F02002 		orr	r2, r2, #32
+  93 0026 9A61     		str	r2, [r3, #24]
+  94 0028 9A69     		ldr	r2, [r3, #24]
+  95 002a 02F02002 		and	r2, r2, #32
+  96 002e 0292     		str	r2, [sp, #8]
+  97 0030 029A     		ldr	r2, [sp, #8]
+  98              	.LBE3:
+  99              	.LBB4:
+  57:Src/menu.c    ****   __HAL_RCC_GPIOB_CLK_ENABLE();
+ 100              		.loc 1 57 0
+ 101 0032 9A69     		ldr	r2, [r3, #24]
+ 102 0034 42F00802 		orr	r2, r2, #8
+ 103 0038 9A61     		str	r2, [r3, #24]
+ 104 003a 9B69     		ldr	r3, [r3, #24]
+ 105 003c 03F00803 		and	r3, r3, #8
+ 106 0040 0393     		str	r3, [sp, #12]
+ 107 0042 039B     		ldr	r3, [sp, #12]
+ 108              	.LBE4:
+  58:Src/menu.c    **** 
+  59:Src/menu.c    ****   /*Configure GPIO pins : PC9 */
+  60:Src/menu.c    ****   GPIO_InitStruct.Pin = GPIO_PIN_9;
+ 109              		.loc 1 60 0
+ 110 0044 4FF40073 		mov	r3, #512
+ 111 0048 0493     		str	r3, [sp, #16]
+  61:Src/menu.c    ****   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  62:Src/menu.c    ****   GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 112              		.loc 1 62 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 4
+
+
+ 113 004a 0125     		movs	r5, #1
+ 114 004c 0695     		str	r5, [sp, #24]
+  63:Src/menu.c    ****   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 115              		.loc 1 63 0
+ 116 004e 04A9     		add	r1, sp, #16
+ 117 0050 1D48     		ldr	r0, .L4+4
+ 118 0052 FFF7FEFF 		bl	HAL_GPIO_Init
+ 119              	.LVL1:
+  64:Src/menu.c    **** 
+  65:Src/menu.c    ****   GPIO_InitStruct.Pin = GPIO_PIN_2;
+ 120              		.loc 1 65 0
+ 121 0056 0423     		movs	r3, #4
+ 122 0058 0493     		str	r3, [sp, #16]
+  66:Src/menu.c    ****   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+ 123              		.loc 1 66 0
+ 124 005a 0594     		str	r4, [sp, #20]
+  67:Src/menu.c    ****   GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 125              		.loc 1 67 0
+ 126 005c 0695     		str	r5, [sp, #24]
+  68:Src/menu.c    ****   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+ 127              		.loc 1 68 0
+ 128 005e 04A9     		add	r1, sp, #16
+ 129 0060 1A48     		ldr	r0, .L4+8
+ 130 0062 FFF7FEFF 		bl	HAL_GPIO_Init
+ 131              	.LVL2:
+  69:Src/menu.c    **** 
+  70:Src/menu.c    ****   GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_9;
+ 132              		.loc 1 70 0
+ 133 0066 40F20323 		movw	r3, #515
+ 134 006a 0493     		str	r3, [sp, #16]
+  71:Src/menu.c    ****   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+ 135              		.loc 1 71 0
+ 136 006c 0594     		str	r4, [sp, #20]
+  72:Src/menu.c    ****   GPIO_InitStruct.Pull = GPIO_PULLUP;
+ 137              		.loc 1 72 0
+ 138 006e 0695     		str	r5, [sp, #24]
+  73:Src/menu.c    ****   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 139              		.loc 1 73 0
+ 140 0070 04A9     		add	r1, sp, #16
+ 141 0072 1748     		ldr	r0, .L4+12
+ 142 0074 FFF7FEFF 		bl	HAL_GPIO_Init
+ 143              	.LVL3:
+  74:Src/menu.c    **** 
+  75:Src/menu.c    ****   BUTTON_Setup(&keyPress[0], MENU_Manager, 0);
+ 144              		.loc 1 75 0
+ 145 0078 164E     		ldr	r6, .L4+16
+ 146 007a 174D     		ldr	r5, .L4+20
+ 147 007c 2246     		mov	r2, r4
+ 148 007e 3146     		mov	r1, r6
+ 149 0080 2846     		mov	r0, r5
+ 150 0082 FFF7FEFF 		bl	BUTTON_Setup
+ 151              	.LVL4:
+  76:Src/menu.c    ****   BUTTON_Setup(&keyPress[1], MENU_Manager, 0);
+ 152              		.loc 1 76 0
+ 153 0086 2246     		mov	r2, r4
+ 154 0088 3146     		mov	r1, r6
+ 155 008a 05F10C00 		add	r0, r5, #12
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 5
+
+
+ 156 008e FFF7FEFF 		bl	BUTTON_Setup
+ 157              	.LVL5:
+  77:Src/menu.c    ****   BUTTON_Setup(&keyPress[2], MENU_Manager, 0);
+ 158              		.loc 1 77 0
+ 159 0092 2246     		mov	r2, r4
+ 160 0094 3146     		mov	r1, r6
+ 161 0096 05F11800 		add	r0, r5, #24
+ 162 009a FFF7FEFF 		bl	BUTTON_Setup
+ 163              	.LVL6:
+  78:Src/menu.c    ****   BUTTON_Setup(&keyPress[3], MENU_Manager, 0);
+ 164              		.loc 1 78 0
+ 165 009e 2246     		mov	r2, r4
+ 166 00a0 3146     		mov	r1, r6
+ 167 00a2 05F12400 		add	r0, r5, #36
+ 168 00a6 FFF7FEFF 		bl	BUTTON_Setup
+ 169              	.LVL7:
+  79:Src/menu.c    ****   BUTTON_Setup(&keyPress[4], MENU_Manager, 0);
+ 170              		.loc 1 79 0
+ 171 00aa 2246     		mov	r2, r4
+ 172 00ac 3146     		mov	r1, r6
+ 173 00ae 05F13000 		add	r0, r5, #48
+ 174 00b2 FFF7FEFF 		bl	BUTTON_Setup
+ 175              	.LVL8:
+  80:Src/menu.c    ****   btnTime = HAL_GetTick();
+ 176              		.loc 1 80 0
+ 177 00b6 FFF7FEFF 		bl	HAL_GetTick
+ 178              	.LVL9:
+ 179 00ba 084B     		ldr	r3, .L4+24
+ 180 00bc 1860     		str	r0, [r3]
+  81:Src/menu.c    **** }
+ 181              		.loc 1 81 0
+ 182 00be 08B0     		add	sp, sp, #32
+ 183              	.LCFI2:
+ 184              		.cfi_def_cfa_offset 16
+ 185              		@ sp needed
+ 186 00c0 70BD     		pop	{r4, r5, r6, pc}
+ 187              	.L5:
+ 188 00c2 00BF     		.align	2
+ 189              	.L4:
+ 190 00c4 00100240 		.word	1073876992
+ 191 00c8 00100140 		.word	1073811456
+ 192 00cc 00140140 		.word	1073812480
+ 193 00d0 000C0140 		.word	1073810432
+ 194 00d4 00000000 		.word	MENU_Manager
+ 195 00d8 00000000 		.word	keyPress
+ 196 00dc 00000000 		.word	btnTime
+ 197              		.cfi_endproc
+ 198              	.LFE67:
+ 200              		.section	.text.BUTTON_Get,"ax",%progbits
+ 201              		.align	1
+ 202              		.global	BUTTON_Get
+ 203              		.syntax unified
+ 204              		.thumb
+ 205              		.thumb_func
+ 206              		.fpu softvfp
+ 208              	BUTTON_Get:
+ 209              	.LFB68:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 6
+
+
+  82:Src/menu.c    **** 
+  83:Src/menu.c    **** void BUTTON_Get(uint8_t port_id)     
+  84:Src/menu.c    **** {  
+ 210              		.loc 1 84 0
+ 211              		.cfi_startproc
+ 212              		@ args = 0, pretend = 0, frame = 0
+ 213              		@ frame_needed = 0, uses_anonymous_args = 0
+ 214              	.LVL10:
+ 215 0000 10B5     		push	{r4, lr}
+ 216              	.LCFI3:
+ 217              		.cfi_def_cfa_offset 8
+ 218              		.cfi_offset 4, -8
+ 219              		.cfi_offset 14, -4
+ 220 0002 0446     		mov	r4, r0
+  85:Src/menu.c    ****   switch(port_id)
+ 221              		.loc 1 85 0
+ 222 0004 0428     		cmp	r0, #4
+ 223 0006 11D8     		bhi	.L7
+ 224 0008 DFE800F0 		tbb	[pc, r0]
+ 225              	.L9:
+ 226 000c 03       		.byte	(.L8-.L9)/2
+ 227 000d 2A       		.byte	(.L10-.L9)/2
+ 228 000e 55       		.byte	(.L11-.L9)/2
+ 229 000f 3F       		.byte	(.L12-.L9)/2
+ 230 0010 6A       		.byte	(.L13-.L9)/2
+ 231 0011 00       		.p2align 1
+ 232              	.L8:
+  86:Src/menu.c    ****   {
+  87:Src/menu.c    ****     case BTN_UP:
+  88:Src/menu.c    ****       if(Up_In() == !UP_PIN)
+ 233              		.loc 1 88 0
+ 234 0012 4FF40071 		mov	r1, #512
+ 235 0016 4648     		ldr	r0, .L23
+ 236              	.LVL11:
+ 237 0018 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 238              	.LVL12:
+ 239 001c C0B9     		cbnz	r0, .L14
+  89:Src/menu.c    ****         keyPress[port_id].press = BTN_PRESS;
+ 240              		.loc 1 89 0
+ 241 001e 04EB4403 		add	r3, r4, r4, lsl #1
+ 242 0022 9A00     		lsls	r2, r3, #2
+ 243 0024 434B     		ldr	r3, .L23+4
+ 244 0026 1344     		add	r3, r3, r2
+ 245 0028 0022     		movs	r2, #0
+ 246 002a 5A72     		strb	r2, [r3, #9]
+ 247              	.L7:
+  90:Src/menu.c    ****       else
+  91:Src/menu.c    ****         keyPress[port_id].press = BTN_RELEASE;
+  92:Src/menu.c    ****       break;
+  93:Src/menu.c    ****     case BTN_DOWN:
+  94:Src/menu.c    ****       if(Down_In() == !DOWN_PIN)
+  95:Src/menu.c    ****         keyPress[port_id].press = BTN_PRESS;
+  96:Src/menu.c    ****       else
+  97:Src/menu.c    ****         keyPress[port_id].press = BTN_RELEASE;
+  98:Src/menu.c    ****       break;
+  99:Src/menu.c    ****     case BTN_NEXT:
+ 100:Src/menu.c    ****       if(Next_In() == !NEXT_PIN)
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 7
+
+
+ 101:Src/menu.c    ****         keyPress[port_id].press = BTN_PRESS;
+ 102:Src/menu.c    ****       else
+ 103:Src/menu.c    ****         keyPress[port_id].press = BTN_RELEASE;
+ 104:Src/menu.c    ****       break;
+ 105:Src/menu.c    ****     case BTN_PREV:
+ 106:Src/menu.c    ****       if(Prev_In() == !PREV_PIN)
+ 107:Src/menu.c    ****         keyPress[port_id].press = BTN_PRESS;
+ 108:Src/menu.c    ****       else
+ 109:Src/menu.c    ****         keyPress[port_id].press = BTN_RELEASE;
+ 110:Src/menu.c    ****       break;
+ 111:Src/menu.c    ****     case BTN_MENU:
+ 112:Src/menu.c    ****       if(Menu_In() == !MENU_PIN)
+ 113:Src/menu.c    ****         keyPress[port_id].press = BTN_PRESS;
+ 114:Src/menu.c    ****       else
+ 115:Src/menu.c    ****         keyPress[port_id].press = BTN_RELEASE;
+ 116:Src/menu.c    ****       break;
+ 117:Src/menu.c    ****   }
+ 118:Src/menu.c    ****   if(keyPress[port_id].press != keyPress[port_id].pressed)
+ 248              		.loc 1 118 0
+ 249 002c 6200     		lsls	r2, r4, #1
+ 250 002e 2244     		add	r2, r2, r4
+ 251 0030 9100     		lsls	r1, r2, #2
+ 252 0032 404B     		ldr	r3, .L23+4
+ 253 0034 0B44     		add	r3, r3, r1
+ 254 0036 5A7A     		ldrb	r2, [r3, #9]	@ zero_extendqisi2
+ 255 0038 1B7A     		ldrb	r3, [r3, #8]	@ zero_extendqisi2
+ 256 003a 9A42     		cmp	r2, r3
+ 257 003c 6FD0     		beq	.L19
+ 119:Src/menu.c    ****   {
+ 120:Src/menu.c    ****     ++(keyPress[port_id].cnt);
+ 258              		.loc 1 120 0
+ 259 003e 3D4A     		ldr	r2, .L23+4
+ 260 0040 0A44     		add	r2, r2, r1
+ 261 0042 D37A     		ldrb	r3, [r2, #11]	@ zero_extendqisi2
+ 262 0044 0133     		adds	r3, r3, #1
+ 263 0046 DBB2     		uxtb	r3, r3
+ 264 0048 D372     		strb	r3, [r2, #11]
+ 121:Src/menu.c    ****     // Tang thoi gian test su kien
+ 122:Src/menu.c    ****     if(keyPress[port_id].cnt == SAMPLE_KEY)
+ 265              		.loc 1 122 0
+ 266 004a 052B     		cmp	r3, #5
+ 267 004c 5DD0     		beq	.L22
+ 268              	.L6:
+ 123:Src/menu.c    ****     { 
+ 124:Src/menu.c    ****       keyPress[port_id].pressed = keyPress[port_id].press;
+ 125:Src/menu.c    ****       keyPress[port_id].cnt = 0;
+ 126:Src/menu.c    ****     }
+ 127:Src/menu.c    ****   }
+ 128:Src/menu.c    ****   else
+ 129:Src/menu.c    ****   {       
+ 130:Src/menu.c    ****     // khong co su kien thi xoa bo dem test
+ 131:Src/menu.c    ****     keyPress[port_id].cnt = 0;
+ 132:Src/menu.c    ****   }        
+ 133:Src/menu.c    **** }     
+ 269              		.loc 1 133 0
+ 270 004e 10BD     		pop	{r4, pc}
+ 271              	.L14:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 8
+
+
+  91:Src/menu.c    ****       break;
+ 272              		.loc 1 91 0
+ 273 0050 04EB4403 		add	r3, r4, r4, lsl #1
+ 274 0054 9A00     		lsls	r2, r3, #2
+ 275 0056 374B     		ldr	r3, .L23+4
+ 276 0058 1344     		add	r3, r3, r2
+ 277 005a 0122     		movs	r2, #1
+ 278 005c 5A72     		strb	r2, [r3, #9]
+ 279 005e E5E7     		b	.L7
+ 280              	.LVL13:
+ 281              	.L10:
+  94:Src/menu.c    ****         keyPress[port_id].press = BTN_PRESS;
+ 282              		.loc 1 94 0
+ 283 0060 0421     		movs	r1, #4
+ 284 0062 3548     		ldr	r0, .L23+8
+ 285              	.LVL14:
+ 286 0064 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 287              	.LVL15:
+ 288 0068 38B9     		cbnz	r0, .L15
+  95:Src/menu.c    ****       else
+ 289              		.loc 1 95 0
+ 290 006a 04EB4403 		add	r3, r4, r4, lsl #1
+ 291 006e 9A00     		lsls	r2, r3, #2
+ 292 0070 304B     		ldr	r3, .L23+4
+ 293 0072 1344     		add	r3, r3, r2
+ 294 0074 0022     		movs	r2, #0
+ 295 0076 5A72     		strb	r2, [r3, #9]
+ 296 0078 D8E7     		b	.L7
+ 297              	.L15:
+  97:Src/menu.c    ****       break;
+ 298              		.loc 1 97 0
+ 299 007a 04EB4403 		add	r3, r4, r4, lsl #1
+ 300 007e 9A00     		lsls	r2, r3, #2
+ 301 0080 2C4B     		ldr	r3, .L23+4
+ 302 0082 1344     		add	r3, r3, r2
+ 303 0084 0122     		movs	r2, #1
+ 304 0086 5A72     		strb	r2, [r3, #9]
+ 305 0088 D0E7     		b	.L7
+ 306              	.LVL16:
+ 307              	.L12:
+ 100:Src/menu.c    ****         keyPress[port_id].press = BTN_PRESS;
+ 308              		.loc 1 100 0
+ 309 008a 4FF40071 		mov	r1, #512
+ 310 008e 2B48     		ldr	r0, .L23+12
+ 311              	.LVL17:
+ 312 0090 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 313              	.LVL18:
+ 314 0094 38B9     		cbnz	r0, .L16
+ 101:Src/menu.c    ****       else
+ 315              		.loc 1 101 0
+ 316 0096 04EB4403 		add	r3, r4, r4, lsl #1
+ 317 009a 9A00     		lsls	r2, r3, #2
+ 318 009c 254B     		ldr	r3, .L23+4
+ 319 009e 1344     		add	r3, r3, r2
+ 320 00a0 0022     		movs	r2, #0
+ 321 00a2 5A72     		strb	r2, [r3, #9]
+ 322 00a4 C2E7     		b	.L7
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 9
+
+
+ 323              	.L16:
+ 103:Src/menu.c    ****       break;
+ 324              		.loc 1 103 0
+ 325 00a6 04EB4403 		add	r3, r4, r4, lsl #1
+ 326 00aa 9A00     		lsls	r2, r3, #2
+ 327 00ac 214B     		ldr	r3, .L23+4
+ 328 00ae 1344     		add	r3, r3, r2
+ 329 00b0 0122     		movs	r2, #1
+ 330 00b2 5A72     		strb	r2, [r3, #9]
+ 331 00b4 BAE7     		b	.L7
+ 332              	.LVL19:
+ 333              	.L11:
+ 106:Src/menu.c    ****         keyPress[port_id].press = BTN_PRESS;
+ 334              		.loc 1 106 0
+ 335 00b6 0121     		movs	r1, #1
+ 336 00b8 1D48     		ldr	r0, .L23
+ 337              	.LVL20:
+ 338 00ba FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 339              	.LVL21:
+ 340 00be 38B9     		cbnz	r0, .L17
+ 107:Src/menu.c    ****       else
+ 341              		.loc 1 107 0
+ 342 00c0 04EB4403 		add	r3, r4, r4, lsl #1
+ 343 00c4 9A00     		lsls	r2, r3, #2
+ 344 00c6 1B4B     		ldr	r3, .L23+4
+ 345 00c8 1344     		add	r3, r3, r2
+ 346 00ca 0022     		movs	r2, #0
+ 347 00cc 5A72     		strb	r2, [r3, #9]
+ 348 00ce ADE7     		b	.L7
+ 349              	.L17:
+ 109:Src/menu.c    ****       break;
+ 350              		.loc 1 109 0
+ 351 00d0 04EB4403 		add	r3, r4, r4, lsl #1
+ 352 00d4 9A00     		lsls	r2, r3, #2
+ 353 00d6 174B     		ldr	r3, .L23+4
+ 354 00d8 1344     		add	r3, r3, r2
+ 355 00da 0122     		movs	r2, #1
+ 356 00dc 5A72     		strb	r2, [r3, #9]
+ 357 00de A5E7     		b	.L7
+ 358              	.LVL22:
+ 359              	.L13:
+ 112:Src/menu.c    ****         keyPress[port_id].press = BTN_PRESS;
+ 360              		.loc 1 112 0
+ 361 00e0 0221     		movs	r1, #2
+ 362 00e2 1348     		ldr	r0, .L23
+ 363              	.LVL23:
+ 364 00e4 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 365              	.LVL24:
+ 366 00e8 38B9     		cbnz	r0, .L18
+ 113:Src/menu.c    ****       else
+ 367              		.loc 1 113 0
+ 368 00ea 04EB4403 		add	r3, r4, r4, lsl #1
+ 369 00ee 9A00     		lsls	r2, r3, #2
+ 370 00f0 104B     		ldr	r3, .L23+4
+ 371 00f2 1344     		add	r3, r3, r2
+ 372 00f4 0022     		movs	r2, #0
+ 373 00f6 5A72     		strb	r2, [r3, #9]
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 10
+
+
+ 374 00f8 98E7     		b	.L7
+ 375              	.L18:
+ 115:Src/menu.c    ****       break;
+ 376              		.loc 1 115 0
+ 377 00fa 04EB4403 		add	r3, r4, r4, lsl #1
+ 378 00fe 9A00     		lsls	r2, r3, #2
+ 379 0100 0C4B     		ldr	r3, .L23+4
+ 380 0102 1344     		add	r3, r3, r2
+ 381 0104 0122     		movs	r2, #1
+ 382 0106 5A72     		strb	r2, [r3, #9]
+ 383 0108 90E7     		b	.L7
+ 384              	.L22:
+ 124:Src/menu.c    ****       keyPress[port_id].cnt = 0;
+ 385              		.loc 1 124 0
+ 386 010a 0A49     		ldr	r1, .L23+4
+ 387 010c 6300     		lsls	r3, r4, #1
+ 388 010e 1819     		adds	r0, r3, r4
+ 389 0110 8200     		lsls	r2, r0, #2
+ 390 0112 0A44     		add	r2, r2, r1
+ 391 0114 507A     		ldrb	r0, [r2, #9]	@ zero_extendqisi2
+ 392 0116 1072     		strb	r0, [r2, #8]
+ 125:Src/menu.c    ****     }
+ 393              		.loc 1 125 0
+ 394 0118 0023     		movs	r3, #0
+ 395 011a D372     		strb	r3, [r2, #11]
+ 396 011c 97E7     		b	.L6
+ 397              	.L19:
+ 131:Src/menu.c    ****   }        
+ 398              		.loc 1 131 0
+ 399 011e 04EB4404 		add	r4, r4, r4, lsl #1
+ 400 0122 A200     		lsls	r2, r4, #2
+ 401 0124 034B     		ldr	r3, .L23+4
+ 402 0126 1344     		add	r3, r3, r2
+ 403 0128 0022     		movs	r2, #0
+ 404 012a DA72     		strb	r2, [r3, #11]
+ 405              		.loc 1 133 0
+ 406 012c 8FE7     		b	.L6
+ 407              	.L24:
+ 408 012e 00BF     		.align	2
+ 409              	.L23:
+ 410 0130 000C0140 		.word	1073810432
+ 411 0134 00000000 		.word	keyPress
+ 412 0138 00140140 		.word	1073812480
+ 413 013c 00100140 		.word	1073811456
+ 414              		.cfi_endproc
+ 415              	.LFE68:
+ 417              		.section	.text.BUTTON_Manage,"ax",%progbits
+ 418              		.align	1
+ 419              		.global	BUTTON_Manage
+ 420              		.syntax unified
+ 421              		.thumb
+ 422              		.thumb_func
+ 423              		.fpu softvfp
+ 425              	BUTTON_Manage:
+ 426              	.LFB69:
+ 134:Src/menu.c    **** 
+ 135:Src/menu.c    **** void BUTTON_Manage(void)
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 11
+
+
+ 136:Src/menu.c    **** {
+ 427              		.loc 1 136 0
+ 428              		.cfi_startproc
+ 429              		@ args = 0, pretend = 0, frame = 0
+ 430              		@ frame_needed = 0, uses_anonymous_args = 0
+ 431 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 432              	.LCFI4:
+ 433              		.cfi_def_cfa_offset 24
+ 434              		.cfi_offset 3, -24
+ 435              		.cfi_offset 4, -20
+ 436              		.cfi_offset 5, -16
+ 437              		.cfi_offset 6, -12
+ 438              		.cfi_offset 7, -8
+ 439              		.cfi_offset 14, -4
+ 137:Src/menu.c    ****   uint8_t key;
+ 138:Src/menu.c    ****   if(HAL_GetTick() - btnTime  >= 5)
+ 440              		.loc 1 138 0
+ 441 0002 FFF7FEFF 		bl	HAL_GetTick
+ 442              	.LVL25:
+ 443 0006 374B     		ldr	r3, .L42
+ 444 0008 1B68     		ldr	r3, [r3]
+ 445 000a C01A     		subs	r0, r0, r3
+ 446 000c 0428     		cmp	r0, #4
+ 447 000e 67D9     		bls	.L25
+ 139:Src/menu.c    ****   {
+ 140:Src/menu.c    ****     for(key = 0; key < 5; key++)
+ 448              		.loc 1 140 0
+ 449 0010 0024     		movs	r4, #0
+ 450 0012 0CE0     		b	.L26
+ 451              	.LVL26:
+ 452              	.L28:
+ 141:Src/menu.c    ****     {
+ 142:Src/menu.c    ****       BUTTON_Get(key);
+ 143:Src/menu.c    ****       if(((keyPress[key].pressed == BTN_PRESS)&&(keyPress[key].waitRelease == 0))||((keyPress[key].
+ 453              		.loc 1 143 0 discriminator 3
+ 454 0014 0BB9     		cbnz	r3, .L30
+ 455              		.loc 1 143 0 is_stmt 0 discriminator 4
+ 456 0016 042C     		cmp	r4, #4
+ 457 0018 37D0     		beq	.L39
+ 458              	.L30:
+ 144:Src/menu.c    ****       {
+ 145:Src/menu.c    ****         keyPress[key].waitRelease = 1;
+ 146:Src/menu.c    ****         menuTimeOut = 60*100;
+ 147:Src/menu.c    ****         BL_On();
+ 148:Src/menu.c    ****         if(*keyPress[key].PressedEventHandler != MENU_Manager)
+ 149:Src/menu.c    ****           BUTTON_Setup(&keyPress[key], MENU_Manager, 0);
+ 150:Src/menu.c    ****         else
+ 151:Src/menu.c    ****         {
+ 152:Src/menu.c    ****           HAL_IWDG_Refresh(&hiwdg);
+ 153:Src/menu.c    ****           (*keyPress[key].PressedEventHandler)(key);
+ 154:Src/menu.c    ****         }
+ 155:Src/menu.c    ****       }
+ 156:Src/menu.c    ****       if(keyPress[key].pressed == BTN_RELEASE)
+ 459              		.loc 1 156 0 is_stmt 1
+ 460 001a 05EB4503 		add	r3, r5, r5, lsl #1
+ 461 001e 9A00     		lsls	r2, r3, #2
+ 462 0020 314B     		ldr	r3, .L42+4
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 12
+
+
+ 463 0022 1344     		add	r3, r3, r2
+ 464 0024 1B7A     		ldrb	r3, [r3, #8]	@ zero_extendqisi2
+ 465 0026 012B     		cmp	r3, #1
+ 466 0028 3FD0     		beq	.L40
+ 467              	.L32:
+ 140:Src/menu.c    ****     {
+ 468              		.loc 1 140 0 discriminator 2
+ 469 002a 0134     		adds	r4, r4, #1
+ 470              	.LVL27:
+ 471 002c E4B2     		uxtb	r4, r4
+ 472              	.LVL28:
+ 473              	.L26:
+ 140:Src/menu.c    ****     {
+ 474              		.loc 1 140 0 is_stmt 0 discriminator 1
+ 475 002e 042C     		cmp	r4, #4
+ 476 0030 40D8     		bhi	.L41
+ 142:Src/menu.c    ****       if(((keyPress[key].pressed == BTN_PRESS)&&(keyPress[key].waitRelease == 0))||((keyPress[key].
+ 477              		.loc 1 142 0 is_stmt 1
+ 478 0032 2046     		mov	r0, r4
+ 479 0034 FFF7FEFF 		bl	BUTTON_Get
+ 480              	.LVL29:
+ 143:Src/menu.c    ****       {
+ 481              		.loc 1 143 0
+ 482 0038 2546     		mov	r5, r4
+ 483 003a 04EB4403 		add	r3, r4, r4, lsl #1
+ 484 003e 9A00     		lsls	r2, r3, #2
+ 485 0040 294B     		ldr	r3, .L42+4
+ 486 0042 1344     		add	r3, r3, r2
+ 487 0044 1B7A     		ldrb	r3, [r3, #8]	@ zero_extendqisi2
+ 488 0046 002B     		cmp	r3, #0
+ 489 0048 E4D1     		bne	.L28
+ 143:Src/menu.c    ****       {
+ 490              		.loc 1 143 0 is_stmt 0 discriminator 1
+ 491 004a 04EB4402 		add	r2, r4, r4, lsl #1
+ 492 004e 9100     		lsls	r1, r2, #2
+ 493 0050 254A     		ldr	r2, .L42+4
+ 494 0052 0A44     		add	r2, r2, r1
+ 495 0054 927A     		ldrb	r2, [r2, #10]	@ zero_extendqisi2
+ 496 0056 002A     		cmp	r2, #0
+ 497 0058 DCD1     		bne	.L28
+ 498              	.L29:
+ 145:Src/menu.c    ****         menuTimeOut = 60*100;
+ 499              		.loc 1 145 0 is_stmt 1
+ 500 005a 234F     		ldr	r7, .L42+4
+ 501 005c 6B00     		lsls	r3, r5, #1
+ 502 005e 2B44     		add	r3, r3, r5
+ 503 0060 9E00     		lsls	r6, r3, #2
+ 504 0062 BB19     		adds	r3, r7, r6
+ 505 0064 0122     		movs	r2, #1
+ 506 0066 9A72     		strb	r2, [r3, #10]
+ 146:Src/menu.c    ****         BL_On();
+ 507              		.loc 1 146 0
+ 508 0068 204B     		ldr	r3, .L42+8
+ 509 006a 41F27072 		movw	r2, #6000
+ 510 006e 1A80     		strh	r2, [r3]	@ movhi
+ 147:Src/menu.c    ****         if(*keyPress[key].PressedEventHandler != MENU_Manager)
+ 511              		.loc 1 147 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 13
+
+
+ 512 0070 FFF7FEFF 		bl	BL_On
+ 513              	.LVL30:
+ 148:Src/menu.c    ****           BUTTON_Setup(&keyPress[key], MENU_Manager, 0);
+ 514              		.loc 1 148 0
+ 515 0074 BA59     		ldr	r2, [r7, r6]
+ 516 0076 1E4B     		ldr	r3, .L42+12
+ 517 0078 9A42     		cmp	r2, r3
+ 518 007a 0BD0     		beq	.L31
+ 149:Src/menu.c    ****         else
+ 519              		.loc 1 149 0
+ 520 007c 0022     		movs	r2, #0
+ 521 007e 1C49     		ldr	r1, .L42+12
+ 522 0080 3846     		mov	r0, r7
+ 523 0082 3044     		add	r0, r0, r6
+ 524 0084 FFF7FEFF 		bl	BUTTON_Setup
+ 525              	.LVL31:
+ 526 0088 C7E7     		b	.L30
+ 527              	.L39:
+ 143:Src/menu.c    ****       {
+ 528              		.loc 1 143 0 discriminator 5
+ 529 008a 1A4B     		ldr	r3, .L42+16
+ 530 008c 1B88     		ldrh	r3, [r3]
+ 531 008e 002B     		cmp	r3, #0
+ 532 0090 C3D1     		bne	.L30
+ 533 0092 E2E7     		b	.L29
+ 534              	.L31:
+ 152:Src/menu.c    ****           (*keyPress[key].PressedEventHandler)(key);
+ 535              		.loc 1 152 0
+ 536 0094 1848     		ldr	r0, .L42+20
+ 537 0096 FFF7FEFF 		bl	HAL_IWDG_Refresh
+ 538              	.LVL32:
+ 153:Src/menu.c    ****         }
+ 539              		.loc 1 153 0
+ 540 009a 05EB4502 		add	r2, r5, r5, lsl #1
+ 541 009e 9300     		lsls	r3, r2, #2
+ 542 00a0 114A     		ldr	r2, .L42+4
+ 543 00a2 D358     		ldr	r3, [r2, r3]
+ 544 00a4 2046     		mov	r0, r4
+ 545 00a6 9847     		blx	r3
+ 546              	.LVL33:
+ 547 00a8 B7E7     		b	.L30
+ 548              	.L40:
+ 157:Src/menu.c    ****         keyPress[key].waitRelease = 0;
+ 549              		.loc 1 157 0
+ 550 00aa 0F4B     		ldr	r3, .L42+4
+ 551 00ac 1344     		add	r3, r3, r2
+ 552 00ae 0022     		movs	r2, #0
+ 553 00b0 9A72     		strb	r2, [r3, #10]
+ 554 00b2 BAE7     		b	.L32
+ 555              	.L41:
+ 158:Src/menu.c    ****     }
+ 159:Src/menu.c    ****     if(menuTimeOut != 0)menuTimeOut--;
+ 556              		.loc 1 159 0
+ 557 00b4 0D4B     		ldr	r3, .L42+8
+ 558 00b6 1B88     		ldrh	r3, [r3]
+ 559 00b8 13B1     		cbz	r3, .L34
+ 560              		.loc 1 159 0 is_stmt 0 discriminator 1
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 14
+
+
+ 561 00ba 013B     		subs	r3, r3, #1
+ 562 00bc 0B4A     		ldr	r2, .L42+8
+ 563 00be 1380     		strh	r3, [r2]	@ movhi
+ 564              	.L34:
+ 160:Src/menu.c    ****     if(menuTimeOut == 0)
+ 565              		.loc 1 160 0 is_stmt 1
+ 566 00c0 0A4B     		ldr	r3, .L42+8
+ 567 00c2 1B88     		ldrh	r3, [r3]
+ 568 00c4 13B9     		cbnz	r3, .L35
+ 161:Src/menu.c    ****     {
+ 162:Src/menu.c    ****       menuIdx = 0;
+ 569              		.loc 1 162 0
+ 570 00c6 0B4B     		ldr	r3, .L42+16
+ 571 00c8 0022     		movs	r2, #0
+ 572 00ca 1A80     		strh	r2, [r3]	@ movhi
+ 573              	.L35:
+ 163:Src/menu.c    ****     }
+ 164:Src/menu.c    ****     if(menuTimeNext != 0) menuTimeNext--;
+ 574              		.loc 1 164 0
+ 575 00cc 0B4B     		ldr	r3, .L42+24
+ 576 00ce 1B88     		ldrh	r3, [r3]
+ 577 00d0 13B1     		cbz	r3, .L36
+ 578              		.loc 1 164 0 is_stmt 0 discriminator 1
+ 579 00d2 013B     		subs	r3, r3, #1
+ 580 00d4 094A     		ldr	r2, .L42+24
+ 581 00d6 1380     		strh	r3, [r2]	@ movhi
+ 582              	.L36:
+ 165:Src/menu.c    ****     btnTime = HAL_GetTick();
+ 583              		.loc 1 165 0 is_stmt 1
+ 584 00d8 FFF7FEFF 		bl	HAL_GetTick
+ 585              	.LVL34:
+ 586 00dc 014B     		ldr	r3, .L42
+ 587 00de 1860     		str	r0, [r3]
+ 588              	.LVL35:
+ 589              	.L25:
+ 166:Src/menu.c    ****   }
+ 167:Src/menu.c    **** }
+ 590              		.loc 1 167 0
+ 591 00e0 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 592              	.L43:
+ 593 00e2 00BF     		.align	2
+ 594              	.L42:
+ 595 00e4 00000000 		.word	btnTime
+ 596 00e8 00000000 		.word	keyPress
+ 597 00ec 00000000 		.word	.LANCHOR1
+ 598 00f0 00000000 		.word	MENU_Manager
+ 599 00f4 00000000 		.word	.LANCHOR0
+ 600 00f8 00000000 		.word	hiwdg
+ 601 00fc 00000000 		.word	.LANCHOR2
+ 602              		.cfi_endproc
+ 603              	.LFE69:
+ 605              		.section	.text.MENU_ToEvt,"ax",%progbits
+ 606              		.align	1
+ 607              		.global	MENU_ToEvt
+ 608              		.syntax unified
+ 609              		.thumb
+ 610              		.thumb_func
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 15
+
+
+ 611              		.fpu softvfp
+ 613              	MENU_ToEvt:
+ 614              	.LFB70:
+ 168:Src/menu.c    **** 
+ 169:Src/menu.c    **** uint16_t MENU_ToEvt(uint16_t mode, uint8_t key)
+ 170:Src/menu.c    **** {
+ 615              		.loc 1 170 0
+ 616              		.cfi_startproc
+ 617              		@ args = 0, pretend = 0, frame = 0
+ 618              		@ frame_needed = 0, uses_anonymous_args = 0
+ 619              	.LVL36:
+ 620 0000 2DE9F843 		push	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 621              	.LCFI5:
+ 622              		.cfi_def_cfa_offset 32
+ 623              		.cfi_offset 3, -32
+ 624              		.cfi_offset 4, -28
+ 625              		.cfi_offset 5, -24
+ 626              		.cfi_offset 6, -20
+ 627              		.cfi_offset 7, -16
+ 628              		.cfi_offset 8, -12
+ 629              		.cfi_offset 9, -8
+ 630              		.cfi_offset 14, -4
+ 631 0004 0546     		mov	r5, r0
+ 632 0006 0E46     		mov	r6, r1
+ 633              	.LVL37:
+ 171:Src/menu.c    ****   uint8_t i;
+ 172:Src/menu.c    ****   uint16_t ret = mode;
+ 173:Src/menu.c    ****   uint8_t cnt;
+ 174:Src/menu.c    ****   for(i = 0; i < sizeof(treeView)/sizeof(treeView[0]); i++)
+ 634              		.loc 1 174 0
+ 635 0008 0024     		movs	r4, #0
+ 636 000a 2AE0     		b	.L45
+ 637              	.LVL38:
+ 638              	.L48:
+ 175:Src/menu.c    ****   {
+ 176:Src/menu.c    ****     HAL_IWDG_Refresh(&hiwdg);
+ 177:Src/menu.c    ****     if(treeView[i].keyMode == mode)
+ 178:Src/menu.c    ****     { 
+ 179:Src/menu.c    ****       if(treeView[i].handler != 0)
+ 180:Src/menu.c    ****       {
+ 181:Src/menu.c    ****         // if(menuIdxLast != mode)
+ 182:Src/menu.c    ****         // {
+ 183:Src/menu.c    ****         //   u8g2_ClearBuffer(&u8g2);
+ 184:Src/menu.c    ****         //   u8g2_SetFont(&u8g2, u8g2_font_6x12_mf);
+ 185:Src/menu.c    ****         //   u8g2_DrawStr(&u8g2, 24, 12, "MENU SETTING");
+ 186:Src/menu.c    ****         // }
+ 187:Src/menu.c    ****         // u8g2_SetFont(&u8g2, u8g2_font_6x12_mf);
+ 188:Src/menu.c    ****         // u8g2_DrawStr(&u8g2, 10, 24, treeView[i].display1);
+ 189:Src/menu.c    ****         // u8g2_DrawStr(&u8g2, 10, 36, treeView[i].display2);
+ 190:Src/menu.c    ****         // u8g2_DrawStr(&u8g2, 10, 48, treeView[i].display3);
+ 191:Src/menu.c    ****         // u8g2_DrawStr(&u8g2, 10, 60, treeView[i].display4);
+ 192:Src/menu.c    ****         // u8g2_DrawStr(&u8g2, 1, (menuIdxCh)*12, "  ");
+ 193:Src/menu.c    ****         // u8g2_DrawStr(&u8g2, 1, (menuIdxCh + 1)*12, "->");
+ 194:Src/menu.c    ****         // u8g2_DrawStr(&u8g2, 1, (menuIdxCh + 2)*12, "  ");
+ 195:Src/menu.c    ****         // //IWDG_ReloadCounter();
+ 196:Src/menu.c    ****         // u8g2_SetFont(&u8g2, u8g2_font_5x8_mf);
+ 197:Src/menu.c    ****         // ret = (*treeView[i].handler)(i, key);
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 16
+
+
+ 198:Src/menu.c    ****         // menuIdxLast = mode;
+ 199:Src/menu.c    **** 
+ 200:Src/menu.c    ****         if((mode == 0x0100)||(mode == 0x0200)||(mode == 0x0300)||(mode == 0x0400))
+ 201:Src/menu.c    ****         {
+ 202:Src/menu.c    ****           u8g2_ClearBuffer(&u8g2);
+ 203:Src/menu.c    ****           u8g2_SetFont(&u8g2, u8g2_font_6x12_mf);
+ 204:Src/menu.c    ****           u8g2_SetDrawColor(&u8g2, 0);
+ 205:Src/menu.c    ****           u8g2_DrawStr(&u8g2, ((22 - strlen("MENU SETTING"))/2)*6, 12, "MENU SETTING");
+ 206:Src/menu.c    ****           u8g2_SetDrawColor(&u8g2, 1);
+ 207:Src/menu.c    ****           u8g2_DrawStr(&u8g2, 10, 24, u8x8_GetStringLineStart(0, treeView[i].display));
+ 208:Src/menu.c    ****           u8g2_DrawStr(&u8g2, 10, 36, u8x8_GetStringLineStart(1, treeView[i].display));
+ 209:Src/menu.c    ****           u8g2_DrawStr(&u8g2, 10, 48, u8x8_GetStringLineStart(2, treeView[i].display));
+ 210:Src/menu.c    ****           u8g2_DrawStr(&u8g2, 10, 60, u8x8_GetStringLineStart(3, treeView[i].display));
+ 211:Src/menu.c    ****           u8g2_DrawStr(&u8g2, 1, (menuIdxCh + 1)*12, "->");
+ 212:Src/menu.c    ****         }
+ 213:Src/menu.c    ****         else
+ 214:Src/menu.c    ****         {
+ 215:Src/menu.c    ****           u8g2_ClearBuffer(&u8g2);
+ 639              		.loc 1 215 0
+ 640 000c DFF87891 		ldr	r9, .L54+28
+ 641 0010 4846     		mov	r0, r9
+ 642 0012 FFF7FEFF 		bl	u8g2_ClearBuffer
+ 643              	.LVL39:
+ 216:Src/menu.c    ****           u8g2_SetFont(&u8g2, u8g2_font_6x12_mf);
+ 644              		.loc 1 216 0
+ 645 0016 5549     		ldr	r1, .L54
+ 646 0018 4846     		mov	r0, r9
+ 647 001a FFF7FEFF 		bl	u8g2_SetFont
+ 648              	.LVL40:
+ 217:Src/menu.c    ****           u8g2_SetDrawColor(&u8g2, 0);
+ 649              		.loc 1 217 0
+ 650 001e 0021     		movs	r1, #0
+ 651 0020 4846     		mov	r0, r9
+ 652 0022 FFF7FEFF 		bl	u8g2_SetDrawColor
+ 653              	.LVL41:
+ 218:Src/menu.c    ****           u8g2_DrawStr(&u8g2, ((22 - strlen(treeView[i].display))/2)*6, 12, treeView[i].display);
+ 654              		.loc 1 218 0
+ 655 0026 524B     		ldr	r3, .L54+4
+ 656 0028 4FF06408 		mov	r8, #100
+ 657 002c 08FB0438 		mla	r8, r8, r4, r3
+ 658 0030 08F10208 		add	r8, r8, #2
+ 659 0034 4046     		mov	r0, r8
+ 660 0036 FFF7FEFF 		bl	strlen
+ 661              	.LVL42:
+ 662 003a C0F11603 		rsb	r3, r0, #22
+ 663 003e 5B08     		lsrs	r3, r3, #1
+ 664 0040 03EB4303 		add	r3, r3, r3, lsl #1
+ 665 0044 5900     		lsls	r1, r3, #1
+ 666 0046 4346     		mov	r3, r8
+ 667 0048 0C22     		movs	r2, #12
+ 668 004a 01F0FE01 		and	r1, r1, #254
+ 669 004e 4846     		mov	r0, r9
+ 670 0050 FFF7FEFF 		bl	u8g2_DrawStr
+ 671              	.LVL43:
+ 219:Src/menu.c    ****           u8g2_SetDrawColor(&u8g2, 1);
+ 672              		.loc 1 219 0
+ 673 0054 0121     		movs	r1, #1
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 17
+
+
+ 674 0056 4846     		mov	r0, r9
+ 675 0058 FFF7FEFF 		bl	u8g2_SetDrawColor
+ 676              	.LVL44:
+ 677 005c 73E0     		b	.L49
+ 678              	.L46:
+ 174:Src/menu.c    ****   {
+ 679              		.loc 1 174 0 discriminator 2
+ 680 005e 0134     		adds	r4, r4, #1
+ 681              	.LVL45:
+ 682 0060 E4B2     		uxtb	r4, r4
+ 683              	.LVL46:
+ 684              	.L45:
+ 174:Src/menu.c    ****   {
+ 685              		.loc 1 174 0 is_stmt 0 discriminator 1
+ 686 0062 112C     		cmp	r4, #17
+ 687 0064 7ED8     		bhi	.L53
+ 176:Src/menu.c    ****     if(treeView[i].keyMode == mode)
+ 688              		.loc 1 176 0 is_stmt 1
+ 689 0066 4348     		ldr	r0, .L54+8
+ 690 0068 FFF7FEFF 		bl	HAL_IWDG_Refresh
+ 691              	.LVL47:
+ 177:Src/menu.c    ****     { 
+ 692              		.loc 1 177 0
+ 693 006c 2746     		mov	r7, r4
+ 694 006e 6423     		movs	r3, #100
+ 695 0070 03FB04F3 		mul	r3, r3, r4
+ 696 0074 3E4A     		ldr	r2, .L54+4
+ 697 0076 D35A     		ldrh	r3, [r2, r3]
+ 698 0078 AB42     		cmp	r3, r5
+ 699 007a F0D1     		bne	.L46
+ 179:Src/menu.c    ****       {
+ 700              		.loc 1 179 0
+ 701 007c 6423     		movs	r3, #100
+ 702 007e 03FB0423 		mla	r3, r3, r4, r2
+ 703 0082 DB6D     		ldr	r3, [r3, #92]
+ 704 0084 002B     		cmp	r3, #0
+ 705 0086 EAD0     		beq	.L46
+ 200:Src/menu.c    ****         {
+ 706              		.loc 1 200 0
+ 707 0088 B5F5807F 		cmp	r5, #256
+ 708 008c 08D0     		beq	.L47
+ 200:Src/menu.c    ****         {
+ 709              		.loc 1 200 0 is_stmt 0 discriminator 1
+ 710 008e B5F5007F 		cmp	r5, #512
+ 711 0092 05D0     		beq	.L47
+ 200:Src/menu.c    ****         {
+ 712              		.loc 1 200 0 discriminator 2
+ 713 0094 B5F5407F 		cmp	r5, #768
+ 714 0098 02D0     		beq	.L47
+ 200:Src/menu.c    ****         {
+ 715              		.loc 1 200 0 discriminator 3
+ 716 009a B5F5806F 		cmp	r5, #1024
+ 717 009e B5D1     		bne	.L48
+ 718              	.L47:
+ 202:Src/menu.c    ****           u8g2_SetFont(&u8g2, u8g2_font_6x12_mf);
+ 719              		.loc 1 202 0 is_stmt 1
+ 720 00a0 DFF8E480 		ldr	r8, .L54+28
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 18
+
+
+ 721 00a4 4046     		mov	r0, r8
+ 722 00a6 FFF7FEFF 		bl	u8g2_ClearBuffer
+ 723              	.LVL48:
+ 203:Src/menu.c    ****           u8g2_SetDrawColor(&u8g2, 0);
+ 724              		.loc 1 203 0
+ 725 00aa 3049     		ldr	r1, .L54
+ 726 00ac 4046     		mov	r0, r8
+ 727 00ae FFF7FEFF 		bl	u8g2_SetFont
+ 728              	.LVL49:
+ 204:Src/menu.c    ****           u8g2_DrawStr(&u8g2, ((22 - strlen("MENU SETTING"))/2)*6, 12, "MENU SETTING");
+ 729              		.loc 1 204 0
+ 730 00b2 0021     		movs	r1, #0
+ 731 00b4 4046     		mov	r0, r8
+ 732 00b6 FFF7FEFF 		bl	u8g2_SetDrawColor
+ 733              	.LVL50:
+ 205:Src/menu.c    ****           u8g2_SetDrawColor(&u8g2, 1);
+ 734              		.loc 1 205 0
+ 735 00ba 2F4B     		ldr	r3, .L54+12
+ 736 00bc 0C22     		movs	r2, #12
+ 737 00be 1E21     		movs	r1, #30
+ 738 00c0 4046     		mov	r0, r8
+ 739 00c2 FFF7FEFF 		bl	u8g2_DrawStr
+ 740              	.LVL51:
+ 206:Src/menu.c    ****           u8g2_DrawStr(&u8g2, 10, 24, u8x8_GetStringLineStart(0, treeView[i].display));
+ 741              		.loc 1 206 0
+ 742 00c6 0121     		movs	r1, #1
+ 743 00c8 4046     		mov	r0, r8
+ 744 00ca FFF7FEFF 		bl	u8g2_SetDrawColor
+ 745              	.LVL52:
+ 207:Src/menu.c    ****           u8g2_DrawStr(&u8g2, 10, 36, u8x8_GetStringLineStart(1, treeView[i].display));
+ 746              		.loc 1 207 0
+ 747 00ce 284B     		ldr	r3, .L54+4
+ 748 00d0 4FF06409 		mov	r9, #100
+ 749 00d4 09FB0739 		mla	r9, r9, r7, r3
+ 750 00d8 09F10209 		add	r9, r9, #2
+ 751 00dc 4946     		mov	r1, r9
+ 752 00de 0020     		movs	r0, #0
+ 753 00e0 FFF7FEFF 		bl	u8x8_GetStringLineStart
+ 754              	.LVL53:
+ 755 00e4 0346     		mov	r3, r0
+ 756 00e6 1822     		movs	r2, #24
+ 757 00e8 0A21     		movs	r1, #10
+ 758 00ea 4046     		mov	r0, r8
+ 759 00ec FFF7FEFF 		bl	u8g2_DrawStr
+ 760              	.LVL54:
+ 208:Src/menu.c    ****           u8g2_DrawStr(&u8g2, 10, 48, u8x8_GetStringLineStart(2, treeView[i].display));
+ 761              		.loc 1 208 0
+ 762 00f0 4946     		mov	r1, r9
+ 763 00f2 0120     		movs	r0, #1
+ 764 00f4 FFF7FEFF 		bl	u8x8_GetStringLineStart
+ 765              	.LVL55:
+ 766 00f8 0346     		mov	r3, r0
+ 767 00fa 2422     		movs	r2, #36
+ 768 00fc 0A21     		movs	r1, #10
+ 769 00fe 4046     		mov	r0, r8
+ 770 0100 FFF7FEFF 		bl	u8g2_DrawStr
+ 771              	.LVL56:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 19
+
+
+ 209:Src/menu.c    ****           u8g2_DrawStr(&u8g2, 10, 60, u8x8_GetStringLineStart(3, treeView[i].display));
+ 772              		.loc 1 209 0
+ 773 0104 4946     		mov	r1, r9
+ 774 0106 0220     		movs	r0, #2
+ 775 0108 FFF7FEFF 		bl	u8x8_GetStringLineStart
+ 776              	.LVL57:
+ 777 010c 0346     		mov	r3, r0
+ 778 010e 3022     		movs	r2, #48
+ 779 0110 0A21     		movs	r1, #10
+ 780 0112 4046     		mov	r0, r8
+ 781 0114 FFF7FEFF 		bl	u8g2_DrawStr
+ 782              	.LVL58:
+ 210:Src/menu.c    ****           u8g2_DrawStr(&u8g2, 1, (menuIdxCh + 1)*12, "->");
+ 783              		.loc 1 210 0
+ 784 0118 4946     		mov	r1, r9
+ 785 011a 0320     		movs	r0, #3
+ 786 011c FFF7FEFF 		bl	u8x8_GetStringLineStart
+ 787              	.LVL59:
+ 788 0120 0346     		mov	r3, r0
+ 789 0122 3C22     		movs	r2, #60
+ 790 0124 0A21     		movs	r1, #10
+ 791 0126 4046     		mov	r0, r8
+ 792 0128 FFF7FEFF 		bl	u8g2_DrawStr
+ 793              	.LVL60:
+ 211:Src/menu.c    ****         }
+ 794              		.loc 1 211 0
+ 795 012c 134B     		ldr	r3, .L54+16
+ 796 012e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 797 0130 0133     		adds	r3, r3, #1
+ 798 0132 03EB4303 		add	r3, r3, r3, lsl #1
+ 799 0136 9A00     		lsls	r2, r3, #2
+ 800 0138 114B     		ldr	r3, .L54+20
+ 801 013a 02F0FC02 		and	r2, r2, #252
+ 802 013e 0121     		movs	r1, #1
+ 803 0140 4046     		mov	r0, r8
+ 804 0142 FFF7FEFF 		bl	u8g2_DrawStr
+ 805              	.LVL61:
+ 806              	.L49:
+ 220:Src/menu.c    ****         }
+ 221:Src/menu.c    ****         u8g2_SetFont(&u8g2, u8g2_font_5x8_mf);
+ 807              		.loc 1 221 0
+ 808 0146 0F49     		ldr	r1, .L54+24
+ 809 0148 0F48     		ldr	r0, .L54+28
+ 810 014a FFF7FEFF 		bl	u8g2_SetFont
+ 811              	.LVL62:
+ 222:Src/menu.c    ****         ret = (*treeView[i].handler)(i, key);
+ 812              		.loc 1 222 0
+ 813 014e 084B     		ldr	r3, .L54+4
+ 814 0150 6422     		movs	r2, #100
+ 815 0152 02FB0737 		mla	r7, r2, r7, r3
+ 816 0156 FB6D     		ldr	r3, [r7, #92]
+ 817 0158 3146     		mov	r1, r6
+ 818 015a 2046     		mov	r0, r4
+ 819 015c 9847     		blx	r3
+ 820              	.LVL63:
+ 223:Src/menu.c    ****         menuIdxLast = mode;
+ 821              		.loc 1 223 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 20
+
+
+ 822 015e 0B4B     		ldr	r3, .L54+32
+ 823 0160 1D80     		strh	r5, [r3]	@ movhi
+ 224:Src/menu.c    ****         return ret;
+ 824              		.loc 1 224 0
+ 825 0162 01E0     		b	.L50
+ 826              	.LVL64:
+ 827              	.L53:
+ 225:Src/menu.c    ****       }
+ 226:Src/menu.c    ****     }
+ 227:Src/menu.c    ****   }
+ 228:Src/menu.c    ****   return (ret&0xFF00);
+ 828              		.loc 1 228 0
+ 829 0164 05F47F40 		and	r0, r5, #65280
+ 830              	.LVL65:
+ 831              	.L50:
+ 229:Src/menu.c    **** }
+ 832              		.loc 1 229 0
+ 833 0168 BDE8F883 		pop	{r3, r4, r5, r6, r7, r8, r9, pc}
+ 834              	.LVL66:
+ 835              	.L55:
+ 836              		.align	2
+ 837              	.L54:
+ 838 016c 00000000 		.word	u8g2_font_6x12_mf
+ 839 0170 00000000 		.word	.LANCHOR3
+ 840 0174 00000000 		.word	hiwdg
+ 841 0178 00000000 		.word	.LC0
+ 842 017c 00000000 		.word	.LANCHOR4
+ 843 0180 10000000 		.word	.LC1
+ 844 0184 00000000 		.word	u8g2_font_5x8_mf
+ 845 0188 00000000 		.word	u8g2
+ 846 018c 00000000 		.word	.LANCHOR5
+ 847              		.cfi_endproc
+ 848              	.LFE70:
+ 850              		.section	.text.MENU_Manager,"ax",%progbits
+ 851              		.align	1
+ 852              		.global	MENU_Manager
+ 853              		.syntax unified
+ 854              		.thumb
+ 855              		.thumb_func
+ 856              		.fpu softvfp
+ 858              	MENU_Manager:
+ 859              	.LFB71:
+ 230:Src/menu.c    **** 
+ 231:Src/menu.c    **** void MENU_Manager(uint8_t key)
+ 232:Src/menu.c    **** {
+ 860              		.loc 1 232 0
+ 861              		.cfi_startproc
+ 862              		@ args = 0, pretend = 0, frame = 0
+ 863              		@ frame_needed = 0, uses_anonymous_args = 0
+ 864              	.LVL67:
+ 865 0000 08B5     		push	{r3, lr}
+ 866              	.LCFI6:
+ 867              		.cfi_def_cfa_offset 8
+ 868              		.cfi_offset 3, -8
+ 869              		.cfi_offset 14, -4
+ 233:Src/menu.c    ****   switch(key)
+ 870              		.loc 1 233 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 21
+
+
+ 871 0002 0428     		cmp	r0, #4
+ 872 0004 00F2B980 		bhi	.L56
+ 873 0008 DFE800F0 		tbb	[pc, r0]
+ 874              	.L59:
+ 875 000c 43       		.byte	(.L58-.L59)/2
+ 876 000d 03       		.byte	(.L60-.L59)/2
+ 877 000e 96       		.byte	(.L61-.L59)/2
+ 878 000f B8       		.byte	(.L62-.L59)/2
+ 879 0010 82       		.byte	(.L63-.L59)/2
+ 880 0011 00       		.p2align 1
+ 881              	.L60:
+ 234:Src/menu.c    ****   {
+ 235:Src/menu.c    ****     case BTN_DOWN:
+ 236:Src/menu.c    ****       menuTimeNext = 6000;
+ 882              		.loc 1 236 0
+ 883 0012 6E4B     		ldr	r3, .L76
+ 884 0014 41F27072 		movw	r2, #6000
+ 885 0018 1A80     		strh	r2, [r3]	@ movhi
+ 237:Src/menu.c    ****       if(menuIdx != 0)
+ 886              		.loc 1 237 0
+ 887 001a 6D4B     		ldr	r3, .L76+4
+ 888 001c 1B88     		ldrh	r3, [r3]
+ 889 001e 002B     		cmp	r3, #0
+ 890 0020 00F0AB80 		beq	.L56
+ 238:Src/menu.c    ****       {
+ 239:Src/menu.c    ****         if((menuIdx == 0x0100)||(menuIdx == 0x0200)||(menuIdx == 0x0300)) //||(menuIdx == 0x0400)
+ 891              		.loc 1 239 0
+ 892 0024 B3F5807F 		cmp	r3, #256
+ 893 0028 17D0     		beq	.L64
+ 894              		.loc 1 239 0 is_stmt 0 discriminator 1
+ 895 002a B3F5007F 		cmp	r3, #512
+ 896 002e 14D0     		beq	.L64
+ 897              		.loc 1 239 0 discriminator 2
+ 898 0030 B3F5407F 		cmp	r3, #768
+ 899 0034 11D0     		beq	.L64
+ 240:Src/menu.c    ****         {
+ 241:Src/menu.c    ****           if(++menuIdxCh > 4)
+ 242:Src/menu.c    ****           {
+ 243:Src/menu.c    ****             menuIdxCh = 1;
+ 244:Src/menu.c    ****             menuIdx += 0x0100;
+ 245:Src/menu.c    ****             if(menuIdx > 0x0400) menuIdx = 0x0100;
+ 246:Src/menu.c    ****           }
+ 247:Src/menu.c    ****           //printf("idx: %.4x - IdxCh: %d\n", menuIdx, menuIdxCh);
+ 248:Src/menu.c    ****         }
+ 249:Src/menu.c    ****         else if(menuIdx == 0x0400)
+ 900              		.loc 1 249 0 is_stmt 1
+ 901 0036 B3F5806F 		cmp	r3, #1024
+ 902 003a 24D1     		bne	.L66
+ 250:Src/menu.c    ****         {
+ 251:Src/menu.c    ****           if(++menuIdxCh > 1)
+ 903              		.loc 1 251 0
+ 904 003c 654A     		ldr	r2, .L76+8
+ 905 003e 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 906 0040 0133     		adds	r3, r3, #1
+ 907 0042 DBB2     		uxtb	r3, r3
+ 908 0044 1370     		strb	r3, [r2]
+ 909 0046 012B     		cmp	r3, #1
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 22
+
+
+ 910 0048 1DD9     		bls	.L66
+ 252:Src/menu.c    ****           {
+ 253:Src/menu.c    ****             menuIdxCh = 1;
+ 911              		.loc 1 253 0
+ 912 004a 1346     		mov	r3, r2
+ 913 004c 0122     		movs	r2, #1
+ 914 004e 1A70     		strb	r2, [r3]
+ 254:Src/menu.c    ****             menuIdx = 0x0100;
+ 915              		.loc 1 254 0
+ 916 0050 5F4B     		ldr	r3, .L76+4
+ 917 0052 4FF48072 		mov	r2, #256
+ 918 0056 1A80     		strh	r2, [r3]	@ movhi
+ 919 0058 15E0     		b	.L66
+ 920              	.L64:
+ 241:Src/menu.c    ****           {
+ 921              		.loc 1 241 0
+ 922 005a 5E49     		ldr	r1, .L76+8
+ 923 005c 0A78     		ldrb	r2, [r1]	@ zero_extendqisi2
+ 924 005e 0132     		adds	r2, r2, #1
+ 925 0060 D2B2     		uxtb	r2, r2
+ 926 0062 0A70     		strb	r2, [r1]
+ 927 0064 042A     		cmp	r2, #4
+ 928 0066 0ED9     		bls	.L66
+ 243:Src/menu.c    ****             menuIdx += 0x0100;
+ 929              		.loc 1 243 0
+ 930 0068 0A46     		mov	r2, r1
+ 931 006a 0121     		movs	r1, #1
+ 932 006c 1170     		strb	r1, [r2]
+ 244:Src/menu.c    ****             if(menuIdx > 0x0400) menuIdx = 0x0100;
+ 933              		.loc 1 244 0
+ 934 006e 03F58073 		add	r3, r3, #256
+ 935 0072 9BB2     		uxth	r3, r3
+ 936 0074 564A     		ldr	r2, .L76+4
+ 937 0076 1380     		strh	r3, [r2]	@ movhi
+ 245:Src/menu.c    ****           }
+ 938              		.loc 1 245 0
+ 939 0078 B3F5806F 		cmp	r3, #1024
+ 940 007c 03D9     		bls	.L66
+ 245:Src/menu.c    ****           }
+ 941              		.loc 1 245 0 is_stmt 0 discriminator 1
+ 942 007e 1346     		mov	r3, r2
+ 943 0080 4FF48072 		mov	r2, #256
+ 944 0084 1A80     		strh	r2, [r3]	@ movhi
+ 945              	.L66:
+ 255:Src/menu.c    ****           }
+ 256:Src/menu.c    ****           //printf("idx: %.4x - IdxCh: %d\n", menuIdx, menuIdxCh);
+ 257:Src/menu.c    ****         }
+ 258:Src/menu.c    ****         MENU_ToEvt(menuIdx, key);
+ 946              		.loc 1 258 0 is_stmt 1
+ 947 0086 0146     		mov	r1, r0
+ 948 0088 514B     		ldr	r3, .L76+4
+ 949 008a 1888     		ldrh	r0, [r3]
+ 950              	.LVL68:
+ 951 008c FFF7FEFF 		bl	MENU_ToEvt
+ 952              	.LVL69:
+ 953 0090 73E0     		b	.L56
+ 954              	.LVL70:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 23
+
+
+ 955              	.L58:
+ 259:Src/menu.c    ****       }
+ 260:Src/menu.c    ****       break;
+ 261:Src/menu.c    ****     case BTN_UP:
+ 262:Src/menu.c    ****       menuTimeNext = 6000;
+ 956              		.loc 1 262 0
+ 957 0092 4E4B     		ldr	r3, .L76
+ 958 0094 41F27072 		movw	r2, #6000
+ 959 0098 1A80     		strh	r2, [r3]	@ movhi
+ 263:Src/menu.c    ****       if(menuIdx != 0)
+ 960              		.loc 1 263 0
+ 961 009a 4D4B     		ldr	r3, .L76+4
+ 962 009c 1B88     		ldrh	r3, [r3]
+ 963 009e 002B     		cmp	r3, #0
+ 964 00a0 6BD0     		beq	.L56
+ 264:Src/menu.c    ****       {
+ 265:Src/menu.c    ****         if((menuIdx == 0x0100)||(menuIdx == 0x0200)||(menuIdx == 0x0300)) //||(menuIdx == 0x0400)
+ 965              		.loc 1 265 0
+ 966 00a2 B3F5807F 		cmp	r3, #256
+ 967 00a6 16D0     		beq	.L67
+ 968              		.loc 1 265 0 is_stmt 0 discriminator 1
+ 969 00a8 B3F5007F 		cmp	r3, #512
+ 970 00ac 13D0     		beq	.L67
+ 971              		.loc 1 265 0 discriminator 2
+ 972 00ae B3F5407F 		cmp	r3, #768
+ 973 00b2 10D0     		beq	.L67
+ 266:Src/menu.c    ****         {
+ 267:Src/menu.c    ****           if(--menuIdxCh == 0)
+ 268:Src/menu.c    ****           {
+ 269:Src/menu.c    ****             menuIdxCh = 4;
+ 270:Src/menu.c    ****             menuIdx -= 0x0100;
+ 271:Src/menu.c    ****             if(menuIdx < 0x0100)
+ 272:Src/menu.c    ****             {
+ 273:Src/menu.c    ****               menuIdx = 0x0400;
+ 274:Src/menu.c    ****               menuIdxCh = 1;
+ 275:Src/menu.c    ****             }
+ 276:Src/menu.c    ****           }
+ 277:Src/menu.c    ****           //printf("idx: %.4x - IdxCh: %d\n", menuIdx, menuIdxCh);
+ 278:Src/menu.c    ****         }
+ 279:Src/menu.c    ****         else if(menuIdx == 0x0400)
+ 974              		.loc 1 279 0 is_stmt 1
+ 975 00b4 B3F5806F 		cmp	r3, #1024
+ 976 00b8 24D1     		bne	.L69
+ 280:Src/menu.c    ****         {
+ 281:Src/menu.c    ****           if(--menuIdxCh == 0)
+ 977              		.loc 1 281 0
+ 978 00ba 464A     		ldr	r2, .L76+8
+ 979 00bc 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 980 00be 013B     		subs	r3, r3, #1
+ 981 00c0 DBB2     		uxtb	r3, r3
+ 982 00c2 1370     		strb	r3, [r2]
+ 983 00c4 F3B9     		cbnz	r3, .L69
+ 282:Src/menu.c    ****           {
+ 283:Src/menu.c    ****             menuIdxCh = 4;
+ 984              		.loc 1 283 0
+ 985 00c6 1346     		mov	r3, r2
+ 986 00c8 0422     		movs	r2, #4
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 24
+
+
+ 987 00ca 1A70     		strb	r2, [r3]
+ 284:Src/menu.c    ****             menuIdx = 0x0300;
+ 988              		.loc 1 284 0
+ 989 00cc 404B     		ldr	r3, .L76+4
+ 990 00ce 4FF44072 		mov	r2, #768
+ 991 00d2 1A80     		strh	r2, [r3]	@ movhi
+ 992 00d4 16E0     		b	.L69
+ 993              	.L67:
+ 267:Src/menu.c    ****           {
+ 994              		.loc 1 267 0
+ 995 00d6 3F49     		ldr	r1, .L76+8
+ 996 00d8 0A78     		ldrb	r2, [r1]	@ zero_extendqisi2
+ 997 00da 013A     		subs	r2, r2, #1
+ 998 00dc D2B2     		uxtb	r2, r2
+ 999 00de 0A70     		strb	r2, [r1]
+ 1000 00e0 82B9     		cbnz	r2, .L69
+ 269:Src/menu.c    ****             menuIdx -= 0x0100;
+ 1001              		.loc 1 269 0
+ 1002 00e2 0A46     		mov	r2, r1
+ 1003 00e4 0421     		movs	r1, #4
+ 1004 00e6 1170     		strb	r1, [r2]
+ 270:Src/menu.c    ****             if(menuIdx < 0x0100)
+ 1005              		.loc 1 270 0
+ 1006 00e8 A3F58073 		sub	r3, r3, #256
+ 1007 00ec 9BB2     		uxth	r3, r3
+ 1008 00ee 384A     		ldr	r2, .L76+4
+ 1009 00f0 1380     		strh	r3, [r2]	@ movhi
+ 271:Src/menu.c    ****             {
+ 1010              		.loc 1 271 0
+ 1011 00f2 FF2B     		cmp	r3, #255
+ 1012 00f4 06D8     		bhi	.L69
+ 273:Src/menu.c    ****               menuIdxCh = 1;
+ 1013              		.loc 1 273 0
+ 1014 00f6 1346     		mov	r3, r2
+ 1015 00f8 4FF48062 		mov	r2, #1024
+ 1016 00fc 1A80     		strh	r2, [r3]	@ movhi
+ 274:Src/menu.c    ****             }
+ 1017              		.loc 1 274 0
+ 1018 00fe 354B     		ldr	r3, .L76+8
+ 1019 0100 0122     		movs	r2, #1
+ 1020 0102 1A70     		strb	r2, [r3]
+ 1021              	.L69:
+ 285:Src/menu.c    ****           }
+ 286:Src/menu.c    ****           //printf("idx: %.4x - IdxCh: %d\n", menuIdx, menuIdxCh);
+ 287:Src/menu.c    ****         }
+ 288:Src/menu.c    ****         MENU_ToEvt(menuIdx, key);
+ 1022              		.loc 1 288 0
+ 1023 0104 0146     		mov	r1, r0
+ 1024 0106 324B     		ldr	r3, .L76+4
+ 1025 0108 1888     		ldrh	r0, [r3]
+ 1026              	.LVL71:
+ 1027 010a FFF7FEFF 		bl	MENU_ToEvt
+ 1028              	.LVL72:
+ 1029 010e 34E0     		b	.L56
+ 1030              	.LVL73:
+ 1031              	.L63:
+ 289:Src/menu.c    ****       }
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 25
+
+
+ 290:Src/menu.c    ****       break;
+ 291:Src/menu.c    ****     case BTN_MENU:
+ 292:Src/menu.c    ****       if(menuIdx == 0)
+ 1032              		.loc 1 292 0
+ 1033 0110 2F4B     		ldr	r3, .L76+4
+ 1034 0112 1B88     		ldrh	r3, [r3]
+ 1035 0114 5BB9     		cbnz	r3, .L70
+ 293:Src/menu.c    ****       {
+ 294:Src/menu.c    ****         menuTimePress = 0;
+ 1036              		.loc 1 294 0
+ 1037 0116 304B     		ldr	r3, .L76+12
+ 1038 0118 0022     		movs	r2, #0
+ 1039 011a 1A80     		strh	r2, [r3]	@ movhi
+ 295:Src/menu.c    ****         menuIdx = 0x0100;
+ 1040              		.loc 1 295 0
+ 1041 011c 4FF48073 		mov	r3, #256
+ 1042 0120 2B4A     		ldr	r2, .L76+4
+ 1043 0122 1380     		strh	r3, [r2]	@ movhi
+ 296:Src/menu.c    ****         MENU_ToEvt(menuIdx, key);
+ 1044              		.loc 1 296 0
+ 1045 0124 0146     		mov	r1, r0
+ 1046 0126 1846     		mov	r0, r3
+ 1047              	.LVL74:
+ 1048 0128 FFF7FEFF 		bl	MENU_ToEvt
+ 1049              	.LVL75:
+ 1050 012c 25E0     		b	.L56
+ 1051              	.LVL76:
+ 1052              	.L70:
+ 297:Src/menu.c    ****       }
+ 298:Src/menu.c    ****       else
+ 299:Src/menu.c    ****       {
+ 300:Src/menu.c    ****         MENU_ToEvt(menuIdx, key);
+ 1053              		.loc 1 300 0
+ 1054 012e 0146     		mov	r1, r0
+ 1055 0130 1846     		mov	r0, r3
+ 1056              	.LVL77:
+ 1057 0132 FFF7FEFF 		bl	MENU_ToEvt
+ 1058              	.LVL78:
+ 1059 0136 20E0     		b	.L56
+ 1060              	.LVL79:
+ 1061              	.L61:
+ 301:Src/menu.c    ****       }
+ 302:Src/menu.c    ****       // if(menuIdx == 0)
+ 303:Src/menu.c    ****       // {
+ 304:Src/menu.c    ****       //   if(++menuTimePress > 200)
+ 305:Src/menu.c    ****       //   {
+ 306:Src/menu.c    ****       //     menuTimePress = 0;
+ 307:Src/menu.c    ****       //     menuIdx = 0x0100;
+ 308:Src/menu.c    ****       //     MENU_ToEvt(menuIdx, key);
+ 309:Src/menu.c    ****       //   }
+ 310:Src/menu.c    ****       // }
+ 311:Src/menu.c    ****       // else
+ 312:Src/menu.c    ****       // {
+ 313:Src/menu.c    ****       //   if((menuIdx == 0x0100)||(menuIdx == 0x0200)||(menuIdx == 0x0300)||(menuIdx == 0x0400)||(
+ 314:Src/menu.c    ****       //   {
+ 315:Src/menu.c    ****       //     menuIdx = menuIdx+menuIdxCh;
+ 316:Src/menu.c    ****       //     menuTimeNext = 200;
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 26
+
+
+ 317:Src/menu.c    ****       //     MENU_ToEvt(menuIdx, 0xFF);
+ 318:Src/menu.c    ****       //   }
+ 319:Src/menu.c    ****       //   else
+ 320:Src/menu.c    ****       //   {
+ 321:Src/menu.c    ****       //     if(menuTimeNext == 0)
+ 322:Src/menu.c    ****       //       MENU_ToEvt(menuIdx, key);
+ 323:Src/menu.c    ****       //   }
+ 324:Src/menu.c    ****       // }
+ 325:Src/menu.c    ****       break;
+ 326:Src/menu.c    ****     case BTN_PREV:
+ 327:Src/menu.c    ****       toggle = 0;
+ 1062              		.loc 1 327 0
+ 1063 0138 284B     		ldr	r3, .L76+16
+ 1064 013a 0022     		movs	r2, #0
+ 1065 013c 1A70     		strb	r2, [r3]
+ 328:Src/menu.c    ****       if((menuIdx != 0x0100)&&(menuIdx != 0x0200)&&(menuIdx != 0x0300)&&(menuIdx != 0x0400))
+ 1066              		.loc 1 328 0
+ 1067 013e 244B     		ldr	r3, .L76+4
+ 1068 0140 1B88     		ldrh	r3, [r3]
+ 1069 0142 B3F5807F 		cmp	r3, #256
+ 1070 0146 0DD0     		beq	.L71
+ 1071              		.loc 1 328 0 is_stmt 0 discriminator 1
+ 1072 0148 B3F5007F 		cmp	r3, #512
+ 1073 014c 0AD0     		beq	.L71
+ 1074              		.loc 1 328 0 discriminator 2
+ 1075 014e B3F5407F 		cmp	r3, #768
+ 1076 0152 07D0     		beq	.L71
+ 1077              		.loc 1 328 0 discriminator 3
+ 1078 0154 B3F5806F 		cmp	r3, #1024
+ 1079 0158 04D0     		beq	.L71
+ 329:Src/menu.c    ****       {
+ 330:Src/menu.c    ****         menuIdx = (menuIdx&0xFF00);
+ 1080              		.loc 1 330 0 is_stmt 1
+ 1081 015a 03F47F43 		and	r3, r3, #65280
+ 1082 015e 1C4A     		ldr	r2, .L76+4
+ 1083 0160 1380     		strh	r3, [r2]	@ movhi
+ 1084 0162 05E0     		b	.L72
+ 1085              	.L71:
+ 331:Src/menu.c    ****       }
+ 332:Src/menu.c    ****       else
+ 333:Src/menu.c    ****       {
+ 334:Src/menu.c    ****         menuIdx = 0;
+ 1086              		.loc 1 334 0
+ 1087 0164 1A4B     		ldr	r3, .L76+4
+ 1088 0166 0022     		movs	r2, #0
+ 1089 0168 1A80     		strh	r2, [r3]	@ movhi
+ 335:Src/menu.c    ****         menuIdxCh = 1;
+ 1090              		.loc 1 335 0
+ 1091 016a 1A4B     		ldr	r3, .L76+8
+ 1092 016c 0122     		movs	r2, #1
+ 1093 016e 1A70     		strb	r2, [r3]
+ 1094              	.L72:
+ 336:Src/menu.c    ****       }
+ 337:Src/menu.c    ****       MENU_ToEvt(menuIdx, key);
+ 1095              		.loc 1 337 0
+ 1096 0170 0146     		mov	r1, r0
+ 1097 0172 174B     		ldr	r3, .L76+4
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 27
+
+
+ 1098 0174 1888     		ldrh	r0, [r3]
+ 1099              	.LVL80:
+ 1100 0176 FFF7FEFF 		bl	MENU_ToEvt
+ 1101              	.LVL81:
+ 1102              	.L56:
+ 338:Src/menu.c    ****       break;
+ 339:Src/menu.c    ****     case BTN_NEXT:
+ 340:Src/menu.c    ****       toggle = TIME_PAGE;
+ 341:Src/menu.c    ****       if((menuIdx == 0x0100)||(menuIdx == 0x0200)||(menuIdx == 0x0300)||(menuIdx == 0x0400))
+ 342:Src/menu.c    ****       {
+ 343:Src/menu.c    ****         menuIdx = menuIdx+menuIdxCh;
+ 344:Src/menu.c    ****         menuTimeNext = 600;
+ 345:Src/menu.c    ****         MENU_ToEvt(menuIdx, 0xFF);
+ 346:Src/menu.c    ****       }
+ 347:Src/menu.c    ****       else
+ 348:Src/menu.c    ****       {
+ 349:Src/menu.c    ****         if(menuTimeNext == 0)
+ 350:Src/menu.c    ****         MENU_ToEvt(menuIdx, key);
+ 351:Src/menu.c    ****       }
+ 352:Src/menu.c    ****       break;
+ 353:Src/menu.c    ****   }
+ 354:Src/menu.c    **** }
+ 1103              		.loc 1 354 0
+ 1104 017a 08BD     		pop	{r3, pc}
+ 1105              	.LVL82:
+ 1106              	.L62:
+ 340:Src/menu.c    ****       if((menuIdx == 0x0100)||(menuIdx == 0x0200)||(menuIdx == 0x0300)||(menuIdx == 0x0400))
+ 1107              		.loc 1 340 0
+ 1108 017c 174B     		ldr	r3, .L76+16
+ 1109 017e 0F22     		movs	r2, #15
+ 1110 0180 1A70     		strb	r2, [r3]
+ 341:Src/menu.c    ****       {
+ 1111              		.loc 1 341 0
+ 1112 0182 134B     		ldr	r3, .L76+4
+ 1113 0184 1B88     		ldrh	r3, [r3]
+ 1114 0186 B3F5807F 		cmp	r3, #256
+ 1115 018a 11D0     		beq	.L73
+ 341:Src/menu.c    ****       {
+ 1116              		.loc 1 341 0 is_stmt 0 discriminator 1
+ 1117 018c B3F5007F 		cmp	r3, #512
+ 1118 0190 0ED0     		beq	.L73
+ 341:Src/menu.c    ****       {
+ 1119              		.loc 1 341 0 discriminator 2
+ 1120 0192 B3F5407F 		cmp	r3, #768
+ 1121 0196 0BD0     		beq	.L73
+ 341:Src/menu.c    ****       {
+ 1122              		.loc 1 341 0 discriminator 3
+ 1123 0198 B3F5806F 		cmp	r3, #1024
+ 1124 019c 08D0     		beq	.L73
+ 349:Src/menu.c    ****         MENU_ToEvt(menuIdx, key);
+ 1125              		.loc 1 349 0 is_stmt 1
+ 1126 019e 0B4A     		ldr	r2, .L76
+ 1127 01a0 1288     		ldrh	r2, [r2]
+ 1128 01a2 002A     		cmp	r2, #0
+ 1129 01a4 E9D1     		bne	.L56
+ 350:Src/menu.c    ****       }
+ 1130              		.loc 1 350 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 28
+
+
+ 1131 01a6 0146     		mov	r1, r0
+ 1132 01a8 1846     		mov	r0, r3
+ 1133              	.LVL83:
+ 1134 01aa FFF7FEFF 		bl	MENU_ToEvt
+ 1135              	.LVL84:
+ 1136              		.loc 1 354 0
+ 1137 01ae E4E7     		b	.L56
+ 1138              	.LVL85:
+ 1139              	.L73:
+ 343:Src/menu.c    ****         menuTimeNext = 600;
+ 1140              		.loc 1 343 0
+ 1141 01b0 084A     		ldr	r2, .L76+8
+ 1142 01b2 1078     		ldrb	r0, [r2]	@ zero_extendqisi2
+ 1143              	.LVL86:
+ 1144 01b4 1844     		add	r0, r0, r3
+ 1145 01b6 80B2     		uxth	r0, r0
+ 1146 01b8 054B     		ldr	r3, .L76+4
+ 1147 01ba 1880     		strh	r0, [r3]	@ movhi
+ 344:Src/menu.c    ****         MENU_ToEvt(menuIdx, 0xFF);
+ 1148              		.loc 1 344 0
+ 1149 01bc 034B     		ldr	r3, .L76
+ 1150 01be 4FF41672 		mov	r2, #600
+ 1151 01c2 1A80     		strh	r2, [r3]	@ movhi
+ 345:Src/menu.c    ****       }
+ 1152              		.loc 1 345 0
+ 1153 01c4 FF21     		movs	r1, #255
+ 1154 01c6 FFF7FEFF 		bl	MENU_ToEvt
+ 1155              	.LVL87:
+ 1156 01ca D6E7     		b	.L56
+ 1157              	.L77:
+ 1158              		.align	2
+ 1159              	.L76:
+ 1160 01cc 00000000 		.word	.LANCHOR2
+ 1161 01d0 00000000 		.word	.LANCHOR0
+ 1162 01d4 00000000 		.word	.LANCHOR4
+ 1163 01d8 00000000 		.word	.LANCHOR6
+ 1164 01dc 00000000 		.word	toggle
+ 1165              		.cfi_endproc
+ 1166              	.LFE71:
+ 1168              		.global	menuTimeNext
+ 1169              		.global	menuTimeOut
+ 1170              		.global	menuTimePress
+ 1171              		.comm	menuCursor,2,2
+ 1172              		.comm	menuValueSet,2,2
+ 1173              		.global	menuIdxCh
+ 1174              		.global	menuIdxLast
+ 1175              		.global	menuIdx
+ 1176              		.comm	keyPress,60,4
+ 1177              		.comm	btnTime,4,4
+ 1178              		.global	treeView
+ 1179              		.section	.bss.menuIdx,"aw",%nobits
+ 1180              		.align	1
+ 1181              		.set	.LANCHOR0,. + 0
+ 1184              	menuIdx:
+ 1185 0000 0000     		.space	2
+ 1186              		.section	.bss.menuIdxLast,"aw",%nobits
+ 1187              		.align	1
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 29
+
+
+ 1188              		.set	.LANCHOR5,. + 0
+ 1191              	menuIdxLast:
+ 1192 0000 0000     		.space	2
+ 1193              		.section	.bss.menuTimeNext,"aw",%nobits
+ 1194              		.align	1
+ 1195              		.set	.LANCHOR2,. + 0
+ 1198              	menuTimeNext:
+ 1199 0000 0000     		.space	2
+ 1200              		.section	.bss.menuTimeOut,"aw",%nobits
+ 1201              		.align	1
+ 1202              		.set	.LANCHOR1,. + 0
+ 1205              	menuTimeOut:
+ 1206 0000 0000     		.space	2
+ 1207              		.section	.bss.menuTimePress,"aw",%nobits
+ 1208              		.align	1
+ 1209              		.set	.LANCHOR6,. + 0
+ 1212              	menuTimePress:
+ 1213 0000 0000     		.space	2
+ 1214              		.section	.data.menuIdxCh,"aw",%progbits
+ 1215              		.set	.LANCHOR4,. + 0
+ 1218              	menuIdxCh:
+ 1219 0000 01       		.byte	1
+ 1220              		.section	.rodata.MENU_ToEvt.str1.4,"aMS",%progbits,1
+ 1221              		.align	2
+ 1222              	.LC0:
+ 1223 0000 4D454E55 		.ascii	"MENU SETTING\000"
+ 1223      20534554 
+ 1223      54494E47 
+ 1223      00
+ 1224 000d 000000   		.space	3
+ 1225              	.LC1:
+ 1226 0010 2D3E00   		.ascii	"->\000"
+ 1227              		.section	.rodata.treeView,"a",%progbits
+ 1228              		.align	2
+ 1229              		.set	.LANCHOR3,. + 0
+ 1232              	treeView:
+ 1233 0000 0000     		.short	0
+ 1234 0002 2000     		.ascii	" \000"
+ 1235 0004 00000000 		.space	88
+ 1235      00000000 
+ 1235      00000000 
+ 1235      00000000 
+ 1235      00000000 
+ 1236 005c 00000000 		.word	normalEvt
+ 1237 0060 00000000 		.word	0
+ 1238 0064 0001     		.short	256
+ 1239 0066 20312E44 		.ascii	" 1.Date Time \012 2.Setup UV \012 3.Setup Pressure "
+ 1239      61746520 
+ 1239      54696D65 
+ 1239      200A2032 
+ 1239      2E536574 
+ 1240 0093 0A20342E 		.ascii	"\012 4.View Page \000"
+ 1240      56696577 
+ 1240      20506167 
+ 1240      652000
+ 1241 00a2 00000000 		.space	30
+ 1241      00000000 
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 30
+
+
+ 1241      00000000 
+ 1241      00000000 
+ 1241      00000000 
+ 1242 00c0 00000000 		.word	Dis1Evt
+ 1243 00c4 00000000 		.word	0
+ 1244 00c8 0101     		.short	257
+ 1245 00ca 20536574 		.ascii	" Set Date Time \012\000"
+ 1245      20446174 
+ 1245      65205469 
+ 1245      6D65200A 
+ 1245      00
+ 1246 00db 00000000 		.space	73
+ 1246      00000000 
+ 1246      00000000 
+ 1246      00000000 
+ 1246      00000000 
+ 1247 0124 00000000 		.word	SetTimeEvt
+ 1248 0128 64000000 		.word	treeView+100
+ 1249 012c 0201     		.short	258
+ 1250 012e 20536574 		.ascii	" Setup UV \012\000"
+ 1250      75702055 
+ 1250      56200A00 
+ 1251 013a 00000000 		.space	78
+ 1251      00000000 
+ 1251      00000000 
+ 1251      00000000 
+ 1251      00000000 
+ 1252 0188 00000000 		.word	SetUVEvt
+ 1253 018c 64000000 		.word	treeView+100
+ 1254 0190 0301     		.short	259
+ 1255 0192 20536574 		.ascii	" Setup Pressure \012\000"
+ 1255      75702050 
+ 1255      72657373 
+ 1255      75726520 
+ 1255      0A00
+ 1256 01a4 00000000 		.space	72
+ 1256      00000000 
+ 1256      00000000 
+ 1256      00000000 
+ 1256      00000000 
+ 1257 01ec 00000000 		.word	SetPressureEvt
+ 1258 01f0 64000000 		.word	treeView+100
+ 1259 01f4 0401     		.short	260
+ 1260 01f6 2053656C 		.ascii	" Select Display \012\000"
+ 1260      65637420 
+ 1260      44697370 
+ 1260      6C617920 
+ 1260      0A00
+ 1261 0208 00000000 		.space	72
+ 1261      00000000 
+ 1261      00000000 
+ 1261      00000000 
+ 1261      00000000 
+ 1262 0250 00000000 		.word	SetDisplayEvt
+ 1263 0254 64000000 		.word	treeView+100
+ 1264 0258 0002     		.short	512
+ 1265 025a 20352E53 		.ascii	" 5.Set brighness \012 6.Backlight \012 7.View Time "
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 31
+
+
+ 1265      65742062 
+ 1265      72696768 
+ 1265      6E657373 
+ 1265      200A2036 
+ 1266 0287 5556200A 		.ascii	"UV \012 8.View Time Filter\000"
+ 1266      20382E56 
+ 1266      69657720 
+ 1266      54696D65 
+ 1266      2046696C 
+ 1267 029f 00000000 		.space	21
+ 1267      00000000 
+ 1267      00000000 
+ 1267      00000000 
+ 1267      00000000 
+ 1268 02b4 00000000 		.word	Dis2Evt
+ 1269 02b8 00000000 		.word	0
+ 1270 02bc 0102     		.short	513
+ 1271 02be 20427269 		.ascii	" Brighness \012\000"
+ 1271      67686E65 
+ 1271      7373200A 
+ 1271      00
+ 1272 02cb 00000000 		.space	77
+ 1272      00000000 
+ 1272      00000000 
+ 1272      00000000 
+ 1272      00000000 
+ 1273 0318 00000000 		.word	SetBrighnessEvt
+ 1274 031c 58020000 		.word	treeView+600
+ 1275 0320 0202     		.short	514
+ 1276 0322 20426163 		.ascii	" Backlight \012\000"
+ 1276      6B6C6967 
+ 1276      6874200A 
+ 1276      00
+ 1277 032f 00000000 		.space	77
+ 1277      00000000 
+ 1277      00000000 
+ 1277      00000000 
+ 1277      00000000 
+ 1278 037c 00000000 		.word	SetBackLightEvt
+ 1279 0380 58020000 		.word	treeView+600
+ 1280 0384 0302     		.short	515
+ 1281 0386 20555620 		.ascii	" UV Time \012\000"
+ 1281      54696D65 
+ 1281      200A00
+ 1282 0391 00000000 		.space	79
+ 1282      00000000 
+ 1282      00000000 
+ 1282      00000000 
+ 1282      00000000 
+ 1283 03e0 00000000 		.word	ViewUVTimeEvt
+ 1284 03e4 58020000 		.word	treeView+600
+ 1285 03e8 0402     		.short	516
+ 1286 03ea 2046696C 		.ascii	" Filter Time \012\000"
+ 1286      74657220 
+ 1286      54696D65 
+ 1286      200A00
+ 1287 03f9 00000000 		.space	75
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 32
+
+
+ 1287      00000000 
+ 1287      00000000 
+ 1287      00000000 
+ 1287      00000000 
+ 1288 0444 00000000 		.word	ViewFilterTimeEvt
+ 1289 0448 58020000 		.word	treeView+600
+ 1290 044c 0003     		.short	768
+ 1291 044e 20392E56 		.ascii	" 9.View Time System \012 10.Reset UV Time \012 11.R"
+ 1291      69657720 
+ 1291      54696D65 
+ 1291      20537973 
+ 1291      74656D20 
+ 1292 047b 65736574 		.ascii	"eset Filter Time \012 12.Reset System Time\000"
+ 1292      2046696C 
+ 1292      74657220 
+ 1292      54696D65 
+ 1292      200A2031 
+ 1293 04a3 00000000 		.space	5
+ 1293      00
+ 1294 04a8 00000000 		.word	Dis3Evt
+ 1295 04ac 00000000 		.word	0
+ 1296 04b0 0103     		.short	769
+ 1297 04b2 20537973 		.ascii	" System Time \000"
+ 1297      74656D20 
+ 1297      54696D65 
+ 1297      2000
+ 1298 04c0 00000000 		.space	76
+ 1298      00000000 
+ 1298      00000000 
+ 1298      00000000 
+ 1298      00000000 
+ 1299 050c 00000000 		.word	ViewSystemTimeEvt
+ 1300 0510 4C040000 		.word	treeView+1100
+ 1301 0514 0203     		.short	770
+ 1302 0516 20526573 		.ascii	" Reset UV Time \000"
+ 1302      65742055 
+ 1302      56205469 
+ 1302      6D652000 
+ 1303 0526 00000000 		.space	74
+ 1303      00000000 
+ 1303      00000000 
+ 1303      00000000 
+ 1303      00000000 
+ 1304 0570 00000000 		.word	ResetUVTimeEvt
+ 1305 0574 4C040000 		.word	treeView+1100
+ 1306 0578 0303     		.short	771
+ 1307 057a 20526573 		.ascii	" Reset Filter Time \000"
+ 1307      65742046 
+ 1307      696C7465 
+ 1307      72205469 
+ 1307      6D652000 
+ 1308 058e 00000000 		.space	70
+ 1308      00000000 
+ 1308      00000000 
+ 1308      00000000 
+ 1308      00000000 
+ 1309 05d4 00000000 		.word	ResetFilterTimeEvt
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 33
+
+
+ 1310 05d8 4C040000 		.word	treeView+1100
+ 1311 05dc 0403     		.short	772
+ 1312 05de 20526573 		.ascii	" Reset System Time \000"
+ 1312      65742053 
+ 1312      79737465 
+ 1312      6D205469 
+ 1312      6D652000 
+ 1313 05f2 00000000 		.space	70
+ 1313      00000000 
+ 1313      00000000 
+ 1313      00000000 
+ 1313      00000000 
+ 1314 0638 00000000 		.word	ResetSystemTimeEvt
+ 1315 063c 4C040000 		.word	treeView+1100
+ 1316 0640 0004     		.short	1024
+ 1317 0642 2031332E 		.ascii	" 13.Speaker \012\000"
+ 1317      53706561 
+ 1317      6B657220 
+ 1317      0A00
+ 1318 0650 00000000 		.space	76
+ 1318      00000000 
+ 1318      00000000 
+ 1318      00000000 
+ 1318      00000000 
+ 1319 069c 00000000 		.word	Dis4Evt
+ 1320 06a0 00000000 		.word	0
+ 1321 06a4 0104     		.short	1025
+ 1322 06a6 20537065 		.ascii	" Speaker \012\000"
+ 1322      616B6572 
+ 1322      200A00
+ 1323 06b1 00000000 		.space	79
+ 1323      00000000 
+ 1323      00000000 
+ 1323      00000000 
+ 1323      00000000 
+ 1324 0700 00000000 		.word	SetSpeakerEvt
+ 1325 0704 40060000 		.word	treeView+1600
+ 1326              		.text
+ 1327              	.Letext0:
+ 1328              		.file 2 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_defau
+ 1329              		.file 3 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_stdint.h"
+ 1330              		.file 4 "Drivers/CMSIS/Include/core_cm3.h"
+ 1331              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h"
+ 1332              		.file 6 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
+ 1333              		.file 7 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/lock.h"
+ 1334              		.file 8 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_types.h"
+ 1335              		.file 9 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/
+ 1336              		.file 10 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/reent.h"
+ 1337              		.file 11 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 1338              		.file 12 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ 1339              		.file 13 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 1340              		.file 14 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_iwdg.h"
+ 1341              		.file 15 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h"
+ 1342              		.file 16 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 1343              		.file 17 "u8g2/csrc/u8x8.h"
+ 1344              		.file 18 "u8g2/csrc/u8g2.h"
+ 1345              		.file 19 "Inc/main.h"
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 34
+
+
+ 1346              		.file 20 "Inc/menu.h"
+ 1347              		.file 21 "Inc/lcd_backlight.h"
+ 1348              		.file 22 "Inc/system.h"
+ 1349              		.file 23 "Inc/config.h"
+ 1350              		.file 24 "Inc/iwdg.h"
+ 1351              		.file 25 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/string.h"
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 35
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 menu.c
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:16     .text.BUTTON_Setup:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:23     .text.BUTTON_Setup:0000000000000000 BUTTON_Setup
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:50     .text.BUTTON_Init:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:57     .text.BUTTON_Init:0000000000000000 BUTTON_Init
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:190    .text.BUTTON_Init:00000000000000c4 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:858    .text.MENU_Manager:0000000000000000 MENU_Manager
+                            *COM*:000000000000003c keyPress
+                            *COM*:0000000000000004 btnTime
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:201    .text.BUTTON_Get:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:208    .text.BUTTON_Get:0000000000000000 BUTTON_Get
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:226    .text.BUTTON_Get:000000000000000c $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:410    .text.BUTTON_Get:0000000000000130 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:418    .text.BUTTON_Manage:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:425    .text.BUTTON_Manage:0000000000000000 BUTTON_Manage
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:595    .text.BUTTON_Manage:00000000000000e4 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:606    .text.MENU_ToEvt:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:613    .text.MENU_ToEvt:0000000000000000 MENU_ToEvt
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:838    .text.MENU_ToEvt:000000000000016c $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:851    .text.MENU_Manager:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:875    .text.MENU_Manager:000000000000000c $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:1160   .text.MENU_Manager:00000000000001cc $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:1198   .bss.menuTimeNext:0000000000000000 menuTimeNext
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:1205   .bss.menuTimeOut:0000000000000000 menuTimeOut
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:1212   .bss.menuTimePress:0000000000000000 menuTimePress
+                            *COM*:0000000000000002 menuCursor
+                            *COM*:0000000000000002 menuValueSet
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:1218   .data.menuIdxCh:0000000000000000 menuIdxCh
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:1191   .bss.menuIdxLast:0000000000000000 menuIdxLast
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:1184   .bss.menuIdx:0000000000000000 menuIdx
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:1232   .rodata.treeView:0000000000000000 treeView
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:1180   .bss.menuIdx:0000000000000000 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:1187   .bss.menuIdxLast:0000000000000000 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:1194   .bss.menuTimeNext:0000000000000000 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:1201   .bss.menuTimeOut:0000000000000000 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:1208   .bss.menuTimePress:0000000000000000 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:1221   .rodata.MENU_ToEvt.str1.4:0000000000000000 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:1228   .rodata.treeView:0000000000000000 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:231    .text.BUTTON_Get:0000000000000011 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:231    .text.BUTTON_Get:0000000000000012 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:880    .text.MENU_Manager:0000000000000011 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s:880    .text.MENU_Manager:0000000000000012 $t
+
+UNDEFINED SYMBOLS
+HAL_GPIO_Init
+HAL_GetTick
+HAL_GPIO_ReadPin
+BL_On
+HAL_IWDG_Refresh
+hiwdg
+u8g2_ClearBuffer
+u8g2_SetFont
+u8g2_SetDrawColor
+strlen
+u8g2_DrawStr
+u8x8_GetStringLineStart
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRlqRmI.s 			page 36
+
+
+u8g2_font_6x12_mf
+u8g2_font_5x8_mf
+u8g2
+toggle
+normalEvt
+Dis1Evt
+SetTimeEvt
+SetUVEvt
+SetPressureEvt
+SetDisplayEvt
+Dis2Evt
+SetBrighnessEvt
+SetBackLightEvt
+ViewUVTimeEvt
+ViewFilterTimeEvt
+Dis3Evt
+ViewSystemTimeEvt
+ResetUVTimeEvt
+ResetFilterTimeEvt
+ResetSystemTimeEvt
+Dis4Evt
+SetSpeakerEvt

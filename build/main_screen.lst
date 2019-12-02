@@ -1,0 +1,1211 @@
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"main_screen.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.main_screen_init,"ax",%progbits
+  16              		.align	1
+  17              		.global	main_screen_init
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  21              		.fpu softvfp
+  23              	main_screen_init:
+  24              	.LFB66:
+  25              		.file 1 "Src/main_screen.c"
+   1:Src/main_screen.c **** #include "main_screen.h"
+   2:Src/main_screen.c **** #include "u8g2.h"
+   3:Src/main_screen.c **** #include "key.h"
+   4:Src/main_screen.c **** #include <stdlib.h>
+   5:Src/main_screen.c **** #include "system.h"
+   6:Src/main_screen.c **** #include "config.h"
+   7:Src/main_screen.c **** #include "sm5852.h"
+   8:Src/main_screen.c **** 
+   9:Src/main_screen.c **** MAIN_SCREEN_T main_scr;
+  10:Src/main_screen.c **** uint8_t blink = 1;
+  11:Src/main_screen.c **** 
+  12:Src/main_screen.c **** void main_screen_init(void)
+  13:Src/main_screen.c **** {
+  26              		.loc 1 13 0
+  27              		.cfi_startproc
+  28              		@ args = 0, pretend = 0, frame = 0
+  29              		@ frame_needed = 0, uses_anonymous_args = 0
+  30 0000 08B5     		push	{r3, lr}
+  31              	.LCFI0:
+  32              		.cfi_def_cfa_offset 8
+  33              		.cfi_offset 3, -8
+  34              		.cfi_offset 14, -4
+  14:Src/main_screen.c ****     u8g2_ClearBuffer(&u8g2);
+  35              		.loc 1 14 0
+  36 0002 0448     		ldr	r0, .L3
+  37 0004 FFF7FEFF 		bl	u8g2_ClearBuffer
+  38              	.LVL0:
+  15:Src/main_screen.c ****     main_scr.tick = HAL_GetTick();
+  39              		.loc 1 15 0
+  40 0008 FFF7FEFF 		bl	HAL_GetTick
+  41              	.LVL1:
+  42 000c 024B     		ldr	r3, .L3+4
+  43 000e 5860     		str	r0, [r3, #4]
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 2
+
+
+  16:Src/main_screen.c **** }
+  44              		.loc 1 16 0
+  45 0010 08BD     		pop	{r3, pc}
+  46              	.L4:
+  47 0012 00BF     		.align	2
+  48              	.L3:
+  49 0014 00000000 		.word	u8g2
+  50 0018 00000000 		.word	main_scr
+  51              		.cfi_endproc
+  52              	.LFE66:
+  54              		.section	.text.Lamp_Status,"ax",%progbits
+  55              		.align	1
+  56              		.global	Lamp_Status
+  57              		.syntax unified
+  58              		.thumb
+  59              		.thumb_func
+  60              		.fpu softvfp
+  62              	Lamp_Status:
+  63              	.LFB67:
+  17:Src/main_screen.c **** 
+  18:Src/main_screen.c **** void Lamp_Status(uint8_t lampStatus)
+  19:Src/main_screen.c **** {
+  64              		.loc 1 19 0
+  65              		.cfi_startproc
+  66              		@ args = 0, pretend = 0, frame = 0
+  67              		@ frame_needed = 0, uses_anonymous_args = 0
+  68              	.LVL2:
+  69 0000 30B5     		push	{r4, r5, lr}
+  70              	.LCFI1:
+  71              		.cfi_def_cfa_offset 12
+  72              		.cfi_offset 4, -12
+  73              		.cfi_offset 5, -8
+  74              		.cfi_offset 14, -4
+  75 0002 83B0     		sub	sp, sp, #12
+  76              	.LCFI2:
+  77              		.cfi_def_cfa_offset 24
+  78 0004 0546     		mov	r5, r0
+  20:Src/main_screen.c ****     u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
+  79              		.loc 1 20 0
+  80 0006 134C     		ldr	r4, .L10
+  81 0008 1349     		ldr	r1, .L10+4
+  82 000a 2046     		mov	r0, r4
+  83              	.LVL3:
+  84 000c FFF7FEFF 		bl	u8g2_SetFont
+  85              	.LVL4:
+  21:Src/main_screen.c ****     u8g2_DrawStr(&u8g2, 9, 33, "NEON");
+  86              		.loc 1 21 0
+  87 0010 124B     		ldr	r3, .L10+8
+  88 0012 2122     		movs	r2, #33
+  89 0014 0921     		movs	r1, #9
+  90 0016 2046     		mov	r0, r4
+  91 0018 FFF7FEFF 		bl	u8g2_DrawStr
+  92              	.LVL5:
+  22:Src/main_screen.c ****     if (lampStatus)
+  93              		.loc 1 22 0
+  94 001c 6DB9     		cbnz	r5, .L9
+  23:Src/main_screen.c ****     {
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 3
+
+
+  24:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 0, 33, bmp_neon_on.width / 8, bmp_neon_on.height, bmp_neon_on.data);
+  25:Src/main_screen.c ****     }
+  26:Src/main_screen.c ****     else
+  27:Src/main_screen.c ****     {
+  28:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 0, 33, bmp_neon_off.width / 8, bmp_neon_off.height, bmp_neon_off.dat
+  95              		.loc 1 28 0
+  96 001e 104A     		ldr	r2, .L10+12
+  97 0020 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  98 0022 5168     		ldr	r1, [r2, #4]
+  99 0024 0191     		str	r1, [sp, #4]
+ 100 0026 5278     		ldrb	r2, [r2, #1]	@ zero_extendqisi2
+ 101 0028 0092     		str	r2, [sp]
+ 102 002a DB08     		lsrs	r3, r3, #3
+ 103 002c 2122     		movs	r2, #33
+ 104 002e 0021     		movs	r1, #0
+ 105 0030 0848     		ldr	r0, .L10
+ 106 0032 FFF7FEFF 		bl	u8g2_DrawBitmap
+ 107              	.LVL6:
+ 108              	.L5:
+  29:Src/main_screen.c ****     }
+  30:Src/main_screen.c **** }
+ 109              		.loc 1 30 0
+ 110 0036 03B0     		add	sp, sp, #12
+ 111              	.LCFI3:
+ 112              		.cfi_remember_state
+ 113              		.cfi_def_cfa_offset 12
+ 114              		@ sp needed
+ 115 0038 30BD     		pop	{r4, r5, pc}
+ 116              	.L9:
+ 117              	.LCFI4:
+ 118              		.cfi_restore_state
+  24:Src/main_screen.c ****     }
+ 119              		.loc 1 24 0
+ 120 003a 0A4A     		ldr	r2, .L10+16
+ 121 003c 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 122 003e 5168     		ldr	r1, [r2, #4]
+ 123 0040 0191     		str	r1, [sp, #4]
+ 124 0042 5278     		ldrb	r2, [r2, #1]	@ zero_extendqisi2
+ 125 0044 0092     		str	r2, [sp]
+ 126 0046 DB08     		lsrs	r3, r3, #3
+ 127 0048 2122     		movs	r2, #33
+ 128 004a 0021     		movs	r1, #0
+ 129 004c 2046     		mov	r0, r4
+ 130 004e FFF7FEFF 		bl	u8g2_DrawBitmap
+ 131              	.LVL7:
+ 132 0052 F0E7     		b	.L5
+ 133              	.L11:
+ 134              		.align	2
+ 135              	.L10:
+ 136 0054 00000000 		.word	u8g2
+ 137 0058 00000000 		.word	u8g2_font_micro_tr
+ 138 005c 00000000 		.word	.LC0
+ 139 0060 00000000 		.word	bmp_neon_off
+ 140 0064 00000000 		.word	bmp_neon_on
+ 141              		.cfi_endproc
+ 142              	.LFE67:
+ 144              		.section	.text.UV_Status,"ax",%progbits
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 4
+
+
+ 145              		.align	1
+ 146              		.global	UV_Status
+ 147              		.syntax unified
+ 148              		.thumb
+ 149              		.thumb_func
+ 150              		.fpu softvfp
+ 152              	UV_Status:
+ 153              	.LFB68:
+  31:Src/main_screen.c **** 
+  32:Src/main_screen.c **** void UV_Status(uint8_t uvStatus)
+  33:Src/main_screen.c **** {
+ 154              		.loc 1 33 0
+ 155              		.cfi_startproc
+ 156              		@ args = 0, pretend = 0, frame = 0
+ 157              		@ frame_needed = 0, uses_anonymous_args = 0
+ 158              	.LVL8:
+ 159 0000 30B5     		push	{r4, r5, lr}
+ 160              	.LCFI5:
+ 161              		.cfi_def_cfa_offset 12
+ 162              		.cfi_offset 4, -12
+ 163              		.cfi_offset 5, -8
+ 164              		.cfi_offset 14, -4
+ 165 0002 83B0     		sub	sp, sp, #12
+ 166              	.LCFI6:
+ 167              		.cfi_def_cfa_offset 24
+ 168 0004 0546     		mov	r5, r0
+  34:Src/main_screen.c ****     u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
+ 169              		.loc 1 34 0
+ 170 0006 134C     		ldr	r4, .L17
+ 171 0008 1349     		ldr	r1, .L17+4
+ 172 000a 2046     		mov	r0, r4
+ 173              	.LVL9:
+ 174 000c FFF7FEFF 		bl	u8g2_SetFont
+ 175              	.LVL10:
+  35:Src/main_screen.c ****     u8g2_DrawStr(&u8g2, 45, 33, "UV");
+ 176              		.loc 1 35 0
+ 177 0010 124B     		ldr	r3, .L17+8
+ 178 0012 2122     		movs	r2, #33
+ 179 0014 2D21     		movs	r1, #45
+ 180 0016 2046     		mov	r0, r4
+ 181 0018 FFF7FEFF 		bl	u8g2_DrawStr
+ 182              	.LVL11:
+  36:Src/main_screen.c ****     if (uvStatus)
+ 183              		.loc 1 36 0
+ 184 001c 6DB9     		cbnz	r5, .L16
+  37:Src/main_screen.c ****     {
+  38:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 32, 33, bmp_uv_on.width / 8, bmp_uv_on.height, bmp_uv_on.data);
+  39:Src/main_screen.c ****     }
+  40:Src/main_screen.c ****     else
+  41:Src/main_screen.c ****     {
+  42:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 32, 33, bmp_uv_off.width / 8, bmp_uv_off.height, bmp_uv_off.data);
+ 185              		.loc 1 42 0
+ 186 001e 104A     		ldr	r2, .L17+12
+ 187 0020 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 188 0022 5168     		ldr	r1, [r2, #4]
+ 189 0024 0191     		str	r1, [sp, #4]
+ 190 0026 5278     		ldrb	r2, [r2, #1]	@ zero_extendqisi2
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 5
+
+
+ 191 0028 0092     		str	r2, [sp]
+ 192 002a DB08     		lsrs	r3, r3, #3
+ 193 002c 2122     		movs	r2, #33
+ 194 002e 2021     		movs	r1, #32
+ 195 0030 0848     		ldr	r0, .L17
+ 196 0032 FFF7FEFF 		bl	u8g2_DrawBitmap
+ 197              	.LVL12:
+ 198              	.L12:
+  43:Src/main_screen.c ****     }
+  44:Src/main_screen.c **** }
+ 199              		.loc 1 44 0
+ 200 0036 03B0     		add	sp, sp, #12
+ 201              	.LCFI7:
+ 202              		.cfi_remember_state
+ 203              		.cfi_def_cfa_offset 12
+ 204              		@ sp needed
+ 205 0038 30BD     		pop	{r4, r5, pc}
+ 206              	.L16:
+ 207              	.LCFI8:
+ 208              		.cfi_restore_state
+  38:Src/main_screen.c ****     }
+ 209              		.loc 1 38 0
+ 210 003a 0A4A     		ldr	r2, .L17+16
+ 211 003c 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 212 003e 5168     		ldr	r1, [r2, #4]
+ 213 0040 0191     		str	r1, [sp, #4]
+ 214 0042 5278     		ldrb	r2, [r2, #1]	@ zero_extendqisi2
+ 215 0044 0092     		str	r2, [sp]
+ 216 0046 DB08     		lsrs	r3, r3, #3
+ 217 0048 2122     		movs	r2, #33
+ 218 004a 2021     		movs	r1, #32
+ 219 004c 2046     		mov	r0, r4
+ 220 004e FFF7FEFF 		bl	u8g2_DrawBitmap
+ 221              	.LVL13:
+ 222 0052 F0E7     		b	.L12
+ 223              	.L18:
+ 224              		.align	2
+ 225              	.L17:
+ 226 0054 00000000 		.word	u8g2
+ 227 0058 00000000 		.word	u8g2_font_micro_tr
+ 228 005c 00000000 		.word	.LC1
+ 229 0060 00000000 		.word	bmp_uv_off
+ 230 0064 00000000 		.word	bmp_uv_on
+ 231              		.cfi_endproc
+ 232              	.LFE68:
+ 234              		.section	.text.Fan_Status,"ax",%progbits
+ 235              		.align	1
+ 236              		.global	Fan_Status
+ 237              		.syntax unified
+ 238              		.thumb
+ 239              		.thumb_func
+ 240              		.fpu softvfp
+ 242              	Fan_Status:
+ 243              	.LFB69:
+  45:Src/main_screen.c **** 
+  46:Src/main_screen.c **** void Fan_Status(uint8_t fanStatus)
+  47:Src/main_screen.c **** {
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 6
+
+
+ 244              		.loc 1 47 0
+ 245              		.cfi_startproc
+ 246              		@ args = 0, pretend = 0, frame = 0
+ 247              		@ frame_needed = 0, uses_anonymous_args = 0
+ 248              	.LVL14:
+ 249 0000 30B5     		push	{r4, r5, lr}
+ 250              	.LCFI9:
+ 251              		.cfi_def_cfa_offset 12
+ 252              		.cfi_offset 4, -12
+ 253              		.cfi_offset 5, -8
+ 254              		.cfi_offset 14, -4
+ 255 0002 83B0     		sub	sp, sp, #12
+ 256              	.LCFI10:
+ 257              		.cfi_def_cfa_offset 24
+ 258 0004 0546     		mov	r5, r0
+  48:Src/main_screen.c ****     u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
+ 259              		.loc 1 48 0
+ 260 0006 154C     		ldr	r4, .L24
+ 261 0008 1549     		ldr	r1, .L24+4
+ 262 000a 2046     		mov	r0, r4
+ 263              	.LVL15:
+ 264 000c FFF7FEFF 		bl	u8g2_SetFont
+ 265              	.LVL16:
+  49:Src/main_screen.c ****     u8g2_DrawStr(&u8g2, 75, 33, "FAN");
+ 266              		.loc 1 49 0
+ 267 0010 144B     		ldr	r3, .L24+8
+ 268 0012 2122     		movs	r2, #33
+ 269 0014 4B21     		movs	r1, #75
+ 270 0016 2046     		mov	r0, r4
+ 271 0018 FFF7FEFF 		bl	u8g2_DrawStr
+ 272              	.LVL17:
+  50:Src/main_screen.c ****     /* ----------------Operation of the Fan--------------- */
+  51:Src/main_screen.c ****     (main_scr.fanRotate & fanStatus) ? u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_rotate.width / 8, bmp
+ 273              		.loc 1 51 0
+ 274 001c 124B     		ldr	r3, .L24+12
+ 275 001e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  52:Src/main_screen.c ****                        : u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_origin.width / 8, bmp_fan_origin.he
+ 276              		.loc 1 52 0
+ 277 0020 2B42     		tst	r3, r5
+ 278 0022 0DD1     		bne	.L23
+ 279              		.loc 1 52 0 is_stmt 0 discriminator 1
+ 280 0024 114A     		ldr	r2, .L24+16
+ 281 0026 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 282 0028 5168     		ldr	r1, [r2, #4]
+ 283 002a 0191     		str	r1, [sp, #4]
+ 284 002c 5278     		ldrb	r2, [r2, #1]	@ zero_extendqisi2
+ 285 002e 0092     		str	r2, [sp]
+ 286 0030 DB08     		lsrs	r3, r3, #3
+ 287 0032 2622     		movs	r2, #38
+ 288 0034 4421     		movs	r1, #68
+ 289 0036 0948     		ldr	r0, .L24
+ 290 0038 FFF7FEFF 		bl	u8g2_DrawBitmap
+ 291              	.LVL18:
+ 292              	.L19:
+  53:Src/main_screen.c **** }
+ 293              		.loc 1 53 0 is_stmt 1
+ 294 003c 03B0     		add	sp, sp, #12
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 7
+
+
+ 295              	.LCFI11:
+ 296              		.cfi_remember_state
+ 297              		.cfi_def_cfa_offset 12
+ 298              		@ sp needed
+ 299 003e 30BD     		pop	{r4, r5, pc}
+ 300              	.L23:
+ 301              	.LCFI12:
+ 302              		.cfi_restore_state
+  51:Src/main_screen.c ****                        : u8g2_DrawBitmap(&u8g2, 68, 38, bmp_fan_origin.width / 8, bmp_fan_origin.he
+ 303              		.loc 1 51 0
+ 304 0040 0B4A     		ldr	r2, .L24+20
+ 305 0042 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 306 0044 5168     		ldr	r1, [r2, #4]
+ 307 0046 0191     		str	r1, [sp, #4]
+ 308 0048 5278     		ldrb	r2, [r2, #1]	@ zero_extendqisi2
+ 309 004a 0092     		str	r2, [sp]
+ 310 004c DB08     		lsrs	r3, r3, #3
+ 311 004e 2622     		movs	r2, #38
+ 312 0050 4421     		movs	r1, #68
+ 313 0052 2046     		mov	r0, r4
+ 314 0054 FFF7FEFF 		bl	u8g2_DrawBitmap
+ 315              	.LVL19:
+ 316 0058 F0E7     		b	.L19
+ 317              	.L25:
+ 318 005a 00BF     		.align	2
+ 319              	.L24:
+ 320 005c 00000000 		.word	u8g2
+ 321 0060 00000000 		.word	u8g2_font_micro_tr
+ 322 0064 00000000 		.word	.LC2
+ 323 0068 00000000 		.word	main_scr
+ 324 006c 00000000 		.word	bmp_fan_origin
+ 325 0070 00000000 		.word	bmp_fan_rotate
+ 326              		.cfi_endproc
+ 327              	.LFE69:
+ 329              		.section	.text.Socket_Status,"ax",%progbits
+ 330              		.align	1
+ 331              		.global	Socket_Status
+ 332              		.syntax unified
+ 333              		.thumb
+ 334              		.thumb_func
+ 335              		.fpu softvfp
+ 337              	Socket_Status:
+ 338              	.LFB70:
+  54:Src/main_screen.c **** 
+  55:Src/main_screen.c **** void Socket_Status(uint8_t sStatus)
+  56:Src/main_screen.c **** {
+ 339              		.loc 1 56 0
+ 340              		.cfi_startproc
+ 341              		@ args = 0, pretend = 0, frame = 0
+ 342              		@ frame_needed = 0, uses_anonymous_args = 0
+ 343              	.LVL20:
+ 344 0000 30B5     		push	{r4, r5, lr}
+ 345              	.LCFI13:
+ 346              		.cfi_def_cfa_offset 12
+ 347              		.cfi_offset 4, -12
+ 348              		.cfi_offset 5, -8
+ 349              		.cfi_offset 14, -4
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 8
+
+
+ 350 0002 83B0     		sub	sp, sp, #12
+ 351              	.LCFI14:
+ 352              		.cfi_def_cfa_offset 24
+ 353 0004 0546     		mov	r5, r0
+  57:Src/main_screen.c ****     u8g2_SetFont(&u8g2, u8g2_font_micro_tr);
+ 354              		.loc 1 57 0
+ 355 0006 1E4C     		ldr	r4, .L31
+ 356 0008 1E49     		ldr	r1, .L31+4
+ 357 000a 2046     		mov	r0, r4
+ 358              	.LVL21:
+ 359 000c FFF7FEFF 		bl	u8g2_SetFont
+ 360              	.LVL22:
+  58:Src/main_screen.c ****     u8g2_DrawStr(&u8g2, 101, 33, "SOCKET");
+ 361              		.loc 1 58 0
+ 362 0010 1D4B     		ldr	r3, .L31+8
+ 363 0012 2122     		movs	r2, #33
+ 364 0014 6521     		movs	r1, #101
+ 365 0016 2046     		mov	r0, r4
+ 366 0018 FFF7FEFF 		bl	u8g2_DrawStr
+ 367              	.LVL23:
+  59:Src/main_screen.c ****     if (sStatus)
+ 368              		.loc 1 59 0
+ 369 001c C5B9     		cbnz	r5, .L30
+  60:Src/main_screen.c ****     {
+  61:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 98, 34, bmp_socket_on.width / 8, bmp_socket_on.height, bmp_socket_on
+  62:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_u8glib_4_tf);
+  63:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 108, 62, "ON");
+  64:Src/main_screen.c ****     }
+  65:Src/main_screen.c ****     else
+  66:Src/main_screen.c ****     {
+  67:Src/main_screen.c ****         u8g2_DrawBitmap(&u8g2, 98, 34, bmp_socket_off.width / 8, bmp_socket_off.height, bmp_socket_
+ 370              		.loc 1 67 0
+ 371 001e 1B4A     		ldr	r2, .L31+12
+ 372 0020 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 373 0022 174C     		ldr	r4, .L31
+ 374 0024 5168     		ldr	r1, [r2, #4]
+ 375 0026 0191     		str	r1, [sp, #4]
+ 376 0028 5278     		ldrb	r2, [r2, #1]	@ zero_extendqisi2
+ 377 002a 0092     		str	r2, [sp]
+ 378 002c DB08     		lsrs	r3, r3, #3
+ 379 002e 2222     		movs	r2, #34
+ 380 0030 6221     		movs	r1, #98
+ 381 0032 2046     		mov	r0, r4
+ 382 0034 FFF7FEFF 		bl	u8g2_DrawBitmap
+ 383              	.LVL24:
+  68:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_u8glib_4_tf);
+ 384              		.loc 1 68 0
+ 385 0038 1549     		ldr	r1, .L31+16
+ 386 003a 2046     		mov	r0, r4
+ 387 003c FFF7FEFF 		bl	u8g2_SetFont
+ 388              	.LVL25:
+  69:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 105, 62, "OFF");
+ 389              		.loc 1 69 0
+ 390 0040 144B     		ldr	r3, .L31+20
+ 391 0042 3E22     		movs	r2, #62
+ 392 0044 6921     		movs	r1, #105
+ 393 0046 2046     		mov	r0, r4
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 9
+
+
+ 394 0048 FFF7FEFF 		bl	u8g2_DrawStr
+ 395              	.LVL26:
+ 396              	.L26:
+  70:Src/main_screen.c ****     }
+  71:Src/main_screen.c **** }
+ 397              		.loc 1 71 0
+ 398 004c 03B0     		add	sp, sp, #12
+ 399              	.LCFI15:
+ 400              		.cfi_remember_state
+ 401              		.cfi_def_cfa_offset 12
+ 402              		@ sp needed
+ 403 004e 30BD     		pop	{r4, r5, pc}
+ 404              	.L30:
+ 405              	.LCFI16:
+ 406              		.cfi_restore_state
+  61:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_u8glib_4_tf);
+ 407              		.loc 1 61 0
+ 408 0050 114A     		ldr	r2, .L31+24
+ 409 0052 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 410 0054 5168     		ldr	r1, [r2, #4]
+ 411 0056 0191     		str	r1, [sp, #4]
+ 412 0058 5278     		ldrb	r2, [r2, #1]	@ zero_extendqisi2
+ 413 005a 0092     		str	r2, [sp]
+ 414 005c DB08     		lsrs	r3, r3, #3
+ 415 005e 2222     		movs	r2, #34
+ 416 0060 6221     		movs	r1, #98
+ 417 0062 2046     		mov	r0, r4
+ 418 0064 FFF7FEFF 		bl	u8g2_DrawBitmap
+ 419              	.LVL27:
+  62:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 108, 62, "ON");
+ 420              		.loc 1 62 0
+ 421 0068 0949     		ldr	r1, .L31+16
+ 422 006a 2046     		mov	r0, r4
+ 423 006c FFF7FEFF 		bl	u8g2_SetFont
+ 424              	.LVL28:
+  63:Src/main_screen.c ****     }
+ 425              		.loc 1 63 0
+ 426 0070 0A4B     		ldr	r3, .L31+28
+ 427 0072 3E22     		movs	r2, #62
+ 428 0074 6C21     		movs	r1, #108
+ 429 0076 2046     		mov	r0, r4
+ 430 0078 FFF7FEFF 		bl	u8g2_DrawStr
+ 431              	.LVL29:
+ 432 007c E6E7     		b	.L26
+ 433              	.L32:
+ 434 007e 00BF     		.align	2
+ 435              	.L31:
+ 436 0080 00000000 		.word	u8g2
+ 437 0084 00000000 		.word	u8g2_font_micro_tr
+ 438 0088 00000000 		.word	.LC3
+ 439 008c 00000000 		.word	bmp_socket_off
+ 440 0090 00000000 		.word	u8g2_font_u8glib_4_tf
+ 441 0094 0C000000 		.word	.LC5
+ 442 0098 00000000 		.word	bmp_socket_on
+ 443 009c 08000000 		.word	.LC4
+ 444              		.cfi_endproc
+ 445              	.LFE70:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 10
+
+
+ 447              		.global	__aeabi_i2f
+ 448              		.global	__aeabi_fcmplt
+ 449              		.global	__aeabi_ui2f
+ 450              		.global	__aeabi_fmul
+ 451              		.global	__aeabi_fdiv
+ 452              		.global	__aeabi_f2uiz
+ 453              		.global	__aeabi_i2d
+ 454              		.global	__aeabi_d2uiz
+ 455              		.section	.text.Filter_Pcent,"ax",%progbits
+ 456              		.align	1
+ 457              		.global	Filter_Pcent
+ 458              		.syntax unified
+ 459              		.thumb
+ 460              		.thumb_func
+ 461              		.fpu softvfp
+ 463              	Filter_Pcent:
+ 464              	.LFB71:
+  72:Src/main_screen.c **** 
+  73:Src/main_screen.c **** void Filter_Pcent(float pressure, uint16_t threshold)
+  74:Src/main_screen.c **** {
+ 465              		.loc 1 74 0
+ 466              		.cfi_startproc
+ 467              		@ args = 0, pretend = 0, frame = 8
+ 468              		@ frame_needed = 0, uses_anonymous_args = 0
+ 469              	.LVL30:
+ 470 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 471              	.LCFI17:
+ 472              		.cfi_def_cfa_offset 20
+ 473              		.cfi_offset 4, -20
+ 474              		.cfi_offset 5, -16
+ 475              		.cfi_offset 6, -12
+ 476              		.cfi_offset 7, -8
+ 477              		.cfi_offset 14, -4
+ 478 0002 85B0     		sub	sp, sp, #20
+ 479              	.LCFI18:
+ 480              		.cfi_def_cfa_offset 40
+ 481 0004 0546     		mov	r5, r0
+ 482 0006 0C46     		mov	r4, r1
+  75:Src/main_screen.c ****     uint8_t percent;
+  76:Src/main_screen.c ****     uint8_t buff[5];
+  77:Src/main_screen.c ****     uint8_t warnBuff[30];
+  78:Src/main_screen.c ****     uint8_t line;
+  79:Src/main_screen.c ****     if(pressure > threshold) pressure = threshold;
+ 483              		.loc 1 79 0
+ 484 0008 0846     		mov	r0, r1
+ 485              	.LVL31:
+ 486 000a FFF7FEFF 		bl	__aeabi_i2f
+ 487              	.LVL32:
+ 488 000e 2946     		mov	r1, r5
+ 489 0010 FFF7FEFF 		bl	__aeabi_fcmplt
+ 490              	.LVL33:
+ 491 0014 18B1     		cbz	r0, .L34
+ 492              		.loc 1 79 0 is_stmt 0 discriminator 1
+ 493 0016 2046     		mov	r0, r4
+ 494 0018 FFF7FEFF 		bl	__aeabi_ui2f
+ 495              	.LVL34:
+ 496 001c 0546     		mov	r5, r0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 11
+
+
+ 497              	.LVL35:
+ 498              	.L34:
+  80:Src/main_screen.c ****     percent = (uint8_t)((pressure * 100)/((float)threshold));
+ 499              		.loc 1 80 0 is_stmt 1
+ 500 001e 3F49     		ldr	r1, .L47
+ 501 0020 2846     		mov	r0, r5
+ 502 0022 FFF7FEFF 		bl	__aeabi_fmul
+ 503              	.LVL36:
+ 504 0026 0546     		mov	r5, r0
+ 505              	.LVL37:
+ 506 0028 2046     		mov	r0, r4
+ 507 002a FFF7FEFF 		bl	__aeabi_ui2f
+ 508              	.LVL38:
+ 509 002e 0146     		mov	r1, r0
+ 510 0030 2846     		mov	r0, r5
+ 511 0032 FFF7FEFF 		bl	__aeabi_fdiv
+ 512              	.LVL39:
+ 513 0036 FFF7FEFF 		bl	__aeabi_f2uiz
+ 514              	.LVL40:
+ 515 003a C0B2     		uxtb	r0, r0
+ 516              	.LVL41:
+  81:Src/main_screen.c ****     percent = fabs(100 - percent);
+ 517              		.loc 1 81 0
+ 518 003c C0F16400 		rsb	r0, r0, #100
+ 519              	.LVL42:
+ 520 0040 FFF7FEFF 		bl	__aeabi_i2d
+ 521              	.LVL43:
+ 522 0044 21F00043 		bic	r3, r1, #-2147483648
+ 523 0048 1946     		mov	r1, r3
+ 524 004a FFF7FEFF 		bl	__aeabi_d2uiz
+ 525              	.LVL44:
+ 526 004e C5B2     		uxtb	r5, r0
+ 527              	.LVL45:
+  82:Src/main_screen.c ****     line = percent * 50 / 100;
+ 528              		.loc 1 82 0
+ 529 0050 3224     		movs	r4, #50
+ 530 0052 04FB05F4 		mul	r4, r4, r5
+ 531 0056 324B     		ldr	r3, .L47+4
+ 532 0058 83FB0434 		smull	r3, r4, r3, r4
+ 533 005c 6409     		lsrs	r4, r4, #5
+ 534              	.LVL46:
+  83:Src/main_screen.c ****     u8g2_SetFont(&u8g2, u8g2_font_5x7_tf);
+ 535              		.loc 1 83 0
+ 536 005e 3149     		ldr	r1, .L47+8
+ 537 0060 3148     		ldr	r0, .L47+12
+ 538 0062 FFF7FEFF 		bl	u8g2_SetFont
+ 539              	.LVL47:
+  84:Src/main_screen.c ****     if((percent == 100) && (percent >= 70))
+ 540              		.loc 1 84 0
+ 541 0066 642D     		cmp	r5, #100
+ 542 0068 18D0     		beq	.L43
+  85:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 17, 21, "The filter is good!");
+  86:Src/main_screen.c ****     else if((percent <= 70) && (percent > 30))
+ 543              		.loc 1 86 0
+ 544 006a A5F11F03 		sub	r3, r5, #31
+ 545 006e DBB2     		uxtb	r3, r3
+ 546 0070 272B     		cmp	r3, #39
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 12
+
+
+ 547 0072 1AD9     		bls	.L44
+  87:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 17, 21, "The filter medium!");
+  88:Src/main_screen.c ****     else if((percent <= 30) && (percent > 10))
+ 548              		.loc 1 88 0
+ 549 0074 A5F10B03 		sub	r3, r5, #11
+ 550 0078 DBB2     		uxtb	r3, r3
+ 551 007a 132B     		cmp	r3, #19
+ 552 007c 1CD9     		bls	.L45
+  89:Src/main_screen.c ****         u8g2_DrawStr(&u8g2, 17, 21, "The filter low!");
+  90:Src/main_screen.c ****     else
+  91:Src/main_screen.c ****     {
+  92:Src/main_screen.c ****         u8g2_SetFont(&u8g2, u8g2_font_5x7_mf);
+ 553              		.loc 1 92 0
+ 554 007e 2B49     		ldr	r1, .L47+16
+ 555 0080 2948     		ldr	r0, .L47+12
+ 556 0082 FFF7FEFF 		bl	u8g2_SetFont
+ 557              	.LVL48:
+  93:Src/main_screen.c ****         if(main_scr.warnCnt > F_WARNING)
+ 558              		.loc 1 93 0
+ 559 0086 2A4B     		ldr	r3, .L47+20
+ 560 0088 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 561 008a 052B     		cmp	r3, #5
+ 562 008c 3ED8     		bhi	.L46
+  94:Src/main_screen.c ****         {
+  95:Src/main_screen.c ****             u8g2_DrawStr(&u8g2, 17, 21, "Please change filter!");
+  96:Src/main_screen.c ****         }
+  97:Src/main_screen.c ****         else
+  98:Src/main_screen.c ****         {
+  99:Src/main_screen.c ****             u8g2_DrawStr(&u8g2, 17, 21, "                     ");
+ 563              		.loc 1 99 0
+ 564 008e 294B     		ldr	r3, .L47+24
+ 565 0090 1522     		movs	r2, #21
+ 566 0092 1121     		movs	r1, #17
+ 567 0094 2448     		ldr	r0, .L47+12
+ 568 0096 FFF7FEFF 		bl	u8g2_DrawStr
+ 569              	.LVL49:
+ 570 009a 13E0     		b	.L37
+ 571              	.L43:
+  85:Src/main_screen.c ****     else if((percent <= 70) && (percent > 30))
+ 572              		.loc 1 85 0
+ 573 009c 264B     		ldr	r3, .L47+28
+ 574 009e 1522     		movs	r2, #21
+ 575 00a0 1121     		movs	r1, #17
+ 576 00a2 2148     		ldr	r0, .L47+12
+ 577 00a4 FFF7FEFF 		bl	u8g2_DrawStr
+ 578              	.LVL50:
+ 579 00a8 0CE0     		b	.L37
+ 580              	.L44:
+  87:Src/main_screen.c ****     else if((percent <= 30) && (percent > 10))
+ 581              		.loc 1 87 0
+ 582 00aa 244B     		ldr	r3, .L47+32
+ 583 00ac 1522     		movs	r2, #21
+ 584 00ae 1121     		movs	r1, #17
+ 585 00b0 1D48     		ldr	r0, .L47+12
+ 586 00b2 FFF7FEFF 		bl	u8g2_DrawStr
+ 587              	.LVL51:
+ 588 00b6 05E0     		b	.L37
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 13
+
+
+ 589              	.L45:
+  89:Src/main_screen.c ****     else
+ 590              		.loc 1 89 0
+ 591 00b8 214B     		ldr	r3, .L47+36
+ 592 00ba 1522     		movs	r2, #21
+ 593 00bc 1121     		movs	r1, #17
+ 594 00be 1A48     		ldr	r0, .L47+12
+ 595 00c0 FFF7FEFF 		bl	u8g2_DrawStr
+ 596              	.LVL52:
+ 597              	.L37:
+ 100:Src/main_screen.c ****         }
+ 101:Src/main_screen.c ****     }
+ 102:Src/main_screen.c ****     u8g2_DrawStr(&u8g2, 7, 10, "Filter:");
+ 598              		.loc 1 102 0
+ 599 00c4 184E     		ldr	r6, .L47+12
+ 600 00c6 1F4B     		ldr	r3, .L47+40
+ 601 00c8 0A22     		movs	r2, #10
+ 602 00ca 0721     		movs	r1, #7
+ 603 00cc 3046     		mov	r0, r6
+ 604 00ce FFF7FEFF 		bl	u8g2_DrawStr
+ 605              	.LVL53:
+ 103:Src/main_screen.c ****     u8g2_DrawFrame(&u8g2, 43, 2, 54, 10);
+ 606              		.loc 1 103 0
+ 607 00d2 0A27     		movs	r7, #10
+ 608 00d4 0097     		str	r7, [sp]
+ 609 00d6 3623     		movs	r3, #54
+ 610 00d8 0222     		movs	r2, #2
+ 611 00da 2B21     		movs	r1, #43
+ 612 00dc 3046     		mov	r0, r6
+ 613 00de FFF7FEFF 		bl	u8g2_DrawFrame
+ 614              	.LVL54:
+ 104:Src/main_screen.c ****     sprintf(buff, "%d %%", percent);
+ 615              		.loc 1 104 0
+ 616 00e2 2A46     		mov	r2, r5
+ 617 00e4 1849     		ldr	r1, .L47+44
+ 618 00e6 02A8     		add	r0, sp, #8
+ 619 00e8 FFF7FEFF 		bl	sprintf
+ 620              	.LVL55:
+ 105:Src/main_screen.c ****     u8g2_DrawStr(&u8g2, 98, 10, buff);
+ 621              		.loc 1 105 0
+ 622 00ec 02AB     		add	r3, sp, #8
+ 623 00ee 3A46     		mov	r2, r7
+ 624 00f0 6221     		movs	r1, #98
+ 625 00f2 3046     		mov	r0, r6
+ 626 00f4 FFF7FEFF 		bl	u8g2_DrawStr
+ 627              	.LVL56:
+ 106:Src/main_screen.c ****     u8g2_DrawBox(&u8g2, 45, 4, line, 6);   
+ 628              		.loc 1 106 0
+ 629 00f8 0623     		movs	r3, #6
+ 630 00fa 0093     		str	r3, [sp]
+ 631 00fc 2346     		mov	r3, r4
+ 632 00fe 0422     		movs	r2, #4
+ 633 0100 2D21     		movs	r1, #45
+ 634 0102 3046     		mov	r0, r6
+ 635 0104 FFF7FEFF 		bl	u8g2_DrawBox
+ 636              	.LVL57:
+ 107:Src/main_screen.c **** }
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 14
+
+
+ 637              		.loc 1 107 0
+ 638 0108 05B0     		add	sp, sp, #20
+ 639              	.LCFI19:
+ 640              		.cfi_remember_state
+ 641              		.cfi_def_cfa_offset 20
+ 642              		@ sp needed
+ 643 010a F0BD     		pop	{r4, r5, r6, r7, pc}
+ 644              	.LVL58:
+ 645              	.L46:
+ 646              	.LCFI20:
+ 647              		.cfi_restore_state
+  95:Src/main_screen.c ****         }
+ 648              		.loc 1 95 0
+ 649 010c 0F4B     		ldr	r3, .L47+48
+ 650 010e 1522     		movs	r2, #21
+ 651 0110 1121     		movs	r1, #17
+ 652 0112 0548     		ldr	r0, .L47+12
+ 653 0114 FFF7FEFF 		bl	u8g2_DrawStr
+ 654              	.LVL59:
+ 655 0118 D4E7     		b	.L37
+ 656              	.L48:
+ 657 011a 00BF     		.align	2
+ 658              	.L47:
+ 659 011c 0000C842 		.word	1120403456
+ 660 0120 1F85EB51 		.word	1374389535
+ 661 0124 00000000 		.word	u8g2_font_5x7_tf
+ 662 0128 00000000 		.word	u8g2
+ 663 012c 00000000 		.word	u8g2_font_5x7_mf
+ 664 0130 00000000 		.word	main_scr
+ 665 0134 50000000 		.word	.LC10
+ 666 0138 00000000 		.word	.LC6
+ 667 013c 14000000 		.word	.LC7
+ 668 0140 28000000 		.word	.LC8
+ 669 0144 68000000 		.word	.LC11
+ 670 0148 70000000 		.word	.LC12
+ 671 014c 38000000 		.word	.LC9
+ 672              		.cfi_endproc
+ 673              	.LFE71:
+ 675              		.section	.text.Horizontal,"ax",%progbits
+ 676              		.align	1
+ 677              		.global	Horizontal
+ 678              		.syntax unified
+ 679              		.thumb
+ 680              		.thumb_func
+ 681              		.fpu softvfp
+ 683              	Horizontal:
+ 684              	.LFB72:
+ 108:Src/main_screen.c **** 
+ 109:Src/main_screen.c **** void Horizontal(void)
+ 110:Src/main_screen.c **** {
+ 685              		.loc 1 110 0
+ 686              		.cfi_startproc
+ 687              		@ args = 0, pretend = 0, frame = 0
+ 688              		@ frame_needed = 0, uses_anonymous_args = 0
+ 689 0000 70B5     		push	{r4, r5, r6, lr}
+ 690              	.LCFI21:
+ 691              		.cfi_def_cfa_offset 16
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 15
+
+
+ 692              		.cfi_offset 4, -16
+ 693              		.cfi_offset 5, -12
+ 694              		.cfi_offset 6, -8
+ 695              		.cfi_offset 14, -4
+ 696 0002 82B0     		sub	sp, sp, #8
+ 697              	.LCFI22:
+ 698              		.cfi_def_cfa_offset 24
+ 111:Src/main_screen.c ****     u8g2_SetDrawColor(&u8g2, 1);
+ 699              		.loc 1 111 0
+ 700 0004 154C     		ldr	r4, .L51
+ 701 0006 0121     		movs	r1, #1
+ 702 0008 2046     		mov	r0, r4
+ 703 000a FFF7FEFF 		bl	u8g2_SetDrawColor
+ 704              	.LVL60:
+ 112:Src/main_screen.c ****     u8g2_DrawFrame(&u8g2, 0, 24, 128, 40);
+ 705              		.loc 1 112 0
+ 706 000e 2825     		movs	r5, #40
+ 707 0010 0095     		str	r5, [sp]
+ 708 0012 8023     		movs	r3, #128
+ 709 0014 1822     		movs	r2, #24
+ 710 0016 0021     		movs	r1, #0
+ 711 0018 2046     		mov	r0, r4
+ 712 001a FFF7FEFF 		bl	u8g2_DrawFrame
+ 713              	.LVL61:
+ 113:Src/main_screen.c ****     u8g2_DrawHLine(&u8g2, 0, 36, 128);
+ 714              		.loc 1 113 0
+ 715 001e 8023     		movs	r3, #128
+ 716 0020 2422     		movs	r2, #36
+ 717 0022 0021     		movs	r1, #0
+ 718 0024 2046     		mov	r0, r4
+ 719 0026 FFF7FEFF 		bl	u8g2_DrawHLine
+ 720              	.LVL62:
+ 114:Src/main_screen.c ****     u8g2_DrawHVLine(&u8g2, 32, 24, 40, 1);
+ 721              		.loc 1 114 0
+ 722 002a 0126     		movs	r6, #1
+ 723 002c 0096     		str	r6, [sp]
+ 724 002e 2B46     		mov	r3, r5
+ 725 0030 1822     		movs	r2, #24
+ 726 0032 2021     		movs	r1, #32
+ 727 0034 2046     		mov	r0, r4
+ 728 0036 FFF7FEFF 		bl	u8g2_DrawHVLine
+ 729              	.LVL63:
+ 115:Src/main_screen.c ****     u8g2_DrawHVLine(&u8g2, 64, 24, 40, 1);
+ 730              		.loc 1 115 0
+ 731 003a 0096     		str	r6, [sp]
+ 732 003c 2B46     		mov	r3, r5
+ 733 003e 1822     		movs	r2, #24
+ 734 0040 4021     		movs	r1, #64
+ 735 0042 2046     		mov	r0, r4
+ 736 0044 FFF7FEFF 		bl	u8g2_DrawHVLine
+ 737              	.LVL64:
+ 116:Src/main_screen.c ****     u8g2_DrawHVLine(&u8g2, 96, 24, 40, 1);
+ 738              		.loc 1 116 0
+ 739 0048 0096     		str	r6, [sp]
+ 740 004a 2B46     		mov	r3, r5
+ 741 004c 1822     		movs	r2, #24
+ 742 004e 6021     		movs	r1, #96
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 16
+
+
+ 743 0050 2046     		mov	r0, r4
+ 744 0052 FFF7FEFF 		bl	u8g2_DrawHVLine
+ 745              	.LVL65:
+ 117:Src/main_screen.c **** }
+ 746              		.loc 1 117 0
+ 747 0056 02B0     		add	sp, sp, #8
+ 748              	.LCFI23:
+ 749              		.cfi_def_cfa_offset 16
+ 750              		@ sp needed
+ 751 0058 70BD     		pop	{r4, r5, r6, pc}
+ 752              	.L52:
+ 753 005a 00BF     		.align	2
+ 754              	.L51:
+ 755 005c 00000000 		.word	u8g2
+ 756              		.cfi_endproc
+ 757              	.LFE72:
+ 759              		.section	.text.Main_Screen_Manage,"ax",%progbits
+ 760              		.align	1
+ 761              		.global	Main_Screen_Manage
+ 762              		.syntax unified
+ 763              		.thumb
+ 764              		.thumb_func
+ 765              		.fpu softvfp
+ 767              	Main_Screen_Manage:
+ 768              	.LFB73:
+ 118:Src/main_screen.c **** 
+ 119:Src/main_screen.c **** /* Management devices|: Neon, UV, Fan, Socket, filter status */
+ 120:Src/main_screen.c **** void Main_Screen_Manage(void)
+ 121:Src/main_screen.c **** {
+ 769              		.loc 1 121 0
+ 770              		.cfi_startproc
+ 771              		@ args = 0, pretend = 0, frame = 0
+ 772              		@ frame_needed = 0, uses_anonymous_args = 0
+ 773 0000 10B5     		push	{r4, lr}
+ 774              	.LCFI24:
+ 775              		.cfi_def_cfa_offset 8
+ 776              		.cfi_offset 4, -8
+ 777              		.cfi_offset 14, -4
+ 122:Src/main_screen.c ****     if (HAL_GetTick() - main_scr.tick > 200)
+ 778              		.loc 1 122 0
+ 779 0002 FFF7FEFF 		bl	HAL_GetTick
+ 780              	.LVL66:
+ 781 0006 174B     		ldr	r3, .L57
+ 782 0008 5B68     		ldr	r3, [r3, #4]
+ 783 000a C01A     		subs	r0, r0, r3
+ 784 000c C828     		cmp	r0, #200
+ 785 000e 10D9     		bls	.L54
+ 123:Src/main_screen.c ****     {
+ 124:Src/main_screen.c ****         main_scr.fanRotate = ~main_scr.fanRotate;
+ 786              		.loc 1 124 0
+ 787 0010 144A     		ldr	r2, .L57
+ 788 0012 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 789 0014 DB43     		mvns	r3, r3
+ 790 0016 1370     		strb	r3, [r2]
+ 125:Src/main_screen.c ****         if(++main_scr.warnCnt > F_WARNING*2) main_scr.warnCnt = 0;
+ 791              		.loc 1 125 0
+ 792 0018 5378     		ldrb	r3, [r2, #1]	@ zero_extendqisi2
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 17
+
+
+ 793 001a 0133     		adds	r3, r3, #1
+ 794 001c DBB2     		uxtb	r3, r3
+ 795 001e 5370     		strb	r3, [r2, #1]
+ 796 0020 0A2B     		cmp	r3, #10
+ 797 0022 02D9     		bls	.L55
+ 798              		.loc 1 125 0 is_stmt 0 discriminator 1
+ 799 0024 1346     		mov	r3, r2
+ 800 0026 0022     		movs	r2, #0
+ 801 0028 5A70     		strb	r2, [r3, #1]
+ 802              	.L55:
+ 126:Src/main_screen.c ****         main_scr.tick = HAL_GetTick();
+ 803              		.loc 1 126 0 is_stmt 1
+ 804 002a FFF7FEFF 		bl	HAL_GetTick
+ 805              	.LVL67:
+ 806 002e 0D4B     		ldr	r3, .L57
+ 807 0030 5860     		str	r0, [r3, #4]
+ 808              	.L54:
+ 127:Src/main_screen.c ****     }
+ 128:Src/main_screen.c ****     u8g2_ClearBuffer(&u8g2);
+ 809              		.loc 1 128 0
+ 810 0032 0D48     		ldr	r0, .L57+4
+ 811 0034 FFF7FEFF 		bl	u8g2_ClearBuffer
+ 812              	.LVL68:
+ 129:Src/main_screen.c ****     Lamp_Status(dev.status.lamp);
+ 813              		.loc 1 129 0
+ 814 0038 0C4C     		ldr	r4, .L57+8
+ 815 003a A078     		ldrb	r0, [r4, #2]	@ zero_extendqisi2
+ 816 003c FFF7FEFF 		bl	Lamp_Status
+ 817              	.LVL69:
+ 130:Src/main_screen.c ****     UV_Status(dev.status.uv);
+ 818              		.loc 1 130 0
+ 819 0040 E078     		ldrb	r0, [r4, #3]	@ zero_extendqisi2
+ 820 0042 FFF7FEFF 		bl	UV_Status
+ 821              	.LVL70:
+ 131:Src/main_screen.c ****     Fan_Status(dev.status.fan);
+ 822              		.loc 1 131 0
+ 823 0046 2079     		ldrb	r0, [r4, #4]	@ zero_extendqisi2
+ 824 0048 FFF7FEFF 		bl	Fan_Status
+ 825              	.LVL71:
+ 132:Src/main_screen.c ****     Socket_Status(dev.status.socket);
+ 826              		.loc 1 132 0
+ 827 004c 6079     		ldrb	r0, [r4, #5]	@ zero_extendqisi2
+ 828 004e FFF7FEFF 		bl	Socket_Status
+ 829              	.LVL72:
+ 133:Src/main_screen.c ****     Horizontal();
+ 830              		.loc 1 133 0
+ 831 0052 FFF7FEFF 		bl	Horizontal
+ 832              	.LVL73:
+ 134:Src/main_screen.c ****     Filter_Pcent(sm5852_1.pressure, sys_cfg.pressureVal);
+ 833              		.loc 1 134 0
+ 834 0056 064B     		ldr	r3, .L57+12
+ 835 0058 D988     		ldrh	r1, [r3, #6]
+ 836 005a 064B     		ldr	r3, .L57+16
+ 837 005c 9868     		ldr	r0, [r3, #8]	@ float
+ 838 005e FFF7FEFF 		bl	Filter_Pcent
+ 839              	.LVL74:
+ 135:Src/main_screen.c **** }
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 18
+
+
+ 840              		.loc 1 135 0
+ 841 0062 10BD     		pop	{r4, pc}
+ 842              	.L58:
+ 843              		.align	2
+ 844              	.L57:
+ 845 0064 00000000 		.word	main_scr
+ 846 0068 00000000 		.word	u8g2
+ 847 006c 00000000 		.word	dev
+ 848 0070 00000000 		.word	sys_cfg
+ 849 0074 00000000 		.word	sm5852_1
+ 850              		.cfi_endproc
+ 851              	.LFE73:
+ 853              		.global	blink
+ 854              		.comm	main_scr,8,4
+ 855              		.comm	bmp_temp,8,4
+ 856              		.section	.data.blink,"aw",%progbits
+ 859              	blink:
+ 860 0000 01       		.byte	1
+ 861              		.section	.rodata.Fan_Status.str1.4,"aMS",%progbits,1
+ 862              		.align	2
+ 863              	.LC2:
+ 864 0000 46414E00 		.ascii	"FAN\000"
+ 865              		.section	.rodata.Filter_Pcent.str1.4,"aMS",%progbits,1
+ 866              		.align	2
+ 867              	.LC6:
+ 868 0000 54686520 		.ascii	"The filter is good!\000"
+ 868      66696C74 
+ 868      65722069 
+ 868      7320676F 
+ 868      6F642100 
+ 869              	.LC7:
+ 870 0014 54686520 		.ascii	"The filter medium!\000"
+ 870      66696C74 
+ 870      6572206D 
+ 870      65646975 
+ 870      6D2100
+ 871 0027 00       		.space	1
+ 872              	.LC8:
+ 873 0028 54686520 		.ascii	"The filter low!\000"
+ 873      66696C74 
+ 873      6572206C 
+ 873      6F772100 
+ 874              	.LC9:
+ 875 0038 506C6561 		.ascii	"Please change filter!\000"
+ 875      73652063 
+ 875      68616E67 
+ 875      65206669 
+ 875      6C746572 
+ 876 004e 0000     		.space	2
+ 877              	.LC10:
+ 878 0050 20202020 		.ascii	"                     \000"
+ 878      20202020 
+ 878      20202020 
+ 878      20202020 
+ 878      20202020 
+ 879 0066 0000     		.space	2
+ 880              	.LC11:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 19
+
+
+ 881 0068 46696C74 		.ascii	"Filter:\000"
+ 881      65723A00 
+ 882              	.LC12:
+ 883 0070 25642025 		.ascii	"%d %%\000"
+ 883      2500
+ 884              		.section	.rodata.Lamp_Status.str1.4,"aMS",%progbits,1
+ 885              		.align	2
+ 886              	.LC0:
+ 887 0000 4E454F4E 		.ascii	"NEON\000"
+ 887      00
+ 888              		.section	.rodata.Socket_Status.str1.4,"aMS",%progbits,1
+ 889              		.align	2
+ 890              	.LC3:
+ 891 0000 534F434B 		.ascii	"SOCKET\000"
+ 891      455400
+ 892 0007 00       		.space	1
+ 893              	.LC4:
+ 894 0008 4F4E00   		.ascii	"ON\000"
+ 895 000b 00       		.space	1
+ 896              	.LC5:
+ 897 000c 4F464600 		.ascii	"OFF\000"
+ 898              		.section	.rodata.UV_Status.str1.4,"aMS",%progbits,1
+ 899              		.align	2
+ 900              	.LC1:
+ 901 0000 555600   		.ascii	"UV\000"
+ 902              		.text
+ 903              	.Letext0:
+ 904              		.file 2 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_defau
+ 905              		.file 3 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_stdint.h"
+ 906              		.file 4 "Drivers/CMSIS/Include/core_cm3.h"
+ 907              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h"
+ 908              		.file 6 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
+ 909              		.file 7 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/lock.h"
+ 910              		.file 8 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_types.h"
+ 911              		.file 9 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/
+ 912              		.file 10 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/reent.h"
+ 913              		.file 11 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 914              		.file 12 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 915              		.file 13 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_i2c.h"
+ 916              		.file 14 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 917              		.file 15 "u8g2/csrc/u8x8.h"
+ 918              		.file 16 "u8g2/csrc/u8g2.h"
+ 919              		.file 17 "Inc/main.h"
+ 920              		.file 18 "Inc/user_bitmap.h"
+ 921              		.file 19 "Inc/main_screen.h"
+ 922              		.file 20 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/stdlib.h"
+ 923              		.file 21 "Inc/system.h"
+ 924              		.file 22 "Inc/config.h"
+ 925              		.file 23 "Inc/sm5852.h"
+ 926              		.file 24 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/stdio.h"
+ 927              		.file 25 "<built-in>"
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 20
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main_screen.c
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:16     .text.main_screen_init:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:23     .text.main_screen_init:0000000000000000 main_screen_init
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:49     .text.main_screen_init:0000000000000014 $d
+                            *COM*:0000000000000008 main_scr
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:55     .text.Lamp_Status:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:62     .text.Lamp_Status:0000000000000000 Lamp_Status
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:136    .text.Lamp_Status:0000000000000054 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:145    .text.UV_Status:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:152    .text.UV_Status:0000000000000000 UV_Status
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:226    .text.UV_Status:0000000000000054 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:235    .text.Fan_Status:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:242    .text.Fan_Status:0000000000000000 Fan_Status
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:320    .text.Fan_Status:000000000000005c $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:330    .text.Socket_Status:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:337    .text.Socket_Status:0000000000000000 Socket_Status
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:436    .text.Socket_Status:0000000000000080 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:456    .text.Filter_Pcent:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:463    .text.Filter_Pcent:0000000000000000 Filter_Pcent
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:659    .text.Filter_Pcent:000000000000011c $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:676    .text.Horizontal:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:683    .text.Horizontal:0000000000000000 Horizontal
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:755    .text.Horizontal:000000000000005c $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:760    .text.Main_Screen_Manage:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:767    .text.Main_Screen_Manage:0000000000000000 Main_Screen_Manage
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:845    .text.Main_Screen_Manage:0000000000000064 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:859    .data.blink:0000000000000000 blink
+                            *COM*:0000000000000008 bmp_temp
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:862    .rodata.Fan_Status.str1.4:0000000000000000 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:866    .rodata.Filter_Pcent.str1.4:0000000000000000 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:885    .rodata.Lamp_Status.str1.4:0000000000000000 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:889    .rodata.Socket_Status.str1.4:0000000000000000 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s:899    .rodata.UV_Status.str1.4:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+u8g2_ClearBuffer
+HAL_GetTick
+u8g2
+u8g2_SetFont
+u8g2_DrawStr
+u8g2_DrawBitmap
+u8g2_font_micro_tr
+bmp_neon_off
+bmp_neon_on
+bmp_uv_off
+bmp_uv_on
+bmp_fan_origin
+bmp_fan_rotate
+bmp_socket_off
+u8g2_font_u8glib_4_tf
+bmp_socket_on
+__aeabi_i2f
+__aeabi_fcmplt
+__aeabi_ui2f
+__aeabi_fmul
+__aeabi_fdiv
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccRLUU3K.s 			page 21
+
+
+__aeabi_f2uiz
+__aeabi_i2d
+__aeabi_d2uiz
+u8g2_DrawFrame
+sprintf
+u8g2_DrawBox
+u8g2_font_5x7_tf
+u8g2_font_5x7_mf
+u8g2_SetDrawColor
+u8g2_DrawHLine
+u8g2_DrawHVLine
+dev
+sys_cfg
+sm5852_1

@@ -1,0 +1,419 @@
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"kalman_filter.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.Simple_Kalman_Filter,"ax",%progbits
+  16              		.align	1
+  17              		.global	Simple_Kalman_Filter
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  21              		.fpu softvfp
+  23              	Simple_Kalman_Filter:
+  24              	.LFB66:
+  25              		.file 1 "Src/kalman_filter.c"
+   1:Src/kalman_filter.c **** #include "kalman_filter.h"
+   2:Src/kalman_filter.c **** 
+   3:Src/kalman_filter.c **** KALMAN_FILTER_T kalman;
+   4:Src/kalman_filter.c **** 
+   5:Src/kalman_filter.c **** void Simple_Kalman_Filter(float mea_e, float est_e, float q)
+   6:Src/kalman_filter.c **** {
+  26              		.loc 1 6 0
+  27              		.cfi_startproc
+  28              		@ args = 0, pretend = 0, frame = 0
+  29              		@ frame_needed = 0, uses_anonymous_args = 0
+  30              		@ link register save eliminated.
+  31              	.LVL0:
+   7:Src/kalman_filter.c **** 	kalman._err_measure = mea_e;
+  32              		.loc 1 7 0
+  33 0000 024B     		ldr	r3, .L2
+  34 0002 1860     		str	r0, [r3]	@ float
+   8:Src/kalman_filter.c **** 	kalman._err_estimate = est_e;
+  35              		.loc 1 8 0
+  36 0004 5960     		str	r1, [r3, #4]	@ float
+   9:Src/kalman_filter.c **** 	kalman._q = q;
+  37              		.loc 1 9 0
+  38 0006 9A60     		str	r2, [r3, #8]	@ float
+  10:Src/kalman_filter.c **** }
+  39              		.loc 1 10 0
+  40 0008 7047     		bx	lr
+  41              	.L3:
+  42 000a 00BF     		.align	2
+  43              	.L2:
+  44 000c 00000000 		.word	kalman
+  45              		.cfi_endproc
+  46              	.LFE66:
+  48              		.global	__aeabi_fadd
+  49              		.global	__aeabi_fdiv
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s 			page 2
+
+
+  50              		.global	__aeabi_fsub
+  51              		.global	__aeabi_fmul
+  52              		.global	__aeabi_f2d
+  53              		.global	__aeabi_dsub
+  54              		.global	__aeabi_dmul
+  55              		.global	__aeabi_dadd
+  56              		.global	__aeabi_d2f
+  57              		.section	.text.Update_Estimate,"ax",%progbits
+  58              		.align	1
+  59              		.global	Update_Estimate
+  60              		.syntax unified
+  61              		.thumb
+  62              		.thumb_func
+  63              		.fpu softvfp
+  65              	Update_Estimate:
+  66              	.LFB67:
+  11:Src/kalman_filter.c **** 
+  12:Src/kalman_filter.c **** float Update_Estimate(float mea)
+  13:Src/kalman_filter.c **** {
+  67              		.loc 1 13 0
+  68              		.cfi_startproc
+  69              		@ args = 0, pretend = 0, frame = 0
+  70              		@ frame_needed = 0, uses_anonymous_args = 0
+  71              	.LVL1:
+  72 0000 2DE9F843 		push	{r3, r4, r5, r6, r7, r8, r9, lr}
+  73              	.LCFI0:
+  74              		.cfi_def_cfa_offset 32
+  75              		.cfi_offset 3, -32
+  76              		.cfi_offset 4, -28
+  77              		.cfi_offset 5, -24
+  78              		.cfi_offset 6, -20
+  79              		.cfi_offset 7, -16
+  80              		.cfi_offset 8, -12
+  81              		.cfi_offset 9, -8
+  82              		.cfi_offset 14, -4
+  83 0004 0546     		mov	r5, r0
+  14:Src/kalman_filter.c **** 	kalman._kalman_gain = kalman._err_estimate/(kalman._err_estimate + kalman._err_measure);
+  84              		.loc 1 14 0
+  85 0006 294C     		ldr	r4, .L6
+  86 0008 D4F80490 		ldr	r9, [r4, #4]	@ float
+  87 000c 2168     		ldr	r1, [r4]	@ float
+  88 000e 4846     		mov	r0, r9
+  89              	.LVL2:
+  90 0010 FFF7FEFF 		bl	__aeabi_fadd
+  91              	.LVL3:
+  92 0014 0146     		mov	r1, r0
+  93 0016 4846     		mov	r0, r9
+  94 0018 FFF7FEFF 		bl	__aeabi_fdiv
+  95              	.LVL4:
+  96 001c 0646     		mov	r6, r0
+  97 001e 6061     		str	r0, [r4, #20]	@ float
+  15:Src/kalman_filter.c **** 	kalman._current_estimate = kalman._last_estimate + kalman._kalman_gain * (mea - kalman._last_estim
+  98              		.loc 1 15 0
+  99 0020 D4F81080 		ldr	r8, [r4, #16]	@ float
+ 100 0024 4146     		mov	r1, r8
+ 101 0026 2846     		mov	r0, r5
+ 102 0028 FFF7FEFF 		bl	__aeabi_fsub
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s 			page 3
+
+
+ 103              	.LVL5:
+ 104 002c 0146     		mov	r1, r0
+ 105 002e 3046     		mov	r0, r6
+ 106 0030 FFF7FEFF 		bl	__aeabi_fmul
+ 107              	.LVL6:
+ 108 0034 0146     		mov	r1, r0
+ 109 0036 4046     		mov	r0, r8
+ 110 0038 FFF7FEFF 		bl	__aeabi_fadd
+ 111              	.LVL7:
+ 112 003c 0546     		mov	r5, r0
+ 113              	.LVL8:
+ 114 003e E060     		str	r0, [r4, #12]	@ float
+  16:Src/kalman_filter.c **** 	kalman._err_estimate = (1.0 - kalman._kalman_gain)*kalman._err_estimate + fabs(kalman._last_estima
+ 115              		.loc 1 16 0
+ 116 0040 3046     		mov	r0, r6
+ 117 0042 FFF7FEFF 		bl	__aeabi_f2d
+ 118              	.LVL9:
+ 119 0046 0246     		mov	r2, r0
+ 120 0048 0B46     		mov	r3, r1
+ 121 004a 0020     		movs	r0, #0
+ 122 004c 1849     		ldr	r1, .L6+4
+ 123 004e FFF7FEFF 		bl	__aeabi_dsub
+ 124              	.LVL10:
+ 125 0052 0646     		mov	r6, r0
+ 126 0054 0F46     		mov	r7, r1
+ 127 0056 4846     		mov	r0, r9
+ 128 0058 FFF7FEFF 		bl	__aeabi_f2d
+ 129              	.LVL11:
+ 130 005c 0246     		mov	r2, r0
+ 131 005e 0B46     		mov	r3, r1
+ 132 0060 3046     		mov	r0, r6
+ 133 0062 3946     		mov	r1, r7
+ 134 0064 FFF7FEFF 		bl	__aeabi_dmul
+ 135              	.LVL12:
+ 136 0068 0646     		mov	r6, r0
+ 137 006a 0F46     		mov	r7, r1
+ 138 006c 2946     		mov	r1, r5
+ 139 006e 4046     		mov	r0, r8
+ 140 0070 FFF7FEFF 		bl	__aeabi_fsub
+ 141              	.LVL13:
+ 142 0074 20F00040 		bic	r0, r0, #-2147483648
+ 143 0078 FFF7FEFF 		bl	__aeabi_f2d
+ 144              	.LVL14:
+ 145 007c 8046     		mov	r8, r0
+ 146 007e 8946     		mov	r9, r1
+ 147 0080 A068     		ldr	r0, [r4, #8]	@ float
+ 148 0082 FFF7FEFF 		bl	__aeabi_f2d
+ 149              	.LVL15:
+ 150 0086 0246     		mov	r2, r0
+ 151 0088 0B46     		mov	r3, r1
+ 152 008a 4046     		mov	r0, r8
+ 153 008c 4946     		mov	r1, r9
+ 154 008e FFF7FEFF 		bl	__aeabi_dmul
+ 155              	.LVL16:
+ 156 0092 0246     		mov	r2, r0
+ 157 0094 0B46     		mov	r3, r1
+ 158 0096 3046     		mov	r0, r6
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s 			page 4
+
+
+ 159 0098 3946     		mov	r1, r7
+ 160 009a FFF7FEFF 		bl	__aeabi_dadd
+ 161              	.LVL17:
+ 162 009e FFF7FEFF 		bl	__aeabi_d2f
+ 163              	.LVL18:
+ 164 00a2 6060     		str	r0, [r4, #4]	@ float
+  17:Src/kalman_filter.c **** 	kalman._last_estimate = kalman._current_estimate;
+ 165              		.loc 1 17 0
+ 166 00a4 2561     		str	r5, [r4, #16]	@ float
+  18:Src/kalman_filter.c **** 	return kalman._current_estimate;
+  19:Src/kalman_filter.c **** }
+ 167              		.loc 1 19 0
+ 168 00a6 2846     		mov	r0, r5
+ 169 00a8 BDE8F883 		pop	{r3, r4, r5, r6, r7, r8, r9, pc}
+ 170              	.L7:
+ 171              		.align	2
+ 172              	.L6:
+ 173 00ac 00000000 		.word	kalman
+ 174 00b0 0000F03F 		.word	1072693248
+ 175              		.cfi_endproc
+ 176              	.LFE67:
+ 178              		.section	.text.Set_Measurement_Error,"ax",%progbits
+ 179              		.align	1
+ 180              		.global	Set_Measurement_Error
+ 181              		.syntax unified
+ 182              		.thumb
+ 183              		.thumb_func
+ 184              		.fpu softvfp
+ 186              	Set_Measurement_Error:
+ 187              	.LFB68:
+  20:Src/kalman_filter.c **** 
+  21:Src/kalman_filter.c **** void Set_Measurement_Error(float mea_e)
+  22:Src/kalman_filter.c **** {
+ 188              		.loc 1 22 0
+ 189              		.cfi_startproc
+ 190              		@ args = 0, pretend = 0, frame = 0
+ 191              		@ frame_needed = 0, uses_anonymous_args = 0
+ 192              		@ link register save eliminated.
+ 193              	.LVL19:
+  23:Src/kalman_filter.c **** 	kalman._err_measure = mea_e;
+ 194              		.loc 1 23 0
+ 195 0000 014B     		ldr	r3, .L9
+ 196 0002 1860     		str	r0, [r3]	@ float
+  24:Src/kalman_filter.c **** }
+ 197              		.loc 1 24 0
+ 198 0004 7047     		bx	lr
+ 199              	.L10:
+ 200 0006 00BF     		.align	2
+ 201              	.L9:
+ 202 0008 00000000 		.word	kalman
+ 203              		.cfi_endproc
+ 204              	.LFE68:
+ 206              		.section	.text.Set_Estimate_Error,"ax",%progbits
+ 207              		.align	1
+ 208              		.global	Set_Estimate_Error
+ 209              		.syntax unified
+ 210              		.thumb
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s 			page 5
+
+
+ 211              		.thumb_func
+ 212              		.fpu softvfp
+ 214              	Set_Estimate_Error:
+ 215              	.LFB69:
+  25:Src/kalman_filter.c **** 
+  26:Src/kalman_filter.c **** void Set_Estimate_Error(float est_e)
+  27:Src/kalman_filter.c **** {
+ 216              		.loc 1 27 0
+ 217              		.cfi_startproc
+ 218              		@ args = 0, pretend = 0, frame = 0
+ 219              		@ frame_needed = 0, uses_anonymous_args = 0
+ 220              		@ link register save eliminated.
+ 221              	.LVL20:
+  28:Src/kalman_filter.c **** 	kalman._err_estimate = est_e;
+ 222              		.loc 1 28 0
+ 223 0000 014B     		ldr	r3, .L12
+ 224 0002 5860     		str	r0, [r3, #4]	@ float
+  29:Src/kalman_filter.c **** }
+ 225              		.loc 1 29 0
+ 226 0004 7047     		bx	lr
+ 227              	.L13:
+ 228 0006 00BF     		.align	2
+ 229              	.L12:
+ 230 0008 00000000 		.word	kalman
+ 231              		.cfi_endproc
+ 232              	.LFE69:
+ 234              		.section	.text.Set_Process_Noise,"ax",%progbits
+ 235              		.align	1
+ 236              		.global	Set_Process_Noise
+ 237              		.syntax unified
+ 238              		.thumb
+ 239              		.thumb_func
+ 240              		.fpu softvfp
+ 242              	Set_Process_Noise:
+ 243              	.LFB70:
+  30:Src/kalman_filter.c **** 
+  31:Src/kalman_filter.c **** void Set_Process_Noise(float q)
+  32:Src/kalman_filter.c **** {
+ 244              		.loc 1 32 0
+ 245              		.cfi_startproc
+ 246              		@ args = 0, pretend = 0, frame = 0
+ 247              		@ frame_needed = 0, uses_anonymous_args = 0
+ 248              		@ link register save eliminated.
+ 249              	.LVL21:
+  33:Src/kalman_filter.c **** 	kalman._q = q;
+ 250              		.loc 1 33 0
+ 251 0000 014B     		ldr	r3, .L15
+ 252 0002 9860     		str	r0, [r3, #8]	@ float
+  34:Src/kalman_filter.c **** }
+ 253              		.loc 1 34 0
+ 254 0004 7047     		bx	lr
+ 255              	.L16:
+ 256 0006 00BF     		.align	2
+ 257              	.L15:
+ 258 0008 00000000 		.word	kalman
+ 259              		.cfi_endproc
+ 260              	.LFE70:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s 			page 6
+
+
+ 262              		.section	.text.Get_Kalman_Gain,"ax",%progbits
+ 263              		.align	1
+ 264              		.global	Get_Kalman_Gain
+ 265              		.syntax unified
+ 266              		.thumb
+ 267              		.thumb_func
+ 268              		.fpu softvfp
+ 270              	Get_Kalman_Gain:
+ 271              	.LFB71:
+  35:Src/kalman_filter.c **** 
+  36:Src/kalman_filter.c **** float Get_Kalman_Gain(void)
+  37:Src/kalman_filter.c **** {
+ 272              		.loc 1 37 0
+ 273              		.cfi_startproc
+ 274              		@ args = 0, pretend = 0, frame = 0
+ 275              		@ frame_needed = 0, uses_anonymous_args = 0
+ 276              		@ link register save eliminated.
+  38:Src/kalman_filter.c **** 	return kalman._kalman_gain;
+  39:Src/kalman_filter.c **** }
+ 277              		.loc 1 39 0
+ 278 0000 014B     		ldr	r3, .L18
+ 279 0002 5869     		ldr	r0, [r3, #20]	@ float
+ 280 0004 7047     		bx	lr
+ 281              	.L19:
+ 282 0006 00BF     		.align	2
+ 283              	.L18:
+ 284 0008 00000000 		.word	kalman
+ 285              		.cfi_endproc
+ 286              	.LFE71:
+ 288              		.section	.text.Get_EstimateError,"ax",%progbits
+ 289              		.align	1
+ 290              		.global	Get_EstimateError
+ 291              		.syntax unified
+ 292              		.thumb
+ 293              		.thumb_func
+ 294              		.fpu softvfp
+ 296              	Get_EstimateError:
+ 297              	.LFB72:
+  40:Src/kalman_filter.c **** 
+  41:Src/kalman_filter.c **** float Get_EstimateError(void)
+  42:Src/kalman_filter.c **** {
+ 298              		.loc 1 42 0
+ 299              		.cfi_startproc
+ 300              		@ args = 0, pretend = 0, frame = 0
+ 301              		@ frame_needed = 0, uses_anonymous_args = 0
+ 302              		@ link register save eliminated.
+  43:Src/kalman_filter.c **** 	return kalman._err_estimate;
+  44:Src/kalman_filter.c **** }
+ 303              		.loc 1 44 0
+ 304 0000 014B     		ldr	r3, .L21
+ 305 0002 5868     		ldr	r0, [r3, #4]	@ float
+ 306 0004 7047     		bx	lr
+ 307              	.L22:
+ 308 0006 00BF     		.align	2
+ 309              	.L21:
+ 310 0008 00000000 		.word	kalman
+ 311              		.cfi_endproc
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s 			page 7
+
+
+ 312              	.LFE72:
+ 314              		.comm	kalman,24,4
+ 315              		.text
+ 316              	.Letext0:
+ 317              		.file 2 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_defau
+ 318              		.file 3 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_stdint.h"
+ 319              		.file 4 "Drivers/CMSIS/Include/core_cm3.h"
+ 320              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h"
+ 321              		.file 6 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/lock.h"
+ 322              		.file 7 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_types.h"
+ 323              		.file 8 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/
+ 324              		.file 9 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/reent.h"
+ 325              		.file 10 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 326              		.file 11 "u8g2/csrc/u8x8.h"
+ 327              		.file 12 "u8g2/csrc/u8g2.h"
+ 328              		.file 13 "Inc/main.h"
+ 329              		.file 14 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/math.h"
+ 330              		.file 15 "Inc/kalman_filter.h"
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 kalman_filter.c
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:16     .text.Simple_Kalman_Filter:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:23     .text.Simple_Kalman_Filter:0000000000000000 Simple_Kalman_Filter
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:44     .text.Simple_Kalman_Filter:000000000000000c $d
+                            *COM*:0000000000000018 kalman
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:58     .text.Update_Estimate:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:65     .text.Update_Estimate:0000000000000000 Update_Estimate
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:173    .text.Update_Estimate:00000000000000ac $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:179    .text.Set_Measurement_Error:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:186    .text.Set_Measurement_Error:0000000000000000 Set_Measurement_Error
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:202    .text.Set_Measurement_Error:0000000000000008 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:207    .text.Set_Estimate_Error:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:214    .text.Set_Estimate_Error:0000000000000000 Set_Estimate_Error
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:230    .text.Set_Estimate_Error:0000000000000008 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:235    .text.Set_Process_Noise:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:242    .text.Set_Process_Noise:0000000000000000 Set_Process_Noise
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:258    .text.Set_Process_Noise:0000000000000008 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:263    .text.Get_Kalman_Gain:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:270    .text.Get_Kalman_Gain:0000000000000000 Get_Kalman_Gain
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:284    .text.Get_Kalman_Gain:0000000000000008 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:289    .text.Get_EstimateError:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:296    .text.Get_EstimateError:0000000000000000 Get_EstimateError
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccoSIa8n.s:310    .text.Get_EstimateError:0000000000000008 $d
+
+UNDEFINED SYMBOLS
+__aeabi_fadd
+__aeabi_fdiv
+__aeabi_fsub
+__aeabi_fmul
+__aeabi_f2d
+__aeabi_dsub
+__aeabi_dmul
+__aeabi_dadd
+__aeabi_d2f

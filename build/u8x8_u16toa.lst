@@ -1,0 +1,243 @@
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccfZBFao.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"u8x8_u16toa.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.u8x8_u16toap,"ax",%progbits
+  16              		.align	1
+  17              		.global	u8x8_u16toap
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  21              		.fpu softvfp
+  23              	u8x8_u16toap:
+  24              	.LFB0:
+  25              		.file 1 "u8g2/csrc/u8x8_u16toa.c"
+   1:u8g2/csrc/u8x8_u16toa.c **** /*
+   2:u8g2/csrc/u8x8_u16toa.c **** 
+   3:u8g2/csrc/u8x8_u16toa.c ****   u8x8_u16toa.c
+   4:u8g2/csrc/u8x8_u16toa.c **** 
+   5:u8g2/csrc/u8x8_u16toa.c ****   Universal 8bit Graphics Library (https://github.com/olikraus/u8g2/)
+   6:u8g2/csrc/u8x8_u16toa.c **** 
+   7:u8g2/csrc/u8x8_u16toa.c ****   Copyright (c) 2016, olikraus@gmail.com
+   8:u8g2/csrc/u8x8_u16toa.c ****   All rights reserved.
+   9:u8g2/csrc/u8x8_u16toa.c **** 
+  10:u8g2/csrc/u8x8_u16toa.c ****   Redistribution and use in source and binary forms, with or without modification, 
+  11:u8g2/csrc/u8x8_u16toa.c ****   are permitted provided that the following conditions are met:
+  12:u8g2/csrc/u8x8_u16toa.c **** 
+  13:u8g2/csrc/u8x8_u16toa.c ****   * Redistributions of source code must retain the above copyright notice, this list 
+  14:u8g2/csrc/u8x8_u16toa.c ****     of conditions and the following disclaimer.
+  15:u8g2/csrc/u8x8_u16toa.c ****     
+  16:u8g2/csrc/u8x8_u16toa.c ****   * Redistributions in binary form must reproduce the above copyright notice, this 
+  17:u8g2/csrc/u8x8_u16toa.c ****     list of conditions and the following disclaimer in the documentation and/or other 
+  18:u8g2/csrc/u8x8_u16toa.c ****     materials provided with the distribution.
+  19:u8g2/csrc/u8x8_u16toa.c **** 
+  20:u8g2/csrc/u8x8_u16toa.c ****   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+  21:u8g2/csrc/u8x8_u16toa.c ****   CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+  22:u8g2/csrc/u8x8_u16toa.c ****   INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+  23:u8g2/csrc/u8x8_u16toa.c ****   MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+  24:u8g2/csrc/u8x8_u16toa.c ****   DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+  25:u8g2/csrc/u8x8_u16toa.c ****   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+  26:u8g2/csrc/u8x8_u16toa.c ****   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+  27:u8g2/csrc/u8x8_u16toa.c ****   NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+  28:u8g2/csrc/u8x8_u16toa.c ****   LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+  29:u8g2/csrc/u8x8_u16toa.c ****   CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+  30:u8g2/csrc/u8x8_u16toa.c ****   STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+  31:u8g2/csrc/u8x8_u16toa.c ****   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+  32:u8g2/csrc/u8x8_u16toa.c ****   ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
+  33:u8g2/csrc/u8x8_u16toa.c **** 
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccfZBFao.s 			page 2
+
+
+  34:u8g2/csrc/u8x8_u16toa.c ****   
+  35:u8g2/csrc/u8x8_u16toa.c **** */
+  36:u8g2/csrc/u8x8_u16toa.c **** 
+  37:u8g2/csrc/u8x8_u16toa.c **** 
+  38:u8g2/csrc/u8x8_u16toa.c **** #include "u8x8.h"
+  39:u8g2/csrc/u8x8_u16toa.c **** 
+  40:u8g2/csrc/u8x8_u16toa.c **** const char *u8x8_u16toap(char * dest, uint16_t v)
+  41:u8g2/csrc/u8x8_u16toa.c **** {
+  26              		.loc 1 41 0
+  27              		.cfi_startproc
+  28              		@ args = 0, pretend = 0, frame = 0
+  29              		@ frame_needed = 0, uses_anonymous_args = 0
+  30              		@ link register save eliminated.
+  31              	.LVL0:
+  32 0000 10B4     		push	{r4}
+  33              	.LCFI0:
+  34              		.cfi_def_cfa_offset 4
+  35              		.cfi_offset 4, -4
+  36              	.LVL1:
+  42:u8g2/csrc/u8x8_u16toa.c ****   uint8_t pos;
+  43:u8g2/csrc/u8x8_u16toa.c ****   uint8_t d;
+  44:u8g2/csrc/u8x8_u16toa.c ****   uint16_t c;
+  45:u8g2/csrc/u8x8_u16toa.c ****   c = 10000;
+  37              		.loc 1 45 0
+  38 0002 42F21072 		movw	r2, #10000
+  46:u8g2/csrc/u8x8_u16toa.c ****   for( pos = 0; pos < 5; pos++ )
+  39              		.loc 1 46 0
+  40 0006 0024     		movs	r4, #0
+  41 0008 0CE0     		b	.L2
+  42              	.LVL2:
+  43              	.L3:
+  47:u8g2/csrc/u8x8_u16toa.c ****   {
+  48:u8g2/csrc/u8x8_u16toa.c ****       d = '0';
+  49:u8g2/csrc/u8x8_u16toa.c ****       while( v >= c )
+  50:u8g2/csrc/u8x8_u16toa.c ****       {
+  51:u8g2/csrc/u8x8_u16toa.c **** 	v -= c;
+  44              		.loc 1 51 0
+  45 000a 891A     		subs	r1, r1, r2
+  46              	.LVL3:
+  47 000c 89B2     		uxth	r1, r1
+  48              	.LVL4:
+  52:u8g2/csrc/u8x8_u16toa.c **** 	d++;
+  49              		.loc 1 52 0
+  50 000e 0133     		adds	r3, r3, #1
+  51              	.LVL5:
+  52 0010 DBB2     		uxtb	r3, r3
+  53              	.LVL6:
+  54              	.L4:
+  49:u8g2/csrc/u8x8_u16toa.c ****       {
+  55              		.loc 1 49 0
+  56 0012 9142     		cmp	r1, r2
+  57 0014 F9D2     		bcs	.L3
+  53:u8g2/csrc/u8x8_u16toa.c ****       }
+  54:u8g2/csrc/u8x8_u16toa.c ****       dest[pos] = d;
+  58              		.loc 1 54 0 discriminator 2
+  59 0016 0355     		strb	r3, [r0, r4]
+  55:u8g2/csrc/u8x8_u16toa.c ****       c /= 10;
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccfZBFao.s 			page 3
+
+
+  60              		.loc 1 55 0 discriminator 2
+  61 0018 064B     		ldr	r3, .L8
+  62              	.LVL7:
+  63 001a A3FB0232 		umull	r3, r2, r3, r2
+  64              	.LVL8:
+  65 001e D208     		lsrs	r2, r2, #3
+  66              	.LVL9:
+  46:u8g2/csrc/u8x8_u16toa.c ****   {
+  67              		.loc 1 46 0 discriminator 2
+  68 0020 0134     		adds	r4, r4, #1
+  69              	.LVL10:
+  70 0022 E4B2     		uxtb	r4, r4
+  71              	.LVL11:
+  72              	.L2:
+  46:u8g2/csrc/u8x8_u16toa.c ****   {
+  73              		.loc 1 46 0 is_stmt 0 discriminator 1
+  74 0024 042C     		cmp	r4, #4
+  75 0026 01D8     		bhi	.L7
+  48:u8g2/csrc/u8x8_u16toa.c ****       while( v >= c )
+  76              		.loc 1 48 0 is_stmt 1
+  77 0028 3023     		movs	r3, #48
+  78 002a F2E7     		b	.L4
+  79              	.L7:
+  56:u8g2/csrc/u8x8_u16toa.c ****   }  
+  57:u8g2/csrc/u8x8_u16toa.c ****   dest[5] = '\0';
+  80              		.loc 1 57 0
+  81 002c 0023     		movs	r3, #0
+  82 002e 4371     		strb	r3, [r0, #5]
+  58:u8g2/csrc/u8x8_u16toa.c ****   return dest;
+  59:u8g2/csrc/u8x8_u16toa.c **** }
+  83              		.loc 1 59 0
+  84 0030 10BC     		pop	{r4}
+  85              	.LCFI1:
+  86              		.cfi_restore 4
+  87              		.cfi_def_cfa_offset 0
+  88              	.LVL12:
+  89 0032 7047     		bx	lr
+  90              	.L9:
+  91              		.align	2
+  92              	.L8:
+  93 0034 CDCCCCCC 		.word	-858993459
+  94              		.cfi_endproc
+  95              	.LFE0:
+  97              		.section	.text.u8x8_u16toa,"ax",%progbits
+  98              		.align	1
+  99              		.global	u8x8_u16toa
+ 100              		.syntax unified
+ 101              		.thumb
+ 102              		.thumb_func
+ 103              		.fpu softvfp
+ 105              	u8x8_u16toa:
+ 106              	.LFB1:
+  60:u8g2/csrc/u8x8_u16toa.c **** 
+  61:u8g2/csrc/u8x8_u16toa.c **** /* v = value, d = number of digits */
+  62:u8g2/csrc/u8x8_u16toa.c **** const char *u8x8_u16toa(uint16_t v, uint8_t d)
+  63:u8g2/csrc/u8x8_u16toa.c **** {
+ 107              		.loc 1 63 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccfZBFao.s 			page 4
+
+
+ 108              		.cfi_startproc
+ 109              		@ args = 0, pretend = 0, frame = 0
+ 110              		@ frame_needed = 0, uses_anonymous_args = 0
+ 111              	.LVL13:
+ 112 0000 10B5     		push	{r4, lr}
+ 113              	.LCFI2:
+ 114              		.cfi_def_cfa_offset 8
+ 115              		.cfi_offset 4, -8
+ 116              		.cfi_offset 14, -4
+  64:u8g2/csrc/u8x8_u16toa.c ****   static char buf[6];
+  65:u8g2/csrc/u8x8_u16toa.c ****   d = 5-d;
+ 117              		.loc 1 65 0
+ 118 0002 C1F10501 		rsb	r1, r1, #5
+ 119              	.LVL14:
+ 120 0006 CCB2     		uxtb	r4, r1
+ 121              	.LVL15:
+  66:u8g2/csrc/u8x8_u16toa.c ****   return u8x8_u16toap(buf, v) + d;
+ 122              		.loc 1 66 0
+ 123 0008 0146     		mov	r1, r0
+ 124 000a 0248     		ldr	r0, .L12
+ 125              	.LVL16:
+ 126 000c FFF7FEFF 		bl	u8x8_u16toap
+ 127              	.LVL17:
+  67:u8g2/csrc/u8x8_u16toa.c **** }
+ 128              		.loc 1 67 0
+ 129 0010 2044     		add	r0, r0, r4
+ 130 0012 10BD     		pop	{r4, pc}
+ 131              	.LVL18:
+ 132              	.L13:
+ 133              		.align	2
+ 134              	.L12:
+ 135 0014 00000000 		.word	.LANCHOR0
+ 136              		.cfi_endproc
+ 137              	.LFE1:
+ 139              		.section	.bss.buf.4995,"aw",%nobits
+ 140              		.align	2
+ 141              		.set	.LANCHOR0,. + 0
+ 144              	buf.4995:
+ 145 0000 00000000 		.space	6
+ 145      0000
+ 146              		.text
+ 147              	.Letext0:
+ 148              		.file 2 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_defau
+ 149              		.file 3 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_stdint.h"
+ 150              		.file 4 "u8g2/csrc/u8x8.h"
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccfZBFao.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 u8x8_u16toa.c
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccfZBFao.s:16     .text.u8x8_u16toap:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccfZBFao.s:23     .text.u8x8_u16toap:0000000000000000 u8x8_u16toap
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccfZBFao.s:93     .text.u8x8_u16toap:0000000000000034 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccfZBFao.s:98     .text.u8x8_u16toa:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccfZBFao.s:105    .text.u8x8_u16toa:0000000000000000 u8x8_u16toa
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccfZBFao.s:135    .text.u8x8_u16toa:0000000000000014 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccfZBFao.s:140    .bss.buf.4995:0000000000000000 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccfZBFao.s:144    .bss.buf.4995:0000000000000000 buf.4995
+
+NO UNDEFINED SYMBOLS

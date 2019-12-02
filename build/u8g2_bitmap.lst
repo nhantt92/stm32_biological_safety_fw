@@ -1,0 +1,999 @@
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"u8g2_bitmap.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.u8g2_SetBitmapMode,"ax",%progbits
+  16              		.align	1
+  17              		.global	u8g2_SetBitmapMode
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  21              		.fpu softvfp
+  23              	u8g2_SetBitmapMode:
+  24              	.LFB0:
+  25              		.file 1 "u8g2/csrc/u8g2_bitmap.c"
+   1:u8g2/csrc/u8g2_bitmap.c **** /*
+   2:u8g2/csrc/u8g2_bitmap.c **** 
+   3:u8g2/csrc/u8g2_bitmap.c ****   u8g2_bitmap.c
+   4:u8g2/csrc/u8g2_bitmap.c **** 
+   5:u8g2/csrc/u8g2_bitmap.c ****   Universal 8bit Graphics Library (https://github.com/olikraus/u8g2/)
+   6:u8g2/csrc/u8g2_bitmap.c **** 
+   7:u8g2/csrc/u8g2_bitmap.c ****   Copyright (c) 2016, olikraus@gmail.com
+   8:u8g2/csrc/u8g2_bitmap.c ****   All rights reserved.
+   9:u8g2/csrc/u8g2_bitmap.c **** 
+  10:u8g2/csrc/u8g2_bitmap.c ****   Redistribution and use in source and binary forms, with or without modification, 
+  11:u8g2/csrc/u8g2_bitmap.c ****   are permitted provided that the following conditions are met:
+  12:u8g2/csrc/u8g2_bitmap.c **** 
+  13:u8g2/csrc/u8g2_bitmap.c ****   * Redistributions of source code must retain the above copyright notice, this list 
+  14:u8g2/csrc/u8g2_bitmap.c ****     of conditions and the following disclaimer.
+  15:u8g2/csrc/u8g2_bitmap.c ****     
+  16:u8g2/csrc/u8g2_bitmap.c ****   * Redistributions in binary form must reproduce the above copyright notice, this 
+  17:u8g2/csrc/u8g2_bitmap.c ****     list of conditions and the following disclaimer in the documentation and/or other 
+  18:u8g2/csrc/u8g2_bitmap.c ****     materials provided with the distribution.
+  19:u8g2/csrc/u8g2_bitmap.c **** 
+  20:u8g2/csrc/u8g2_bitmap.c ****   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+  21:u8g2/csrc/u8g2_bitmap.c ****   CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+  22:u8g2/csrc/u8g2_bitmap.c ****   INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+  23:u8g2/csrc/u8g2_bitmap.c ****   MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+  24:u8g2/csrc/u8g2_bitmap.c ****   DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+  25:u8g2/csrc/u8g2_bitmap.c ****   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+  26:u8g2/csrc/u8g2_bitmap.c ****   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+  27:u8g2/csrc/u8g2_bitmap.c ****   NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+  28:u8g2/csrc/u8g2_bitmap.c ****   LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+  29:u8g2/csrc/u8g2_bitmap.c ****   CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+  30:u8g2/csrc/u8g2_bitmap.c ****   STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+  31:u8g2/csrc/u8g2_bitmap.c ****   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+  32:u8g2/csrc/u8g2_bitmap.c ****   ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
+  33:u8g2/csrc/u8g2_bitmap.c **** 
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s 			page 2
+
+
+  34:u8g2/csrc/u8g2_bitmap.c **** */
+  35:u8g2/csrc/u8g2_bitmap.c **** 
+  36:u8g2/csrc/u8g2_bitmap.c **** #include "u8g2.h"
+  37:u8g2/csrc/u8g2_bitmap.c **** 
+  38:u8g2/csrc/u8g2_bitmap.c **** 
+  39:u8g2/csrc/u8g2_bitmap.c **** void u8g2_SetBitmapMode(u8g2_t *u8g2, uint8_t is_transparent) {
+  26              		.loc 1 39 0
+  27              		.cfi_startproc
+  28              		@ args = 0, pretend = 0, frame = 0
+  29              		@ frame_needed = 0, uses_anonymous_args = 0
+  30              		@ link register save eliminated.
+  31              	.LVL0:
+  40:u8g2/csrc/u8g2_bitmap.c ****   u8g2->bitmap_transparency = is_transparent;
+  32              		.loc 1 40 0
+  33 0000 80F87C10 		strb	r1, [r0, #124]
+  41:u8g2/csrc/u8g2_bitmap.c **** }
+  34              		.loc 1 41 0
+  35 0004 7047     		bx	lr
+  36              		.cfi_endproc
+  37              	.LFE0:
+  39              		.section	.text.u8g2_DrawHorizontalBitmap,"ax",%progbits
+  40              		.align	1
+  41              		.global	u8g2_DrawHorizontalBitmap
+  42              		.syntax unified
+  43              		.thumb
+  44              		.thumb_func
+  45              		.fpu softvfp
+  47              	u8g2_DrawHorizontalBitmap:
+  48              	.LFB1:
+  42:u8g2/csrc/u8g2_bitmap.c **** 
+  43:u8g2/csrc/u8g2_bitmap.c **** /*
+  44:u8g2/csrc/u8g2_bitmap.c ****   x,y 	Position on the display
+  45:u8g2/csrc/u8g2_bitmap.c ****   len		Length of bitmap line in pixel. Note: This differs from u8glib which had a bytecount here.
+  46:u8g2/csrc/u8g2_bitmap.c ****   b		Pointer to the bitmap line.
+  47:u8g2/csrc/u8g2_bitmap.c ****   Only draw pixels which are set.
+  48:u8g2/csrc/u8g2_bitmap.c **** */
+  49:u8g2/csrc/u8g2_bitmap.c **** 
+  50:u8g2/csrc/u8g2_bitmap.c **** void u8g2_DrawHorizontalBitmap(u8g2_t *u8g2, u8g2_uint_t x, u8g2_uint_t y, u8g2_uint_t len, const u
+  51:u8g2/csrc/u8g2_bitmap.c **** {
+  49              		.loc 1 51 0
+  50              		.cfi_startproc
+  51              		@ args = 4, pretend = 0, frame = 0
+  52              		@ frame_needed = 0, uses_anonymous_args = 0
+  53              	.LVL1:
+  54 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  55              	.LCFI0:
+  56              		.cfi_def_cfa_offset 36
+  57              		.cfi_offset 4, -36
+  58              		.cfi_offset 5, -32
+  59              		.cfi_offset 6, -28
+  60              		.cfi_offset 7, -24
+  61              		.cfi_offset 8, -20
+  62              		.cfi_offset 9, -16
+  63              		.cfi_offset 10, -12
+  64              		.cfi_offset 11, -8
+  65              		.cfi_offset 14, -4
+  66 0004 83B0     		sub	sp, sp, #12
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s 			page 3
+
+
+  67              	.LCFI1:
+  68              		.cfi_def_cfa_offset 48
+  69 0006 0746     		mov	r7, r0
+  70 0008 0D46     		mov	r5, r1
+  71 000a 9146     		mov	r9, r2
+  72 000c 1C46     		mov	r4, r3
+  73 000e DDF83080 		ldr	r8, [sp, #48]
+  52:u8g2/csrc/u8g2_bitmap.c ****   uint8_t mask;
+  53:u8g2/csrc/u8g2_bitmap.c ****   uint8_t color = u8g2->draw_color;
+  74              		.loc 1 53 0
+  75 0012 90F87DB0 		ldrb	fp, [r0, #125]	@ zero_extendqisi2
+  76              	.LVL2:
+  54:u8g2/csrc/u8g2_bitmap.c ****   uint8_t ncolor = (color == 0 ? 1 : 0);
+  55:u8g2/csrc/u8g2_bitmap.c **** 
+  56:u8g2/csrc/u8g2_bitmap.c **** #ifdef U8G2_WITH_INTERSECTION
+  57:u8g2/csrc/u8g2_bitmap.c ****   if ( u8g2_IsIntersection(u8g2, x, y, x+len, y+1) == 0 ) 
+  77              		.loc 1 57 0
+  78 0016 CB18     		adds	r3, r1, r3
+  79              	.LVL3:
+  80 0018 561C     		adds	r6, r2, #1
+  81 001a F6B2     		uxtb	r6, r6
+  82 001c 0096     		str	r6, [sp]
+  83 001e DBB2     		uxtb	r3, r3
+  84 0020 FFF7FEFF 		bl	u8g2_IsIntersection
+  85              	.LVL4:
+  86 0024 68B3     		cbz	r0, .L2
+  87 0026 BBFA8BFA 		clz	r10, fp
+  88              	.LVL5:
+  89 002a 4FEA5A1A 		lsr	r10, r10, #5
+  90              	.LVL6:
+  58:u8g2/csrc/u8g2_bitmap.c ****     return;
+  59:u8g2/csrc/u8g2_bitmap.c **** #endif /* U8G2_WITH_INTERSECTION */
+  60:u8g2/csrc/u8g2_bitmap.c ****   
+  61:u8g2/csrc/u8g2_bitmap.c ****   mask = 128;
+  91              		.loc 1 61 0
+  92 002e 8026     		movs	r6, #128
+  93 0030 12E0     		b	.L4
+  94              	.LVL7:
+  95              	.L11:
+  62:u8g2/csrc/u8g2_bitmap.c ****   while(len > 0)
+  63:u8g2/csrc/u8g2_bitmap.c ****   {
+  64:u8g2/csrc/u8g2_bitmap.c ****     if ( *b & mask ) {
+  65:u8g2/csrc/u8g2_bitmap.c ****       u8g2->draw_color = color;
+  96              		.loc 1 65 0
+  97 0032 87F87DB0 		strb	fp, [r7, #125]
+  66:u8g2/csrc/u8g2_bitmap.c ****       u8g2_DrawHVLine(u8g2, x, y, 1, 0);
+  98              		.loc 1 66 0
+  99 0036 0023     		movs	r3, #0
+ 100 0038 0093     		str	r3, [sp]
+ 101 003a 0123     		movs	r3, #1
+ 102 003c 4A46     		mov	r2, r9
+ 103 003e 2946     		mov	r1, r5
+ 104 0040 3846     		mov	r0, r7
+ 105 0042 FFF7FEFF 		bl	u8g2_DrawHVLine
+ 106              	.LVL8:
+ 107              	.L6:
+  67:u8g2/csrc/u8g2_bitmap.c ****     } else if ( u8g2->bitmap_transparency == 0 ) {
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s 			page 4
+
+
+  68:u8g2/csrc/u8g2_bitmap.c ****       u8g2->draw_color = ncolor;
+  69:u8g2/csrc/u8g2_bitmap.c ****       u8g2_DrawHVLine(u8g2, x, y, 1, 0);
+  70:u8g2/csrc/u8g2_bitmap.c ****     }
+  71:u8g2/csrc/u8g2_bitmap.c **** 
+  72:u8g2/csrc/u8g2_bitmap.c ****     x++;
+ 108              		.loc 1 72 0
+ 109 0046 0135     		adds	r5, r5, #1
+ 110              	.LVL9:
+ 111 0048 EDB2     		uxtb	r5, r5
+ 112              	.LVL10:
+  73:u8g2/csrc/u8g2_bitmap.c ****     mask >>= 1;
+  74:u8g2/csrc/u8g2_bitmap.c ****     if ( mask == 0 )
+ 113              		.loc 1 74 0
+ 114 004a 7608     		lsrs	r6, r6, #1
+ 115              	.LVL11:
+ 116 004c 02D1     		bne	.L7
+ 117              	.LVL12:
+  75:u8g2/csrc/u8g2_bitmap.c ****     {
+  76:u8g2/csrc/u8g2_bitmap.c ****       mask = 128;
+  77:u8g2/csrc/u8g2_bitmap.c ****       b++;
+ 118              		.loc 1 77 0
+ 119 004e 08F10108 		add	r8, r8, #1
+ 120              	.LVL13:
+  76:u8g2/csrc/u8g2_bitmap.c ****       b++;
+ 121              		.loc 1 76 0
+ 122 0052 8026     		movs	r6, #128
+ 123              	.LVL14:
+ 124              	.L7:
+  78:u8g2/csrc/u8g2_bitmap.c ****     }
+  79:u8g2/csrc/u8g2_bitmap.c ****     len--;
+ 125              		.loc 1 79 0
+ 126 0054 013C     		subs	r4, r4, #1
+ 127              	.LVL15:
+ 128 0056 E4B2     		uxtb	r4, r4
+ 129              	.LVL16:
+ 130              	.L4:
+  62:u8g2/csrc/u8g2_bitmap.c ****   {
+ 131              		.loc 1 62 0
+ 132 0058 8CB1     		cbz	r4, .L10
+  64:u8g2/csrc/u8g2_bitmap.c ****       u8g2->draw_color = color;
+ 133              		.loc 1 64 0
+ 134 005a 98F80030 		ldrb	r3, [r8]	@ zero_extendqisi2
+ 135 005e 1E42     		tst	r6, r3
+ 136 0060 E7D1     		bne	.L11
+  67:u8g2/csrc/u8g2_bitmap.c ****       u8g2->draw_color = ncolor;
+ 137              		.loc 1 67 0
+ 138 0062 97F87C30 		ldrb	r3, [r7, #124]	@ zero_extendqisi2
+ 139 0066 002B     		cmp	r3, #0
+ 140 0068 EDD1     		bne	.L6
+  68:u8g2/csrc/u8g2_bitmap.c ****       u8g2_DrawHVLine(u8g2, x, y, 1, 0);
+ 141              		.loc 1 68 0
+ 142 006a 87F87DA0 		strb	r10, [r7, #125]
+  69:u8g2/csrc/u8g2_bitmap.c ****     }
+ 143              		.loc 1 69 0
+ 144 006e 0093     		str	r3, [sp]
+ 145 0070 0123     		movs	r3, #1
+ 146 0072 4A46     		mov	r2, r9
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s 			page 5
+
+
+ 147 0074 2946     		mov	r1, r5
+ 148 0076 3846     		mov	r0, r7
+ 149 0078 FFF7FEFF 		bl	u8g2_DrawHVLine
+ 150              	.LVL17:
+ 151 007c E3E7     		b	.L6
+ 152              	.L10:
+  80:u8g2/csrc/u8g2_bitmap.c ****   }
+  81:u8g2/csrc/u8g2_bitmap.c ****   u8g2->draw_color = color;
+ 153              		.loc 1 81 0
+ 154 007e 87F87DB0 		strb	fp, [r7, #125]
+ 155              	.LVL18:
+ 156              	.L2:
+  82:u8g2/csrc/u8g2_bitmap.c **** }
+ 157              		.loc 1 82 0
+ 158 0082 03B0     		add	sp, sp, #12
+ 159              	.LCFI2:
+ 160              		.cfi_def_cfa_offset 36
+ 161              		@ sp needed
+ 162 0084 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 163              		.cfi_endproc
+ 164              	.LFE1:
+ 166              		.section	.text.u8g2_DrawBitmap,"ax",%progbits
+ 167              		.align	1
+ 168              		.global	u8g2_DrawBitmap
+ 169              		.syntax unified
+ 170              		.thumb
+ 171              		.thumb_func
+ 172              		.fpu softvfp
+ 174              	u8g2_DrawBitmap:
+ 175              	.LFB2:
+  83:u8g2/csrc/u8g2_bitmap.c **** 
+  84:u8g2/csrc/u8g2_bitmap.c **** 
+  85:u8g2/csrc/u8g2_bitmap.c **** /* u8glib compatible bitmap draw function */
+  86:u8g2/csrc/u8g2_bitmap.c **** void u8g2_DrawBitmap(u8g2_t *u8g2, u8g2_uint_t x, u8g2_uint_t y, u8g2_uint_t cnt, u8g2_uint_t h, co
+  87:u8g2/csrc/u8g2_bitmap.c **** {
+ 176              		.loc 1 87 0
+ 177              		.cfi_startproc
+ 178              		@ args = 8, pretend = 0, frame = 0
+ 179              		@ frame_needed = 0, uses_anonymous_args = 0
+ 180              	.LVL19:
+ 181 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 182              	.LCFI3:
+ 183              		.cfi_def_cfa_offset 32
+ 184              		.cfi_offset 4, -32
+ 185              		.cfi_offset 5, -28
+ 186              		.cfi_offset 6, -24
+ 187              		.cfi_offset 7, -20
+ 188              		.cfi_offset 8, -16
+ 189              		.cfi_offset 9, -12
+ 190              		.cfi_offset 10, -8
+ 191              		.cfi_offset 14, -4
+ 192 0004 82B0     		sub	sp, sp, #8
+ 193              	.LCFI4:
+ 194              		.cfi_def_cfa_offset 40
+ 195 0006 8246     		mov	r10, r0
+ 196 0008 8846     		mov	r8, r1
+ 197 000a 1546     		mov	r5, r2
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s 			page 6
+
+
+ 198 000c 9946     		mov	r9, r3
+ 199 000e 9DF82840 		ldrb	r4, [sp, #40]	@ zero_extendqisi2
+ 200 0012 0B9E     		ldr	r6, [sp, #44]
+ 201              	.LVL20:
+  88:u8g2/csrc/u8g2_bitmap.c ****   u8g2_uint_t w;
+  89:u8g2/csrc/u8g2_bitmap.c ****   w = cnt;
+  90:u8g2/csrc/u8g2_bitmap.c ****   w *= 8;
+ 202              		.loc 1 90 0
+ 203 0014 DF00     		lsls	r7, r3, #3
+ 204 0016 FFB2     		uxtb	r7, r7
+ 205              	.LVL21:
+  91:u8g2/csrc/u8g2_bitmap.c **** #ifdef U8G2_WITH_INTERSECTION
+  92:u8g2/csrc/u8g2_bitmap.c ****   if ( u8g2_IsIntersection(u8g2, x, y, x+w, y+h) == 0 ) 
+ 206              		.loc 1 92 0
+ 207 0018 07EB010C 		add	ip, r7, r1
+ 208 001c 1319     		adds	r3, r2, r4
+ 209              	.LVL22:
+ 210 001e DBB2     		uxtb	r3, r3
+ 211 0020 0093     		str	r3, [sp]
+ 212 0022 5FFA8CF3 		uxtb	r3, ip
+ 213 0026 FFF7FEFF 		bl	u8g2_IsIntersection
+ 214              	.LVL23:
+ 215 002a 60B9     		cbnz	r0, .L14
+ 216 002c 0DE0     		b	.L12
+ 217              	.LVL24:
+ 218              	.L15:
+  93:u8g2/csrc/u8g2_bitmap.c ****     return;
+  94:u8g2/csrc/u8g2_bitmap.c **** #endif /* U8G2_WITH_INTERSECTION */
+  95:u8g2/csrc/u8g2_bitmap.c ****   
+  96:u8g2/csrc/u8g2_bitmap.c ****   while( h > 0 )
+  97:u8g2/csrc/u8g2_bitmap.c ****   {
+  98:u8g2/csrc/u8g2_bitmap.c ****     u8g2_DrawHorizontalBitmap(u8g2, x, y, w, bitmap);
+ 219              		.loc 1 98 0
+ 220 002e 0096     		str	r6, [sp]
+ 221 0030 3B46     		mov	r3, r7
+ 222 0032 2A46     		mov	r2, r5
+ 223 0034 4146     		mov	r1, r8
+ 224 0036 5046     		mov	r0, r10
+ 225 0038 FFF7FEFF 		bl	u8g2_DrawHorizontalBitmap
+ 226              	.LVL25:
+  99:u8g2/csrc/u8g2_bitmap.c ****     bitmap += cnt;
+ 227              		.loc 1 99 0
+ 228 003c 4E44     		add	r6, r6, r9
+ 229              	.LVL26:
+ 100:u8g2/csrc/u8g2_bitmap.c ****     y++;
+ 230              		.loc 1 100 0
+ 231 003e 0135     		adds	r5, r5, #1
+ 232              	.LVL27:
+ 233 0040 EDB2     		uxtb	r5, r5
+ 234              	.LVL28:
+ 101:u8g2/csrc/u8g2_bitmap.c ****     h--;
+ 235              		.loc 1 101 0
+ 236 0042 013C     		subs	r4, r4, #1
+ 237              	.LVL29:
+ 238 0044 E4B2     		uxtb	r4, r4
+ 239              	.LVL30:
+ 240              	.L14:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s 			page 7
+
+
+  96:u8g2/csrc/u8g2_bitmap.c ****   {
+ 241              		.loc 1 96 0
+ 242 0046 002C     		cmp	r4, #0
+ 243 0048 F1D1     		bne	.L15
+ 244              	.LVL31:
+ 245              	.L12:
+ 102:u8g2/csrc/u8g2_bitmap.c ****   }
+ 103:u8g2/csrc/u8g2_bitmap.c **** }
+ 246              		.loc 1 103 0
+ 247 004a 02B0     		add	sp, sp, #8
+ 248              	.LCFI5:
+ 249              		.cfi_def_cfa_offset 32
+ 250              		@ sp needed
+ 251 004c BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 252              		.cfi_endproc
+ 253              	.LFE2:
+ 255              		.section	.text.u8g2_DrawHXBM,"ax",%progbits
+ 256              		.align	1
+ 257              		.global	u8g2_DrawHXBM
+ 258              		.syntax unified
+ 259              		.thumb
+ 260              		.thumb_func
+ 261              		.fpu softvfp
+ 263              	u8g2_DrawHXBM:
+ 264              	.LFB3:
+ 104:u8g2/csrc/u8g2_bitmap.c **** 
+ 105:u8g2/csrc/u8g2_bitmap.c **** 
+ 106:u8g2/csrc/u8g2_bitmap.c **** 
+ 107:u8g2/csrc/u8g2_bitmap.c **** void u8g2_DrawHXBM(u8g2_t *u8g2, u8g2_uint_t x, u8g2_uint_t y, u8g2_uint_t len, const uint8_t *b)
+ 108:u8g2/csrc/u8g2_bitmap.c **** {
+ 265              		.loc 1 108 0
+ 266              		.cfi_startproc
+ 267              		@ args = 4, pretend = 0, frame = 0
+ 268              		@ frame_needed = 0, uses_anonymous_args = 0
+ 269              	.LVL32:
+ 270 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 271              	.LCFI6:
+ 272              		.cfi_def_cfa_offset 36
+ 273              		.cfi_offset 4, -36
+ 274              		.cfi_offset 5, -32
+ 275              		.cfi_offset 6, -28
+ 276              		.cfi_offset 7, -24
+ 277              		.cfi_offset 8, -20
+ 278              		.cfi_offset 9, -16
+ 279              		.cfi_offset 10, -12
+ 280              		.cfi_offset 11, -8
+ 281              		.cfi_offset 14, -4
+ 282 0004 83B0     		sub	sp, sp, #12
+ 283              	.LCFI7:
+ 284              		.cfi_def_cfa_offset 48
+ 285 0006 0746     		mov	r7, r0
+ 286 0008 0E46     		mov	r6, r1
+ 287 000a 9146     		mov	r9, r2
+ 288 000c 1D46     		mov	r5, r3
+ 289 000e DDF83080 		ldr	r8, [sp, #48]
+ 109:u8g2/csrc/u8g2_bitmap.c ****   uint8_t mask;
+ 110:u8g2/csrc/u8g2_bitmap.c ****   uint8_t color = u8g2->draw_color;
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s 			page 8
+
+
+ 290              		.loc 1 110 0
+ 291 0012 90F87DB0 		ldrb	fp, [r0, #125]	@ zero_extendqisi2
+ 292              	.LVL33:
+ 111:u8g2/csrc/u8g2_bitmap.c ****   uint8_t ncolor = (color == 0 ? 1 : 0);
+ 112:u8g2/csrc/u8g2_bitmap.c **** #ifdef U8G2_WITH_INTERSECTION
+ 113:u8g2/csrc/u8g2_bitmap.c ****   if ( u8g2_IsIntersection(u8g2, x, y, x+len, y+1) == 0 ) 
+ 293              		.loc 1 113 0
+ 294 0016 CB18     		adds	r3, r1, r3
+ 295              	.LVL34:
+ 296 0018 541C     		adds	r4, r2, #1
+ 297 001a E4B2     		uxtb	r4, r4
+ 298 001c 0094     		str	r4, [sp]
+ 299 001e DBB2     		uxtb	r3, r3
+ 300 0020 FFF7FEFF 		bl	u8g2_IsIntersection
+ 301              	.LVL35:
+ 302 0024 78B3     		cbz	r0, .L17
+ 303 0026 BBFA8BFA 		clz	r10, fp
+ 304              	.LVL36:
+ 305 002a 4FEA5A1A 		lsr	r10, r10, #5
+ 306              	.LVL37:
+ 114:u8g2/csrc/u8g2_bitmap.c ****     return;
+ 115:u8g2/csrc/u8g2_bitmap.c **** #endif /* U8G2_WITH_INTERSECTION */
+ 116:u8g2/csrc/u8g2_bitmap.c ****   
+ 117:u8g2/csrc/u8g2_bitmap.c ****   mask = 1;
+ 307              		.loc 1 117 0
+ 308 002e 0124     		movs	r4, #1
+ 309 0030 14E0     		b	.L19
+ 310              	.LVL38:
+ 311              	.L26:
+ 118:u8g2/csrc/u8g2_bitmap.c ****   while(len > 0) {
+ 119:u8g2/csrc/u8g2_bitmap.c ****     if ( *b & mask ) {
+ 120:u8g2/csrc/u8g2_bitmap.c ****       u8g2->draw_color = color;
+ 312              		.loc 1 120 0
+ 313 0032 87F87DB0 		strb	fp, [r7, #125]
+ 121:u8g2/csrc/u8g2_bitmap.c ****       u8g2_DrawHVLine(u8g2, x, y, 1, 0);
+ 314              		.loc 1 121 0
+ 315 0036 0023     		movs	r3, #0
+ 316 0038 0093     		str	r3, [sp]
+ 317 003a 0123     		movs	r3, #1
+ 318 003c 4A46     		mov	r2, r9
+ 319 003e 3146     		mov	r1, r6
+ 320 0040 3846     		mov	r0, r7
+ 321 0042 FFF7FEFF 		bl	u8g2_DrawHVLine
+ 322              	.LVL39:
+ 323              	.L21:
+ 122:u8g2/csrc/u8g2_bitmap.c ****     } else if ( u8g2->bitmap_transparency == 0 ) {
+ 123:u8g2/csrc/u8g2_bitmap.c ****       u8g2->draw_color = ncolor;
+ 124:u8g2/csrc/u8g2_bitmap.c ****       u8g2_DrawHVLine(u8g2, x, y, 1, 0);
+ 125:u8g2/csrc/u8g2_bitmap.c ****     }
+ 126:u8g2/csrc/u8g2_bitmap.c ****     x++;
+ 324              		.loc 1 126 0
+ 325 0046 0136     		adds	r6, r6, #1
+ 326              	.LVL40:
+ 327 0048 F6B2     		uxtb	r6, r6
+ 328              	.LVL41:
+ 127:u8g2/csrc/u8g2_bitmap.c ****     mask <<= 1;
+ 329              		.loc 1 127 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s 			page 9
+
+
+ 330 004a 6400     		lsls	r4, r4, #1
+ 331              	.LVL42:
+ 128:u8g2/csrc/u8g2_bitmap.c ****     if ( mask == 0 )
+ 332              		.loc 1 128 0
+ 333 004c 14F0FF04 		ands	r4, r4, #255
+ 334              	.LVL43:
+ 335 0050 02D1     		bne	.L22
+ 336              	.LVL44:
+ 129:u8g2/csrc/u8g2_bitmap.c ****     {
+ 130:u8g2/csrc/u8g2_bitmap.c ****       mask = 1;
+ 131:u8g2/csrc/u8g2_bitmap.c ****       b++;
+ 337              		.loc 1 131 0
+ 338 0052 08F10108 		add	r8, r8, #1
+ 339              	.LVL45:
+ 130:u8g2/csrc/u8g2_bitmap.c ****       b++;
+ 340              		.loc 1 130 0
+ 341 0056 0124     		movs	r4, #1
+ 342              	.LVL46:
+ 343              	.L22:
+ 132:u8g2/csrc/u8g2_bitmap.c ****     }
+ 133:u8g2/csrc/u8g2_bitmap.c ****     len--;
+ 344              		.loc 1 133 0
+ 345 0058 013D     		subs	r5, r5, #1
+ 346              	.LVL47:
+ 347 005a EDB2     		uxtb	r5, r5
+ 348              	.LVL48:
+ 349              	.L19:
+ 118:u8g2/csrc/u8g2_bitmap.c ****     if ( *b & mask ) {
+ 350              		.loc 1 118 0
+ 351 005c 8DB1     		cbz	r5, .L25
+ 119:u8g2/csrc/u8g2_bitmap.c ****       u8g2->draw_color = color;
+ 352              		.loc 1 119 0
+ 353 005e 98F80030 		ldrb	r3, [r8]	@ zero_extendqisi2
+ 354 0062 1C42     		tst	r4, r3
+ 355 0064 E5D1     		bne	.L26
+ 122:u8g2/csrc/u8g2_bitmap.c ****       u8g2->draw_color = ncolor;
+ 356              		.loc 1 122 0
+ 357 0066 97F87C30 		ldrb	r3, [r7, #124]	@ zero_extendqisi2
+ 358 006a 002B     		cmp	r3, #0
+ 359 006c EBD1     		bne	.L21
+ 123:u8g2/csrc/u8g2_bitmap.c ****       u8g2_DrawHVLine(u8g2, x, y, 1, 0);
+ 360              		.loc 1 123 0
+ 361 006e 87F87DA0 		strb	r10, [r7, #125]
+ 124:u8g2/csrc/u8g2_bitmap.c ****     }
+ 362              		.loc 1 124 0
+ 363 0072 0093     		str	r3, [sp]
+ 364 0074 0123     		movs	r3, #1
+ 365 0076 4A46     		mov	r2, r9
+ 366 0078 3146     		mov	r1, r6
+ 367 007a 3846     		mov	r0, r7
+ 368 007c FFF7FEFF 		bl	u8g2_DrawHVLine
+ 369              	.LVL49:
+ 370 0080 E1E7     		b	.L21
+ 371              	.L25:
+ 134:u8g2/csrc/u8g2_bitmap.c ****   }
+ 135:u8g2/csrc/u8g2_bitmap.c ****   u8g2->draw_color = color;
+ 372              		.loc 1 135 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s 			page 10
+
+
+ 373 0082 87F87DB0 		strb	fp, [r7, #125]
+ 374              	.LVL50:
+ 375              	.L17:
+ 136:u8g2/csrc/u8g2_bitmap.c **** }
+ 376              		.loc 1 136 0
+ 377 0086 03B0     		add	sp, sp, #12
+ 378              	.LCFI8:
+ 379              		.cfi_def_cfa_offset 36
+ 380              		@ sp needed
+ 381 0088 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 382              		.cfi_endproc
+ 383              	.LFE3:
+ 385              		.section	.text.u8g2_DrawXBM,"ax",%progbits
+ 386              		.align	1
+ 387              		.global	u8g2_DrawXBM
+ 388              		.syntax unified
+ 389              		.thumb
+ 390              		.thumb_func
+ 391              		.fpu softvfp
+ 393              	u8g2_DrawXBM:
+ 394              	.LFB4:
+ 137:u8g2/csrc/u8g2_bitmap.c **** 
+ 138:u8g2/csrc/u8g2_bitmap.c **** 
+ 139:u8g2/csrc/u8g2_bitmap.c **** void u8g2_DrawXBM(u8g2_t *u8g2, u8g2_uint_t x, u8g2_uint_t y, u8g2_uint_t w, u8g2_uint_t h, const u
+ 140:u8g2/csrc/u8g2_bitmap.c **** {
+ 395              		.loc 1 140 0
+ 396              		.cfi_startproc
+ 397              		@ args = 8, pretend = 0, frame = 0
+ 398              		@ frame_needed = 0, uses_anonymous_args = 0
+ 399              	.LVL51:
+ 400 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 401              	.LCFI9:
+ 402              		.cfi_def_cfa_offset 32
+ 403              		.cfi_offset 4, -32
+ 404              		.cfi_offset 5, -28
+ 405              		.cfi_offset 6, -24
+ 406              		.cfi_offset 7, -20
+ 407              		.cfi_offset 8, -16
+ 408              		.cfi_offset 9, -12
+ 409              		.cfi_offset 10, -8
+ 410              		.cfi_offset 14, -4
+ 411 0004 82B0     		sub	sp, sp, #8
+ 412              	.LCFI10:
+ 413              		.cfi_def_cfa_offset 40
+ 414 0006 8246     		mov	r10, r0
+ 415 0008 8946     		mov	r9, r1
+ 416 000a 1546     		mov	r5, r2
+ 417 000c 1F46     		mov	r7, r3
+ 418 000e 9DF82840 		ldrb	r4, [sp, #40]	@ zero_extendqisi2
+ 419 0012 0B9E     		ldr	r6, [sp, #44]
+ 420              	.LVL52:
+ 141:u8g2/csrc/u8g2_bitmap.c ****   u8g2_uint_t blen;
+ 142:u8g2/csrc/u8g2_bitmap.c ****   blen = w;
+ 143:u8g2/csrc/u8g2_bitmap.c ****   blen += 7;
+ 421              		.loc 1 143 0
+ 422 0014 03F10708 		add	r8, r3, #7
+ 423              	.LVL53:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s 			page 11
+
+
+ 144:u8g2/csrc/u8g2_bitmap.c ****   blen >>= 3;
+ 424              		.loc 1 144 0
+ 425 0018 C8F3C408 		ubfx	r8, r8, #3, #5
+ 426              	.LVL54:
+ 145:u8g2/csrc/u8g2_bitmap.c **** #ifdef U8G2_WITH_INTERSECTION
+ 146:u8g2/csrc/u8g2_bitmap.c ****   if ( u8g2_IsIntersection(u8g2, x, y, x+w, y+h) == 0 ) 
+ 427              		.loc 1 146 0
+ 428 001c 03EB010C 		add	ip, r3, r1
+ 429 0020 1319     		adds	r3, r2, r4
+ 430              	.LVL55:
+ 431 0022 DBB2     		uxtb	r3, r3
+ 432 0024 0093     		str	r3, [sp]
+ 433 0026 5FFA8CF3 		uxtb	r3, ip
+ 434 002a FFF7FEFF 		bl	u8g2_IsIntersection
+ 435              	.LVL56:
+ 436 002e 60B9     		cbnz	r0, .L29
+ 437 0030 0DE0     		b	.L27
+ 438              	.LVL57:
+ 439              	.L30:
+ 147:u8g2/csrc/u8g2_bitmap.c ****     return;
+ 148:u8g2/csrc/u8g2_bitmap.c **** #endif /* U8G2_WITH_INTERSECTION */
+ 149:u8g2/csrc/u8g2_bitmap.c ****   
+ 150:u8g2/csrc/u8g2_bitmap.c ****   while( h > 0 )
+ 151:u8g2/csrc/u8g2_bitmap.c ****   {
+ 152:u8g2/csrc/u8g2_bitmap.c ****     u8g2_DrawHXBM(u8g2, x, y, w, bitmap);
+ 440              		.loc 1 152 0
+ 441 0032 0096     		str	r6, [sp]
+ 442 0034 3B46     		mov	r3, r7
+ 443 0036 2A46     		mov	r2, r5
+ 444 0038 4946     		mov	r1, r9
+ 445 003a 5046     		mov	r0, r10
+ 446 003c FFF7FEFF 		bl	u8g2_DrawHXBM
+ 447              	.LVL58:
+ 153:u8g2/csrc/u8g2_bitmap.c ****     bitmap += blen;
+ 448              		.loc 1 153 0
+ 449 0040 4644     		add	r6, r6, r8
+ 450              	.LVL59:
+ 154:u8g2/csrc/u8g2_bitmap.c ****     y++;
+ 451              		.loc 1 154 0
+ 452 0042 0135     		adds	r5, r5, #1
+ 453              	.LVL60:
+ 454 0044 EDB2     		uxtb	r5, r5
+ 455              	.LVL61:
+ 155:u8g2/csrc/u8g2_bitmap.c ****     h--;
+ 456              		.loc 1 155 0
+ 457 0046 013C     		subs	r4, r4, #1
+ 458              	.LVL62:
+ 459 0048 E4B2     		uxtb	r4, r4
+ 460              	.LVL63:
+ 461              	.L29:
+ 150:u8g2/csrc/u8g2_bitmap.c ****   {
+ 462              		.loc 1 150 0
+ 463 004a 002C     		cmp	r4, #0
+ 464 004c F1D1     		bne	.L30
+ 465              	.LVL64:
+ 466              	.L27:
+ 156:u8g2/csrc/u8g2_bitmap.c ****   }
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s 			page 12
+
+
+ 157:u8g2/csrc/u8g2_bitmap.c **** }
+ 467              		.loc 1 157 0
+ 468 004e 02B0     		add	sp, sp, #8
+ 469              	.LCFI11:
+ 470              		.cfi_def_cfa_offset 32
+ 471              		@ sp needed
+ 472 0050 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 473              		.cfi_endproc
+ 474              	.LFE4:
+ 476              		.section	.text.u8g2_DrawHXBMP,"ax",%progbits
+ 477              		.align	1
+ 478              		.global	u8g2_DrawHXBMP
+ 479              		.syntax unified
+ 480              		.thumb
+ 481              		.thumb_func
+ 482              		.fpu softvfp
+ 484              	u8g2_DrawHXBMP:
+ 485              	.LFB5:
+ 158:u8g2/csrc/u8g2_bitmap.c **** 
+ 159:u8g2/csrc/u8g2_bitmap.c **** 
+ 160:u8g2/csrc/u8g2_bitmap.c **** 
+ 161:u8g2/csrc/u8g2_bitmap.c **** 
+ 162:u8g2/csrc/u8g2_bitmap.c **** 
+ 163:u8g2/csrc/u8g2_bitmap.c **** 
+ 164:u8g2/csrc/u8g2_bitmap.c **** void u8g2_DrawHXBMP(u8g2_t *u8g2, u8g2_uint_t x, u8g2_uint_t y, u8g2_uint_t len, const uint8_t *b)
+ 165:u8g2/csrc/u8g2_bitmap.c **** {
+ 486              		.loc 1 165 0
+ 487              		.cfi_startproc
+ 488              		@ args = 4, pretend = 0, frame = 0
+ 489              		@ frame_needed = 0, uses_anonymous_args = 0
+ 490              	.LVL65:
+ 491 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 492              	.LCFI12:
+ 493              		.cfi_def_cfa_offset 36
+ 494              		.cfi_offset 4, -36
+ 495              		.cfi_offset 5, -32
+ 496              		.cfi_offset 6, -28
+ 497              		.cfi_offset 7, -24
+ 498              		.cfi_offset 8, -20
+ 499              		.cfi_offset 9, -16
+ 500              		.cfi_offset 10, -12
+ 501              		.cfi_offset 11, -8
+ 502              		.cfi_offset 14, -4
+ 503 0004 83B0     		sub	sp, sp, #12
+ 504              	.LCFI13:
+ 505              		.cfi_def_cfa_offset 48
+ 506 0006 0746     		mov	r7, r0
+ 507 0008 0E46     		mov	r6, r1
+ 508 000a 9146     		mov	r9, r2
+ 509 000c 1D46     		mov	r5, r3
+ 510 000e DDF83080 		ldr	r8, [sp, #48]
+ 166:u8g2/csrc/u8g2_bitmap.c ****   uint8_t mask;
+ 167:u8g2/csrc/u8g2_bitmap.c ****   uint8_t color = u8g2->draw_color;
+ 511              		.loc 1 167 0
+ 512 0012 90F87DB0 		ldrb	fp, [r0, #125]	@ zero_extendqisi2
+ 513              	.LVL66:
+ 168:u8g2/csrc/u8g2_bitmap.c ****   uint8_t ncolor = (color == 0 ? 1 : 0);
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s 			page 13
+
+
+ 169:u8g2/csrc/u8g2_bitmap.c **** #ifdef U8G2_WITH_INTERSECTION
+ 170:u8g2/csrc/u8g2_bitmap.c ****   if ( u8g2_IsIntersection(u8g2, x, y, x+len, y+1) == 0 ) 
+ 514              		.loc 1 170 0
+ 515 0016 CB18     		adds	r3, r1, r3
+ 516              	.LVL67:
+ 517 0018 541C     		adds	r4, r2, #1
+ 518 001a E4B2     		uxtb	r4, r4
+ 519 001c 0094     		str	r4, [sp]
+ 520 001e DBB2     		uxtb	r3, r3
+ 521 0020 FFF7FEFF 		bl	u8g2_IsIntersection
+ 522              	.LVL68:
+ 523 0024 78B3     		cbz	r0, .L32
+ 524 0026 BBFA8BFA 		clz	r10, fp
+ 525              	.LVL69:
+ 526 002a 4FEA5A1A 		lsr	r10, r10, #5
+ 527              	.LVL70:
+ 171:u8g2/csrc/u8g2_bitmap.c ****     return;
+ 172:u8g2/csrc/u8g2_bitmap.c **** #endif /* U8G2_WITH_INTERSECTION */
+ 173:u8g2/csrc/u8g2_bitmap.c ****   
+ 174:u8g2/csrc/u8g2_bitmap.c ****   mask = 1;
+ 528              		.loc 1 174 0
+ 529 002e 0124     		movs	r4, #1
+ 530 0030 14E0     		b	.L34
+ 531              	.LVL71:
+ 532              	.L41:
+ 175:u8g2/csrc/u8g2_bitmap.c ****   while(len > 0)
+ 176:u8g2/csrc/u8g2_bitmap.c ****   {
+ 177:u8g2/csrc/u8g2_bitmap.c ****     if( u8x8_pgm_read(b) & mask ) {
+ 178:u8g2/csrc/u8g2_bitmap.c ****       u8g2->draw_color = color;
+ 533              		.loc 1 178 0
+ 534 0032 87F87DB0 		strb	fp, [r7, #125]
+ 179:u8g2/csrc/u8g2_bitmap.c ****       u8g2_DrawHVLine(u8g2, x, y, 1, 0);
+ 535              		.loc 1 179 0
+ 536 0036 0023     		movs	r3, #0
+ 537 0038 0093     		str	r3, [sp]
+ 538 003a 0123     		movs	r3, #1
+ 539 003c 4A46     		mov	r2, r9
+ 540 003e 3146     		mov	r1, r6
+ 541 0040 3846     		mov	r0, r7
+ 542 0042 FFF7FEFF 		bl	u8g2_DrawHVLine
+ 543              	.LVL72:
+ 544              	.L36:
+ 180:u8g2/csrc/u8g2_bitmap.c ****     } else if( u8g2->bitmap_transparency == 0 ) {
+ 181:u8g2/csrc/u8g2_bitmap.c ****       u8g2->draw_color = ncolor;
+ 182:u8g2/csrc/u8g2_bitmap.c ****       u8g2_DrawHVLine(u8g2, x, y, 1, 0);
+ 183:u8g2/csrc/u8g2_bitmap.c ****     }
+ 184:u8g2/csrc/u8g2_bitmap.c ****    
+ 185:u8g2/csrc/u8g2_bitmap.c ****     x++;
+ 545              		.loc 1 185 0
+ 546 0046 0136     		adds	r6, r6, #1
+ 547              	.LVL73:
+ 548 0048 F6B2     		uxtb	r6, r6
+ 549              	.LVL74:
+ 186:u8g2/csrc/u8g2_bitmap.c ****     mask <<= 1;
+ 550              		.loc 1 186 0
+ 551 004a 6400     		lsls	r4, r4, #1
+ 552              	.LVL75:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s 			page 14
+
+
+ 187:u8g2/csrc/u8g2_bitmap.c ****     if ( mask == 0 )
+ 553              		.loc 1 187 0
+ 554 004c 14F0FF04 		ands	r4, r4, #255
+ 555              	.LVL76:
+ 556 0050 02D1     		bne	.L37
+ 557              	.LVL77:
+ 188:u8g2/csrc/u8g2_bitmap.c ****     {
+ 189:u8g2/csrc/u8g2_bitmap.c ****       mask = 1;
+ 190:u8g2/csrc/u8g2_bitmap.c ****       b++;
+ 558              		.loc 1 190 0
+ 559 0052 08F10108 		add	r8, r8, #1
+ 560              	.LVL78:
+ 189:u8g2/csrc/u8g2_bitmap.c ****       b++;
+ 561              		.loc 1 189 0
+ 562 0056 0124     		movs	r4, #1
+ 563              	.LVL79:
+ 564              	.L37:
+ 191:u8g2/csrc/u8g2_bitmap.c ****     }
+ 192:u8g2/csrc/u8g2_bitmap.c ****     len--;
+ 565              		.loc 1 192 0
+ 566 0058 013D     		subs	r5, r5, #1
+ 567              	.LVL80:
+ 568 005a EDB2     		uxtb	r5, r5
+ 569              	.LVL81:
+ 570              	.L34:
+ 175:u8g2/csrc/u8g2_bitmap.c ****   {
+ 571              		.loc 1 175 0
+ 572 005c 8DB1     		cbz	r5, .L40
+ 177:u8g2/csrc/u8g2_bitmap.c ****       u8g2->draw_color = color;
+ 573              		.loc 1 177 0
+ 574 005e 98F80030 		ldrb	r3, [r8]	@ zero_extendqisi2
+ 575 0062 2342     		tst	r3, r4
+ 576 0064 E5D1     		bne	.L41
+ 180:u8g2/csrc/u8g2_bitmap.c ****       u8g2->draw_color = ncolor;
+ 577              		.loc 1 180 0
+ 578 0066 97F87C30 		ldrb	r3, [r7, #124]	@ zero_extendqisi2
+ 579 006a 002B     		cmp	r3, #0
+ 580 006c EBD1     		bne	.L36
+ 181:u8g2/csrc/u8g2_bitmap.c ****       u8g2_DrawHVLine(u8g2, x, y, 1, 0);
+ 581              		.loc 1 181 0
+ 582 006e 87F87DA0 		strb	r10, [r7, #125]
+ 182:u8g2/csrc/u8g2_bitmap.c ****     }
+ 583              		.loc 1 182 0
+ 584 0072 0093     		str	r3, [sp]
+ 585 0074 0123     		movs	r3, #1
+ 586 0076 4A46     		mov	r2, r9
+ 587 0078 3146     		mov	r1, r6
+ 588 007a 3846     		mov	r0, r7
+ 589 007c FFF7FEFF 		bl	u8g2_DrawHVLine
+ 590              	.LVL82:
+ 591 0080 E1E7     		b	.L36
+ 592              	.L40:
+ 193:u8g2/csrc/u8g2_bitmap.c ****   }
+ 194:u8g2/csrc/u8g2_bitmap.c ****   u8g2->draw_color = color;
+ 593              		.loc 1 194 0
+ 594 0082 87F87DB0 		strb	fp, [r7, #125]
+ 595              	.LVL83:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s 			page 15
+
+
+ 596              	.L32:
+ 195:u8g2/csrc/u8g2_bitmap.c **** }
+ 597              		.loc 1 195 0
+ 598 0086 03B0     		add	sp, sp, #12
+ 599              	.LCFI14:
+ 600              		.cfi_def_cfa_offset 36
+ 601              		@ sp needed
+ 602 0088 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 603              		.cfi_endproc
+ 604              	.LFE5:
+ 606              		.section	.text.u8g2_DrawXBMP,"ax",%progbits
+ 607              		.align	1
+ 608              		.global	u8g2_DrawXBMP
+ 609              		.syntax unified
+ 610              		.thumb
+ 611              		.thumb_func
+ 612              		.fpu softvfp
+ 614              	u8g2_DrawXBMP:
+ 615              	.LFB6:
+ 196:u8g2/csrc/u8g2_bitmap.c **** 
+ 197:u8g2/csrc/u8g2_bitmap.c **** 
+ 198:u8g2/csrc/u8g2_bitmap.c **** void u8g2_DrawXBMP(u8g2_t *u8g2, u8g2_uint_t x, u8g2_uint_t y, u8g2_uint_t w, u8g2_uint_t h, const 
+ 199:u8g2/csrc/u8g2_bitmap.c **** {
+ 616              		.loc 1 199 0
+ 617              		.cfi_startproc
+ 618              		@ args = 8, pretend = 0, frame = 0
+ 619              		@ frame_needed = 0, uses_anonymous_args = 0
+ 620              	.LVL84:
+ 621 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 622              	.LCFI15:
+ 623              		.cfi_def_cfa_offset 32
+ 624              		.cfi_offset 4, -32
+ 625              		.cfi_offset 5, -28
+ 626              		.cfi_offset 6, -24
+ 627              		.cfi_offset 7, -20
+ 628              		.cfi_offset 8, -16
+ 629              		.cfi_offset 9, -12
+ 630              		.cfi_offset 10, -8
+ 631              		.cfi_offset 14, -4
+ 632 0004 82B0     		sub	sp, sp, #8
+ 633              	.LCFI16:
+ 634              		.cfi_def_cfa_offset 40
+ 635 0006 8246     		mov	r10, r0
+ 636 0008 8946     		mov	r9, r1
+ 637 000a 1546     		mov	r5, r2
+ 638 000c 1F46     		mov	r7, r3
+ 639 000e 9DF82840 		ldrb	r4, [sp, #40]	@ zero_extendqisi2
+ 640 0012 0B9E     		ldr	r6, [sp, #44]
+ 641              	.LVL85:
+ 200:u8g2/csrc/u8g2_bitmap.c ****   u8g2_uint_t blen;
+ 201:u8g2/csrc/u8g2_bitmap.c ****   blen = w;
+ 202:u8g2/csrc/u8g2_bitmap.c ****   blen += 7;
+ 642              		.loc 1 202 0
+ 643 0014 03F10708 		add	r8, r3, #7
+ 644              	.LVL86:
+ 203:u8g2/csrc/u8g2_bitmap.c ****   blen >>= 3;
+ 645              		.loc 1 203 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s 			page 16
+
+
+ 646 0018 C8F3C408 		ubfx	r8, r8, #3, #5
+ 647              	.LVL87:
+ 204:u8g2/csrc/u8g2_bitmap.c **** #ifdef U8G2_WITH_INTERSECTION
+ 205:u8g2/csrc/u8g2_bitmap.c ****   if ( u8g2_IsIntersection(u8g2, x, y, x+w, y+h) == 0 ) 
+ 648              		.loc 1 205 0
+ 649 001c 03EB010C 		add	ip, r3, r1
+ 650 0020 1319     		adds	r3, r2, r4
+ 651              	.LVL88:
+ 652 0022 DBB2     		uxtb	r3, r3
+ 653 0024 0093     		str	r3, [sp]
+ 654 0026 5FFA8CF3 		uxtb	r3, ip
+ 655 002a FFF7FEFF 		bl	u8g2_IsIntersection
+ 656              	.LVL89:
+ 657 002e 60B9     		cbnz	r0, .L44
+ 658 0030 0DE0     		b	.L42
+ 659              	.LVL90:
+ 660              	.L45:
+ 206:u8g2/csrc/u8g2_bitmap.c ****     return;
+ 207:u8g2/csrc/u8g2_bitmap.c **** #endif /* U8G2_WITH_INTERSECTION */
+ 208:u8g2/csrc/u8g2_bitmap.c ****   
+ 209:u8g2/csrc/u8g2_bitmap.c ****   while( h > 0 )
+ 210:u8g2/csrc/u8g2_bitmap.c ****   {
+ 211:u8g2/csrc/u8g2_bitmap.c ****     u8g2_DrawHXBMP(u8g2, x, y, w, bitmap);
+ 661              		.loc 1 211 0
+ 662 0032 0096     		str	r6, [sp]
+ 663 0034 3B46     		mov	r3, r7
+ 664 0036 2A46     		mov	r2, r5
+ 665 0038 4946     		mov	r1, r9
+ 666 003a 5046     		mov	r0, r10
+ 667 003c FFF7FEFF 		bl	u8g2_DrawHXBMP
+ 668              	.LVL91:
+ 212:u8g2/csrc/u8g2_bitmap.c ****     bitmap += blen;
+ 669              		.loc 1 212 0
+ 670 0040 4644     		add	r6, r6, r8
+ 671              	.LVL92:
+ 213:u8g2/csrc/u8g2_bitmap.c ****     y++;
+ 672              		.loc 1 213 0
+ 673 0042 0135     		adds	r5, r5, #1
+ 674              	.LVL93:
+ 675 0044 EDB2     		uxtb	r5, r5
+ 676              	.LVL94:
+ 214:u8g2/csrc/u8g2_bitmap.c ****     h--;
+ 677              		.loc 1 214 0
+ 678 0046 013C     		subs	r4, r4, #1
+ 679              	.LVL95:
+ 680 0048 E4B2     		uxtb	r4, r4
+ 681              	.LVL96:
+ 682              	.L44:
+ 209:u8g2/csrc/u8g2_bitmap.c ****   {
+ 683              		.loc 1 209 0
+ 684 004a 002C     		cmp	r4, #0
+ 685 004c F1D1     		bne	.L45
+ 686              	.LVL97:
+ 687              	.L42:
+ 215:u8g2/csrc/u8g2_bitmap.c ****   }
+ 216:u8g2/csrc/u8g2_bitmap.c **** }
+ 688              		.loc 1 216 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s 			page 17
+
+
+ 689 004e 02B0     		add	sp, sp, #8
+ 690              	.LCFI17:
+ 691              		.cfi_def_cfa_offset 32
+ 692              		@ sp needed
+ 693 0050 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 694              		.cfi_endproc
+ 695              	.LFE6:
+ 697              		.text
+ 698              	.Letext0:
+ 699              		.file 2 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_defau
+ 700              		.file 3 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_stdint.h"
+ 701              		.file 4 "u8g2/csrc/u8x8.h"
+ 702              		.file 5 "u8g2/csrc/u8g2.h"
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s 			page 18
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 u8g2_bitmap.c
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s:16     .text.u8g2_SetBitmapMode:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s:23     .text.u8g2_SetBitmapMode:0000000000000000 u8g2_SetBitmapMode
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s:40     .text.u8g2_DrawHorizontalBitmap:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s:47     .text.u8g2_DrawHorizontalBitmap:0000000000000000 u8g2_DrawHorizontalBitmap
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s:167    .text.u8g2_DrawBitmap:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s:174    .text.u8g2_DrawBitmap:0000000000000000 u8g2_DrawBitmap
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s:256    .text.u8g2_DrawHXBM:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s:263    .text.u8g2_DrawHXBM:0000000000000000 u8g2_DrawHXBM
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s:386    .text.u8g2_DrawXBM:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s:393    .text.u8g2_DrawXBM:0000000000000000 u8g2_DrawXBM
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s:477    .text.u8g2_DrawHXBMP:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s:484    .text.u8g2_DrawHXBMP:0000000000000000 u8g2_DrawHXBMP
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s:607    .text.u8g2_DrawXBMP:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccjMTJZk.s:614    .text.u8g2_DrawXBMP:0000000000000000 u8g2_DrawXBMP
+
+UNDEFINED SYMBOLS
+u8g2_IsIntersection
+u8g2_DrawHVLine

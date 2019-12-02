@@ -1,0 +1,495 @@
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"output.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.Output_Init,"ax",%progbits
+  16              		.align	1
+  17              		.global	Output_Init
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  21              		.fpu softvfp
+  23              	Output_Init:
+  24              	.LFB66:
+  25              		.file 1 "Src/output.c"
+   1:Src/output.c  **** #include "output.h"
+   2:Src/output.c  **** #include "main_screen.h"
+   3:Src/output.c  **** #include "system.h"
+   4:Src/output.c  **** 
+   5:Src/output.c  **** void Output_Init(void)
+   6:Src/output.c  **** {
+  26              		.loc 1 6 0
+  27              		.cfi_startproc
+  28              		@ args = 0, pretend = 0, frame = 24
+  29              		@ frame_needed = 0, uses_anonymous_args = 0
+  30 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+  31              	.LCFI0:
+  32              		.cfi_def_cfa_offset 24
+  33              		.cfi_offset 4, -24
+  34              		.cfi_offset 5, -20
+  35              		.cfi_offset 6, -16
+  36              		.cfi_offset 7, -12
+  37              		.cfi_offset 8, -8
+  38              		.cfi_offset 14, -4
+  39 0004 86B0     		sub	sp, sp, #24
+  40              	.LCFI1:
+  41              		.cfi_def_cfa_offset 48
+   7:Src/output.c  ****     GPIO_InitTypeDef GPIO_InitStruct = {0};
+  42              		.loc 1 7 0
+  43 0006 0024     		movs	r4, #0
+  44 0008 0494     		str	r4, [sp, #16]
+  45              	.LBB2:
+   8:Src/output.c  **** 
+   9:Src/output.c  ****     /* GPIO Ports Clock Enable */
+  10:Src/output.c  ****     __HAL_RCC_GPIOC_CLK_ENABLE();
+  46              		.loc 1 10 0
+  47 000a 1D4B     		ldr	r3, .L3
+  48 000c 9A69     		ldr	r2, [r3, #24]
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s 			page 2
+
+
+  49 000e 42F01002 		orr	r2, r2, #16
+  50 0012 9A61     		str	r2, [r3, #24]
+  51 0014 9A69     		ldr	r2, [r3, #24]
+  52 0016 02F01002 		and	r2, r2, #16
+  53 001a 0092     		str	r2, [sp]
+  54 001c 009A     		ldr	r2, [sp]
+  55              	.LBE2:
+  56              	.LBB3:
+  11:Src/output.c  ****     __HAL_RCC_GPIOB_CLK_ENABLE();
+  57              		.loc 1 11 0
+  58 001e 9A69     		ldr	r2, [r3, #24]
+  59 0020 42F00802 		orr	r2, r2, #8
+  60 0024 9A61     		str	r2, [r3, #24]
+  61 0026 9B69     		ldr	r3, [r3, #24]
+  62 0028 03F00803 		and	r3, r3, #8
+  63 002c 0193     		str	r3, [sp, #4]
+  64 002e 019B     		ldr	r3, [sp, #4]
+  65              	.LBE3:
+  12:Src/output.c  **** 
+  13:Src/output.c  ****     GPIO_InitStruct.Pin = GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5;
+  66              		.loc 1 13 0
+  67 0030 3C27     		movs	r7, #60
+  68 0032 0297     		str	r7, [sp, #8]
+  14:Src/output.c  ****     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  69              		.loc 1 14 0
+  70 0034 4FF00108 		mov	r8, #1
+  71 0038 CDF80C80 		str	r8, [sp, #12]
+  15:Src/output.c  ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+  16:Src/output.c  ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  72              		.loc 1 16 0
+  73 003c 0225     		movs	r5, #2
+  74 003e 0595     		str	r5, [sp, #20]
+  17:Src/output.c  ****     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  75              		.loc 1 17 0
+  76 0040 104E     		ldr	r6, .L3+4
+  77 0042 02A9     		add	r1, sp, #8
+  78 0044 3046     		mov	r0, r6
+  79 0046 FFF7FEFF 		bl	HAL_GPIO_Init
+  80              	.LVL0:
+  18:Src/output.c  **** 
+  19:Src/output.c  ****     GPIO_InitStruct.Pin = GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8;
+  81              		.loc 1 19 0
+  82 004a 4FF4E073 		mov	r3, #448
+  83 004e 0293     		str	r3, [sp, #8]
+  20:Src/output.c  ****     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  84              		.loc 1 20 0
+  85 0050 CDF80C80 		str	r8, [sp, #12]
+  21:Src/output.c  ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+  86              		.loc 1 21 0
+  87 0054 0494     		str	r4, [sp, #16]
+  22:Src/output.c  ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  88              		.loc 1 22 0
+  89 0056 0595     		str	r5, [sp, #20]
+  23:Src/output.c  ****     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  90              		.loc 1 23 0
+  91 0058 0B4D     		ldr	r5, .L3+8
+  92 005a 02A9     		add	r1, sp, #8
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s 			page 3
+
+
+  93 005c 2846     		mov	r0, r5
+  94 005e FFF7FEFF 		bl	HAL_GPIO_Init
+  95              	.LVL1:
+  24:Src/output.c  **** 
+  25:Src/output.c  ****     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5, GPIO_PIN_RESET);
+  96              		.loc 1 25 0
+  97 0062 2246     		mov	r2, r4
+  98 0064 3946     		mov	r1, r7
+  99 0066 3046     		mov	r0, r6
+ 100 0068 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 101              	.LVL2:
+  26:Src/output.c  ****     HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9, GPIO_PIN_RESET);
+ 102              		.loc 1 26 0
+ 103 006c 2246     		mov	r2, r4
+ 104 006e 4FF47071 		mov	r1, #960
+ 105 0072 2846     		mov	r0, r5
+ 106 0074 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 107              	.LVL3:
+  27:Src/output.c  **** }
+ 108              		.loc 1 27 0
+ 109 0078 06B0     		add	sp, sp, #24
+ 110              	.LCFI2:
+ 111              		.cfi_def_cfa_offset 24
+ 112              		@ sp needed
+ 113 007a BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 114              	.L4:
+ 115 007e 00BF     		.align	2
+ 116              	.L3:
+ 117 0080 00100240 		.word	1073876992
+ 118 0084 000C0140 		.word	1073810432
+ 119 0088 00100140 		.word	1073811456
+ 120              		.cfi_endproc
+ 121              	.LFE66:
+ 123              		.section	.text.SW_Neon,"ax",%progbits
+ 124              		.align	1
+ 125              		.global	SW_Neon
+ 126              		.syntax unified
+ 127              		.thumb
+ 128              		.thumb_func
+ 129              		.fpu softvfp
+ 131              	SW_Neon:
+ 132              	.LFB67:
+  28:Src/output.c  **** 
+  29:Src/output.c  **** void SW_Neon(uint8_t neonStatus)
+  30:Src/output.c  **** {
+ 133              		.loc 1 30 0
+ 134              		.cfi_startproc
+ 135              		@ args = 0, pretend = 0, frame = 0
+ 136              		@ frame_needed = 0, uses_anonymous_args = 0
+ 137              	.LVL4:
+ 138 0000 08B5     		push	{r3, lr}
+ 139              	.LCFI3:
+ 140              		.cfi_def_cfa_offset 8
+ 141              		.cfi_offset 3, -8
+ 142              		.cfi_offset 14, -4
+  31:Src/output.c  ****     if (neonStatus)
+ 143              		.loc 1 31 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s 			page 4
+
+
+ 144 0002 28B9     		cbnz	r0, .L9
+  32:Src/output.c  ****         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_SET);
+  33:Src/output.c  ****     else
+  34:Src/output.c  ****         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_RESET);
+ 145              		.loc 1 34 0
+ 146 0004 0022     		movs	r2, #0
+ 147 0006 0421     		movs	r1, #4
+ 148 0008 0448     		ldr	r0, .L10
+ 149              	.LVL5:
+ 150 000a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 151              	.LVL6:
+ 152              	.L5:
+  35:Src/output.c  **** }
+ 153              		.loc 1 35 0
+ 154 000e 08BD     		pop	{r3, pc}
+ 155              	.LVL7:
+ 156              	.L9:
+  32:Src/output.c  ****         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_2, GPIO_PIN_SET);
+ 157              		.loc 1 32 0
+ 158 0010 0122     		movs	r2, #1
+ 159 0012 0421     		movs	r1, #4
+ 160 0014 0148     		ldr	r0, .L10
+ 161              	.LVL8:
+ 162 0016 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 163              	.LVL9:
+ 164 001a F8E7     		b	.L5
+ 165              	.L11:
+ 166              		.align	2
+ 167              	.L10:
+ 168 001c 000C0140 		.word	1073810432
+ 169              		.cfi_endproc
+ 170              	.LFE67:
+ 172              		.section	.text.SW_Uv,"ax",%progbits
+ 173              		.align	1
+ 174              		.global	SW_Uv
+ 175              		.syntax unified
+ 176              		.thumb
+ 177              		.thumb_func
+ 178              		.fpu softvfp
+ 180              	SW_Uv:
+ 181              	.LFB68:
+  36:Src/output.c  **** void SW_Uv(uint8_t uvStatus)
+  37:Src/output.c  **** {
+ 182              		.loc 1 37 0
+ 183              		.cfi_startproc
+ 184              		@ args = 0, pretend = 0, frame = 0
+ 185              		@ frame_needed = 0, uses_anonymous_args = 0
+ 186              	.LVL10:
+ 187 0000 08B5     		push	{r3, lr}
+ 188              	.LCFI4:
+ 189              		.cfi_def_cfa_offset 8
+ 190              		.cfi_offset 3, -8
+ 191              		.cfi_offset 14, -4
+  38:Src/output.c  ****     if (uvStatus)
+ 192              		.loc 1 38 0
+ 193 0002 28B9     		cbnz	r0, .L16
+  39:Src/output.c  ****         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET);
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s 			page 5
+
+
+  40:Src/output.c  ****     else
+  41:Src/output.c  ****         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_RESET);
+ 194              		.loc 1 41 0
+ 195 0004 0022     		movs	r2, #0
+ 196 0006 0821     		movs	r1, #8
+ 197 0008 0448     		ldr	r0, .L17
+ 198              	.LVL11:
+ 199 000a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 200              	.LVL12:
+ 201              	.L12:
+  42:Src/output.c  **** }
+ 202              		.loc 1 42 0
+ 203 000e 08BD     		pop	{r3, pc}
+ 204              	.LVL13:
+ 205              	.L16:
+  39:Src/output.c  ****         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, GPIO_PIN_SET);
+ 206              		.loc 1 39 0
+ 207 0010 0122     		movs	r2, #1
+ 208 0012 0821     		movs	r1, #8
+ 209 0014 0148     		ldr	r0, .L17
+ 210              	.LVL14:
+ 211 0016 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 212              	.LVL15:
+ 213 001a F8E7     		b	.L12
+ 214              	.L18:
+ 215              		.align	2
+ 216              	.L17:
+ 217 001c 000C0140 		.word	1073810432
+ 218              		.cfi_endproc
+ 219              	.LFE68:
+ 221              		.section	.text.SW_Fan,"ax",%progbits
+ 222              		.align	1
+ 223              		.global	SW_Fan
+ 224              		.syntax unified
+ 225              		.thumb
+ 226              		.thumb_func
+ 227              		.fpu softvfp
+ 229              	SW_Fan:
+ 230              	.LFB69:
+  43:Src/output.c  **** void SW_Fan(uint8_t fanStatus)
+  44:Src/output.c  **** {
+ 231              		.loc 1 44 0
+ 232              		.cfi_startproc
+ 233              		@ args = 0, pretend = 0, frame = 0
+ 234              		@ frame_needed = 0, uses_anonymous_args = 0
+ 235              	.LVL16:
+ 236 0000 08B5     		push	{r3, lr}
+ 237              	.LCFI5:
+ 238              		.cfi_def_cfa_offset 8
+ 239              		.cfi_offset 3, -8
+ 240              		.cfi_offset 14, -4
+  45:Src/output.c  ****     if (fanStatus)
+ 241              		.loc 1 45 0
+ 242 0002 28B9     		cbnz	r0, .L23
+  46:Src/output.c  ****         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET);
+  47:Src/output.c  ****     else
+  48:Src/output.c  ****         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_RESET);
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s 			page 6
+
+
+ 243              		.loc 1 48 0
+ 244 0004 0022     		movs	r2, #0
+ 245 0006 1021     		movs	r1, #16
+ 246 0008 0448     		ldr	r0, .L24
+ 247              	.LVL17:
+ 248 000a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 249              	.LVL18:
+ 250              	.L19:
+  49:Src/output.c  **** }
+ 251              		.loc 1 49 0
+ 252 000e 08BD     		pop	{r3, pc}
+ 253              	.LVL19:
+ 254              	.L23:
+  46:Src/output.c  ****         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET);
+ 255              		.loc 1 46 0
+ 256 0010 0122     		movs	r2, #1
+ 257 0012 1021     		movs	r1, #16
+ 258 0014 0148     		ldr	r0, .L24
+ 259              	.LVL20:
+ 260 0016 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 261              	.LVL21:
+ 262 001a F8E7     		b	.L19
+ 263              	.L25:
+ 264              		.align	2
+ 265              	.L24:
+ 266 001c 000C0140 		.word	1073810432
+ 267              		.cfi_endproc
+ 268              	.LFE69:
+ 270              		.section	.text.SW_Socket,"ax",%progbits
+ 271              		.align	1
+ 272              		.global	SW_Socket
+ 273              		.syntax unified
+ 274              		.thumb
+ 275              		.thumb_func
+ 276              		.fpu softvfp
+ 278              	SW_Socket:
+ 279              	.LFB70:
+  50:Src/output.c  **** void SW_Socket(uint8_t socketStatus)
+  51:Src/output.c  **** {
+ 280              		.loc 1 51 0
+ 281              		.cfi_startproc
+ 282              		@ args = 0, pretend = 0, frame = 0
+ 283              		@ frame_needed = 0, uses_anonymous_args = 0
+ 284              	.LVL22:
+ 285 0000 08B5     		push	{r3, lr}
+ 286              	.LCFI6:
+ 287              		.cfi_def_cfa_offset 8
+ 288              		.cfi_offset 3, -8
+ 289              		.cfi_offset 14, -4
+  52:Src/output.c  ****     if (socketStatus)
+ 290              		.loc 1 52 0
+ 291 0002 28B9     		cbnz	r0, .L30
+  53:Src/output.c  ****         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET);
+  54:Src/output.c  ****     else
+  55:Src/output.c  ****         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_RESET);
+ 292              		.loc 1 55 0
+ 293 0004 0022     		movs	r2, #0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s 			page 7
+
+
+ 294 0006 2021     		movs	r1, #32
+ 295 0008 0448     		ldr	r0, .L31
+ 296              	.LVL23:
+ 297 000a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 298              	.LVL24:
+ 299              	.L26:
+  56:Src/output.c  **** }
+ 300              		.loc 1 56 0
+ 301 000e 08BD     		pop	{r3, pc}
+ 302              	.LVL25:
+ 303              	.L30:
+  53:Src/output.c  ****         HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_SET);
+ 304              		.loc 1 53 0
+ 305 0010 0122     		movs	r2, #1
+ 306 0012 2021     		movs	r1, #32
+ 307 0014 0148     		ldr	r0, .L31
+ 308              	.LVL26:
+ 309 0016 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 310              	.LVL27:
+ 311 001a F8E7     		b	.L26
+ 312              	.L32:
+ 313              		.align	2
+ 314              	.L31:
+ 315 001c 000C0140 		.word	1073810432
+ 316              		.cfi_endproc
+ 317              	.LFE70:
+ 319              		.section	.text.Output_Manage,"ax",%progbits
+ 320              		.align	1
+ 321              		.global	Output_Manage
+ 322              		.syntax unified
+ 323              		.thumb
+ 324              		.thumb_func
+ 325              		.fpu softvfp
+ 327              	Output_Manage:
+ 328              	.LFB71:
+  57:Src/output.c  **** void Output_Manage(void)
+  58:Src/output.c  **** {
+ 329              		.loc 1 58 0
+ 330              		.cfi_startproc
+ 331              		@ args = 0, pretend = 0, frame = 0
+ 332              		@ frame_needed = 0, uses_anonymous_args = 0
+ 333 0000 10B5     		push	{r4, lr}
+ 334              	.LCFI7:
+ 335              		.cfi_def_cfa_offset 8
+ 336              		.cfi_offset 4, -8
+ 337              		.cfi_offset 14, -4
+  59:Src/output.c  ****     // SW_Neon(main_scr.lampStatus);
+  60:Src/output.c  ****     // SW_Uv(main_scr.uvStatus);
+  61:Src/output.c  ****     // SW_Fan(main_scr.fanStatus);
+  62:Src/output.c  ****     // SW_Socket(main_scr.socketStatus);
+  63:Src/output.c  ****     SW_Neon(dev.status.lamp);
+ 338              		.loc 1 63 0
+ 339 0002 074C     		ldr	r4, .L35
+ 340 0004 A078     		ldrb	r0, [r4, #2]	@ zero_extendqisi2
+ 341 0006 FFF7FEFF 		bl	SW_Neon
+ 342              	.LVL28:
+  64:Src/output.c  ****     SW_Uv(dev.status.uv);
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s 			page 8
+
+
+ 343              		.loc 1 64 0
+ 344 000a E078     		ldrb	r0, [r4, #3]	@ zero_extendqisi2
+ 345 000c FFF7FEFF 		bl	SW_Uv
+ 346              	.LVL29:
+  65:Src/output.c  ****     SW_Fan(dev.status.fan);
+ 347              		.loc 1 65 0
+ 348 0010 2079     		ldrb	r0, [r4, #4]	@ zero_extendqisi2
+ 349 0012 FFF7FEFF 		bl	SW_Fan
+ 350              	.LVL30:
+  66:Src/output.c  ****     SW_Socket(dev.status.socket);
+ 351              		.loc 1 66 0
+ 352 0016 6079     		ldrb	r0, [r4, #5]	@ zero_extendqisi2
+ 353 0018 FFF7FEFF 		bl	SW_Socket
+ 354              	.LVL31:
+  67:Src/output.c  **** }...
+ 355              		.loc 1 67 0
+ 356 001c 10BD     		pop	{r4, pc}
+ 357              	.L36:
+ 358 001e 00BF     		.align	2
+ 359              	.L35:
+ 360 0020 00000000 		.word	dev
+ 361              		.cfi_endproc
+ 362              	.LFE71:
+ 364              		.comm	bmp_temp,8,4
+ 365              		.text
+ 366              	.Letext0:
+ 367              		.file 2 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_defau
+ 368              		.file 3 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_stdint.h"
+ 369              		.file 4 "Drivers/CMSIS/Include/core_cm3.h"
+ 370              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h"
+ 371              		.file 6 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
+ 372              		.file 7 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/lock.h"
+ 373              		.file 8 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_types.h"
+ 374              		.file 9 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/
+ 375              		.file 10 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/reent.h"
+ 376              		.file 11 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ 377              		.file 12 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 378              		.file 13 "u8g2/csrc/u8x8.h"
+ 379              		.file 14 "u8g2/csrc/u8g2.h"
+ 380              		.file 15 "Inc/main.h"
+ 381              		.file 16 "Inc/user_bitmap.h"
+ 382              		.file 17 "Inc/main_screen.h"
+ 383              		.file 18 "Inc/system.h"
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 output.c
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s:16     .text.Output_Init:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s:23     .text.Output_Init:0000000000000000 Output_Init
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s:117    .text.Output_Init:0000000000000080 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s:124    .text.SW_Neon:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s:131    .text.SW_Neon:0000000000000000 SW_Neon
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s:168    .text.SW_Neon:000000000000001c $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s:173    .text.SW_Uv:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s:180    .text.SW_Uv:0000000000000000 SW_Uv
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s:217    .text.SW_Uv:000000000000001c $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s:222    .text.SW_Fan:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s:229    .text.SW_Fan:0000000000000000 SW_Fan
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s:266    .text.SW_Fan:000000000000001c $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s:271    .text.SW_Socket:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s:278    .text.SW_Socket:0000000000000000 SW_Socket
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s:315    .text.SW_Socket:000000000000001c $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s:320    .text.Output_Manage:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s:327    .text.Output_Manage:0000000000000000 Output_Manage
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccl6IibY.s:360    .text.Output_Manage:0000000000000020 $d
+                            *COM*:0000000000000008 bmp_temp
+
+UNDEFINED SYMBOLS
+HAL_GPIO_Init
+HAL_GPIO_WritePin
+dev

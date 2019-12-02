@@ -1,0 +1,506 @@
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccDSNWBk.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"u8g2_input_value.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.u8g2_UserInterfaceInputValue,"ax",%progbits
+  16              		.align	1
+  17              		.global	u8g2_UserInterfaceInputValue
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  21              		.fpu softvfp
+  23              	u8g2_UserInterfaceInputValue:
+  24              	.LFB0:
+  25              		.file 1 "u8g2/csrc/u8g2_input_value.c"
+   1:u8g2/csrc/u8g2_input_value.c **** /*
+   2:u8g2/csrc/u8g2_input_value.c **** 
+   3:u8g2/csrc/u8g2_input_value.c ****   u8g2_input_value.c
+   4:u8g2/csrc/u8g2_input_value.c ****   
+   5:u8g2/csrc/u8g2_input_value.c ****   Universal 8bit Graphics Library (https://github.com/olikraus/u8g2/)
+   6:u8g2/csrc/u8g2_input_value.c **** 
+   7:u8g2/csrc/u8g2_input_value.c ****   Copyright (c) 2016, olikraus@gmail.com
+   8:u8g2/csrc/u8g2_input_value.c ****   All rights reserved.
+   9:u8g2/csrc/u8g2_input_value.c **** 
+  10:u8g2/csrc/u8g2_input_value.c ****   Redistribution and use in source and binary forms, with or without modification, 
+  11:u8g2/csrc/u8g2_input_value.c ****   are permitted provided that the following conditions are met:
+  12:u8g2/csrc/u8g2_input_value.c **** 
+  13:u8g2/csrc/u8g2_input_value.c ****   * Redistributions of source code must retain the above copyright notice, this list 
+  14:u8g2/csrc/u8g2_input_value.c ****     of conditions and the following disclaimer.
+  15:u8g2/csrc/u8g2_input_value.c ****     
+  16:u8g2/csrc/u8g2_input_value.c ****   * Redistributions in binary form must reproduce the above copyright notice, this 
+  17:u8g2/csrc/u8g2_input_value.c ****     list of conditions and the following disclaimer in the documentation and/or other 
+  18:u8g2/csrc/u8g2_input_value.c ****     materials provided with the distribution.
+  19:u8g2/csrc/u8g2_input_value.c **** 
+  20:u8g2/csrc/u8g2_input_value.c ****   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+  21:u8g2/csrc/u8g2_input_value.c ****   CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+  22:u8g2/csrc/u8g2_input_value.c ****   INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+  23:u8g2/csrc/u8g2_input_value.c ****   MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+  24:u8g2/csrc/u8g2_input_value.c ****   DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+  25:u8g2/csrc/u8g2_input_value.c ****   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+  26:u8g2/csrc/u8g2_input_value.c ****   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+  27:u8g2/csrc/u8g2_input_value.c ****   NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+  28:u8g2/csrc/u8g2_input_value.c ****   LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+  29:u8g2/csrc/u8g2_input_value.c ****   CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+  30:u8g2/csrc/u8g2_input_value.c ****   STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+  31:u8g2/csrc/u8g2_input_value.c ****   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+  32:u8g2/csrc/u8g2_input_value.c ****   ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
+  33:u8g2/csrc/u8g2_input_value.c ****   
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccDSNWBk.s 			page 2
+
+
+  34:u8g2/csrc/u8g2_input_value.c **** */
+  35:u8g2/csrc/u8g2_input_value.c **** 
+  36:u8g2/csrc/u8g2_input_value.c **** #include "u8g2.h"
+  37:u8g2/csrc/u8g2_input_value.c **** 
+  38:u8g2/csrc/u8g2_input_value.c **** /*
+  39:u8g2/csrc/u8g2_input_value.c ****   return:
+  40:u8g2/csrc/u8g2_input_value.c ****     0: value is not changed (HOME/Break Button pressed)
+  41:u8g2/csrc/u8g2_input_value.c ****     1: value has been updated
+  42:u8g2/csrc/u8g2_input_value.c **** */
+  43:u8g2/csrc/u8g2_input_value.c **** 
+  44:u8g2/csrc/u8g2_input_value.c **** uint8_t u8g2_UserInterfaceInputValue(u8g2_t *u8g2, const char *title, const char *pre, uint8_t *val
+  45:u8g2/csrc/u8g2_input_value.c **** {
+  26              		.loc 1 45 0
+  27              		.cfi_startproc
+  28              		@ args = 16, pretend = 0, frame = 24
+  29              		@ frame_needed = 0, uses_anonymous_args = 0
+  30              	.LVL0:
+  31 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  32              	.LCFI0:
+  33              		.cfi_def_cfa_offset 36
+  34              		.cfi_offset 4, -36
+  35              		.cfi_offset 5, -32
+  36              		.cfi_offset 6, -28
+  37              		.cfi_offset 7, -24
+  38              		.cfi_offset 8, -20
+  39              		.cfi_offset 9, -16
+  40              		.cfi_offset 10, -12
+  41              		.cfi_offset 11, -8
+  42              		.cfi_offset 14, -4
+  43 0004 89B0     		sub	sp, sp, #36
+  44              	.LCFI1:
+  45              		.cfi_def_cfa_offset 72
+  46 0006 0446     		mov	r4, r0
+  47 0008 8B46     		mov	fp, r1
+  48 000a 0392     		str	r2, [sp, #12]
+  49 000c 0793     		str	r3, [sp, #28]
+  50 000e 9DF84820 		ldrb	r2, [sp, #72]	@ zero_extendqisi2
+  51              	.LVL1:
+  52 0012 0692     		str	r2, [sp, #24]
+  53 0014 9DF84C20 		ldrb	r2, [sp, #76]	@ zero_extendqisi2
+  54 0018 0592     		str	r2, [sp, #20]
+  55 001a 9DF85020 		ldrb	r2, [sp, #80]	@ zero_extendqisi2
+  56 001e 0492     		str	r2, [sp, #16]
+  46:u8g2/csrc/u8g2_input_value.c ****   uint8_t line_height;
+  47:u8g2/csrc/u8g2_input_value.c ****   uint8_t height;
+  48:u8g2/csrc/u8g2_input_value.c ****   u8g2_uint_t pixel_height;
+  49:u8g2/csrc/u8g2_input_value.c ****   u8g2_uint_t  y, yy;
+  50:u8g2/csrc/u8g2_input_value.c ****   u8g2_uint_t  pixel_width;
+  51:u8g2/csrc/u8g2_input_value.c ****   u8g2_uint_t  x, xx;
+  52:u8g2/csrc/u8g2_input_value.c ****   
+  53:u8g2/csrc/u8g2_input_value.c ****   uint8_t local_value = *value;
+  57              		.loc 1 53 0
+  58 0020 93F800A0 		ldrb	r10, [r3]	@ zero_extendqisi2
+  59              	.LVL2:
+  54:u8g2/csrc/u8g2_input_value.c ****   //uint8_t r; /* not used ??? */
+  55:u8g2/csrc/u8g2_input_value.c ****   uint8_t event;
+  56:u8g2/csrc/u8g2_input_value.c **** 
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccDSNWBk.s 			page 3
+
+
+  57:u8g2/csrc/u8g2_input_value.c ****   /* only horizontal strings are supported, so force this here */
+  58:u8g2/csrc/u8g2_input_value.c ****   u8g2_SetFontDirection(u8g2, 0);
+  60              		.loc 1 58 0
+  61 0024 0021     		movs	r1, #0
+  62              	.LVL3:
+  63 0026 FFF7FEFF 		bl	u8g2_SetFontDirection
+  64              	.LVL4:
+  59:u8g2/csrc/u8g2_input_value.c **** 
+  60:u8g2/csrc/u8g2_input_value.c ****   /* force baseline position */
+  61:u8g2/csrc/u8g2_input_value.c ****   u8g2_SetFontPosBaseline(u8g2);
+  65              		.loc 1 61 0
+  66 002a 2046     		mov	r0, r4
+  67 002c FFF7FEFF 		bl	u8g2_SetFontPosBaseline
+  68              	.LVL5:
+  62:u8g2/csrc/u8g2_input_value.c ****   
+  63:u8g2/csrc/u8g2_input_value.c ****   /* calculate line height */
+  64:u8g2/csrc/u8g2_input_value.c ****   line_height = u8g2_GetAscent(u8g2);
+  69              		.loc 1 64 0
+  70 0030 94F97990 		ldrsb	r9, [r4, #121]
+  71 0034 5FFA89F9 		uxtb	r9, r9
+  72              	.LVL6:
+  65:u8g2/csrc/u8g2_input_value.c ****   line_height -= u8g2_GetDescent(u8g2);
+  73              		.loc 1 65 0
+  74 0038 94F87A30 		ldrb	r3, [r4, #122]	@ zero_extendqisi2
+  75 003c A9EB0309 		sub	r9, r9, r3
+  76              	.LVL7:
+  77 0040 5FFA89F9 		uxtb	r9, r9
+  78              	.LVL8:
+  66:u8g2/csrc/u8g2_input_value.c ****   
+  67:u8g2/csrc/u8g2_input_value.c ****   
+  68:u8g2/csrc/u8g2_input_value.c ****   /* calculate overall height of the input value box */
+  69:u8g2/csrc/u8g2_input_value.c ****   height = 1;	/* value input line */
+  70:u8g2/csrc/u8g2_input_value.c ****   height += u8x8_GetStringLineCnt(title);
+  79              		.loc 1 70 0
+  80 0044 5846     		mov	r0, fp
+  81 0046 FFF7FEFF 		bl	u8x8_GetStringLineCnt
+  82              	.LVL9:
+  83 004a 431C     		adds	r3, r0, #1
+  84 004c DBB2     		uxtb	r3, r3
+  85              	.LVL10:
+  71:u8g2/csrc/u8g2_input_value.c **** 
+  72:u8g2/csrc/u8g2_input_value.c ****   /* calculate the height in pixel */
+  73:u8g2/csrc/u8g2_input_value.c ****   pixel_height = height;
+  74:u8g2/csrc/u8g2_input_value.c ****   pixel_height *= line_height;
+  86              		.loc 1 74 0
+  87 004e 03FB09F3 		mul	r3, r3, r9
+  88              	.LVL11:
+  89 0052 DBB2     		uxtb	r3, r3
+  90              	.LVL12:
+  75:u8g2/csrc/u8g2_input_value.c **** 
+  76:u8g2/csrc/u8g2_input_value.c **** 
+  77:u8g2/csrc/u8g2_input_value.c ****   /* calculate offset from top */
+  78:u8g2/csrc/u8g2_input_value.c ****   y = 0;
+  79:u8g2/csrc/u8g2_input_value.c ****   if ( pixel_height < u8g2_GetDisplayHeight(u8g2)  )
+  91              		.loc 1 79 0
+  92 0054 94F84080 		ldrb	r8, [r4, #64]	@ zero_extendqisi2
+  93 0058 9845     		cmp	r8, r3
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccDSNWBk.s 			page 4
+
+
+  94 005a 64D9     		bls	.L13
+  95              	.LVL13:
+  80:u8g2/csrc/u8g2_input_value.c ****   {
+  81:u8g2/csrc/u8g2_input_value.c ****     y = u8g2_GetDisplayHeight(u8g2);
+  82:u8g2/csrc/u8g2_input_value.c ****     y -= pixel_height;
+  96              		.loc 1 82 0
+  97 005c A8EB0308 		sub	r8, r8, r3
+  98              	.LVL14:
+  83:u8g2/csrc/u8g2_input_value.c ****     y /= 2;
+  99              		.loc 1 83 0
+ 100 0060 C8F34608 		ubfx	r8, r8, #1, #7
+ 101              	.LVL15:
+ 102              	.L2:
+  84:u8g2/csrc/u8g2_input_value.c ****   }
+  85:u8g2/csrc/u8g2_input_value.c ****   
+  86:u8g2/csrc/u8g2_input_value.c ****   /* calculate offset from left for the label */
+  87:u8g2/csrc/u8g2_input_value.c ****   x = 0;
+  88:u8g2/csrc/u8g2_input_value.c ****   pixel_width = u8g2_GetUTF8Width(u8g2, pre);
+ 103              		.loc 1 88 0
+ 104 0064 0399     		ldr	r1, [sp, #12]
+ 105 0066 2046     		mov	r0, r4
+ 106              	.LVL16:
+ 107 0068 FFF7FEFF 		bl	u8g2_GetUTF8Width
+ 108              	.LVL17:
+ 109 006c 0546     		mov	r5, r0
+ 110              	.LVL18:
+  89:u8g2/csrc/u8g2_input_value.c ****   pixel_width += u8g2_GetUTF8Width(u8g2, "0") * digits;
+ 111              		.loc 1 89 0
+ 112 006e 3C49     		ldr	r1, .L20
+ 113 0070 2046     		mov	r0, r4
+ 114 0072 FFF7FEFF 		bl	u8g2_GetUTF8Width
+ 115              	.LVL19:
+ 116 0076 049B     		ldr	r3, [sp, #16]
+ 117 0078 00FB0355 		mla	r5, r0, r3, r5
+ 118              	.LVL20:
+ 119 007c EDB2     		uxtb	r5, r5
+ 120              	.LVL21:
+  90:u8g2/csrc/u8g2_input_value.c ****   pixel_width += u8g2_GetUTF8Width(u8g2, post);
+ 121              		.loc 1 90 0
+ 122 007e 1599     		ldr	r1, [sp, #84]
+ 123 0080 2046     		mov	r0, r4
+ 124 0082 FFF7FEFF 		bl	u8g2_GetUTF8Width
+ 125              	.LVL22:
+ 126 0086 2844     		add	r0, r0, r5
+ 127 0088 C0B2     		uxtb	r0, r0
+ 128              	.LVL23:
+  91:u8g2/csrc/u8g2_input_value.c ****   if ( pixel_width < u8g2_GetDisplayWidth(u8g2) )
+ 129              		.loc 1 91 0
+ 130 008a 94F83F70 		ldrb	r7, [r4, #63]	@ zero_extendqisi2
+ 131 008e 8742     		cmp	r7, r0
+ 132 0090 4CD9     		bls	.L14
+ 133              	.LVL24:
+  92:u8g2/csrc/u8g2_input_value.c ****   {
+  93:u8g2/csrc/u8g2_input_value.c ****     x = u8g2_GetDisplayWidth(u8g2);
+  94:u8g2/csrc/u8g2_input_value.c ****     x -= pixel_width;
+ 134              		.loc 1 94 0
+ 135 0092 3F1A     		subs	r7, r7, r0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccDSNWBk.s 			page 5
+
+
+ 136              	.LVL25:
+  95:u8g2/csrc/u8g2_input_value.c ****     x /= 2;
+ 137              		.loc 1 95 0
+ 138 0094 C7F34607 		ubfx	r7, r7, #1, #7
+ 139              	.LVL26:
+ 140 0098 4E46     		mov	r6, r9
+ 141              	.LVL27:
+ 142              	.L4:
+  96:u8g2/csrc/u8g2_input_value.c ****   }
+  97:u8g2/csrc/u8g2_input_value.c ****   
+  98:u8g2/csrc/u8g2_input_value.c ****   /* event loop */
+  99:u8g2/csrc/u8g2_input_value.c ****   for(;;)
+ 100:u8g2/csrc/u8g2_input_value.c ****   {
+ 101:u8g2/csrc/u8g2_input_value.c ****     u8g2_FirstPage(u8g2);
+ 143              		.loc 1 101 0
+ 144 009a 2046     		mov	r0, r4
+ 145 009c FFF7FEFF 		bl	u8g2_FirstPage
+ 146              	.LVL28:
+ 147              	.L5:
+ 102:u8g2/csrc/u8g2_input_value.c ****     do
+ 103:u8g2/csrc/u8g2_input_value.c ****     {
+ 104:u8g2/csrc/u8g2_input_value.c ****       /* render */
+ 105:u8g2/csrc/u8g2_input_value.c ****       yy = y;
+ 106:u8g2/csrc/u8g2_input_value.c ****       yy += u8g2_DrawUTF8Lines(u8g2, 0, yy, u8g2_GetDisplayWidth(u8g2), line_height, title);
+ 148              		.loc 1 106 0 discriminator 1
+ 149 00a0 94F83F30 		ldrb	r3, [r4, #63]	@ zero_extendqisi2
+ 150 00a4 CDF804B0 		str	fp, [sp, #4]
+ 151 00a8 0096     		str	r6, [sp]
+ 152 00aa 4246     		mov	r2, r8
+ 153 00ac 0021     		movs	r1, #0
+ 154 00ae 2046     		mov	r0, r4
+ 155 00b0 FFF7FEFF 		bl	u8g2_DrawUTF8Lines
+ 156              	.LVL29:
+ 157 00b4 4044     		add	r0, r0, r8
+ 158 00b6 5FFA80F9 		uxtb	r9, r0
+ 159              	.LVL30:
+ 107:u8g2/csrc/u8g2_input_value.c ****       xx = x;
+ 108:u8g2/csrc/u8g2_input_value.c ****       xx += u8g2_DrawUTF8(u8g2, xx, yy, pre);
+ 160              		.loc 1 108 0 discriminator 1
+ 161 00ba 039B     		ldr	r3, [sp, #12]
+ 162 00bc 4A46     		mov	r2, r9
+ 163 00be 3946     		mov	r1, r7
+ 164 00c0 2046     		mov	r0, r4
+ 165 00c2 FFF7FEFF 		bl	u8g2_DrawUTF8
+ 166              	.LVL31:
+ 167 00c6 3844     		add	r0, r0, r7
+ 168 00c8 C5B2     		uxtb	r5, r0
+ 169              	.LVL32:
+ 109:u8g2/csrc/u8g2_input_value.c ****       xx += u8g2_DrawUTF8(u8g2, xx, yy, u8x8_u8toa(local_value, digits));
+ 170              		.loc 1 109 0 discriminator 1
+ 171 00ca 0499     		ldr	r1, [sp, #16]
+ 172 00cc 5046     		mov	r0, r10
+ 173 00ce FFF7FEFF 		bl	u8x8_u8toa
+ 174              	.LVL33:
+ 175 00d2 0346     		mov	r3, r0
+ 176 00d4 4A46     		mov	r2, r9
+ 177 00d6 2946     		mov	r1, r5
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccDSNWBk.s 			page 6
+
+
+ 178 00d8 2046     		mov	r0, r4
+ 179 00da FFF7FEFF 		bl	u8g2_DrawUTF8
+ 180              	.LVL34:
+ 181 00de 2844     		add	r0, r0, r5
+ 182              	.LVL35:
+ 110:u8g2/csrc/u8g2_input_value.c ****       u8g2_DrawUTF8(u8g2, xx, yy, post);
+ 183              		.loc 1 110 0 discriminator 1
+ 184 00e0 159B     		ldr	r3, [sp, #84]
+ 185 00e2 4A46     		mov	r2, r9
+ 186 00e4 C1B2     		uxtb	r1, r0
+ 187 00e6 2046     		mov	r0, r4
+ 188              	.LVL36:
+ 189 00e8 FFF7FEFF 		bl	u8g2_DrawUTF8
+ 190              	.LVL37:
+ 111:u8g2/csrc/u8g2_input_value.c ****     } while( u8g2_NextPage(u8g2) );
+ 191              		.loc 1 111 0 discriminator 1
+ 192 00ec 2046     		mov	r0, r4
+ 193 00ee FFF7FEFF 		bl	u8g2_NextPage
+ 194              	.LVL38:
+ 195 00f2 0546     		mov	r5, r0
+ 196 00f4 0028     		cmp	r0, #0
+ 197 00f6 D3D1     		bne	.L5
+ 198              	.L12:
+ 112:u8g2/csrc/u8g2_input_value.c ****     
+ 113:u8g2/csrc/u8g2_input_value.c **** #ifdef U8G2_REF_MAN_PIC
+ 114:u8g2/csrc/u8g2_input_value.c ****       return 0;
+ 115:u8g2/csrc/u8g2_input_value.c **** #endif
+ 116:u8g2/csrc/u8g2_input_value.c ****     
+ 117:u8g2/csrc/u8g2_input_value.c ****     for(;;)
+ 118:u8g2/csrc/u8g2_input_value.c ****     {
+ 119:u8g2/csrc/u8g2_input_value.c ****       event = u8x8_GetMenuEvent(u8g2_GetU8x8(u8g2));
+ 199              		.loc 1 119 0
+ 200 00f8 2046     		mov	r0, r4
+ 201 00fa FFF7FEFF 		bl	u8x8_GetMenuEvent
+ 202              	.LVL39:
+ 120:u8g2/csrc/u8g2_input_value.c ****       if ( event == U8X8_MSG_GPIO_MENU_SELECT )
+ 203              		.loc 1 120 0
+ 204 00fe 5028     		cmp	r0, #80
+ 205 0100 1DD0     		beq	.L19
+ 121:u8g2/csrc/u8g2_input_value.c ****       {
+ 122:u8g2/csrc/u8g2_input_value.c **** 	*value = local_value;
+ 123:u8g2/csrc/u8g2_input_value.c **** 	return 1;
+ 124:u8g2/csrc/u8g2_input_value.c ****       }
+ 125:u8g2/csrc/u8g2_input_value.c ****       else if ( event == U8X8_MSG_GPIO_MENU_HOME )
+ 206              		.loc 1 125 0
+ 207 0102 5328     		cmp	r0, #83
+ 208 0104 1FD0     		beq	.L7
+ 126:u8g2/csrc/u8g2_input_value.c ****       {
+ 127:u8g2/csrc/u8g2_input_value.c **** 	return 0;
+ 128:u8g2/csrc/u8g2_input_value.c ****       }
+ 129:u8g2/csrc/u8g2_input_value.c ****       else if ( event == U8X8_MSG_GPIO_MENU_NEXT || event == U8X8_MSG_GPIO_MENU_UP )
+ 209              		.loc 1 129 0
+ 210 0106 5128     		cmp	r0, #81
+ 211 0108 21D0     		beq	.L8
+ 212              		.loc 1 129 0 is_stmt 0 discriminator 1
+ 213 010a 5428     		cmp	r0, #84
+ 214 010c 1FD0     		beq	.L8
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccDSNWBk.s 			page 7
+
+
+ 130:u8g2/csrc/u8g2_input_value.c ****       {
+ 131:u8g2/csrc/u8g2_input_value.c **** 	if ( local_value >= hi )
+ 132:u8g2/csrc/u8g2_input_value.c **** 	  local_value = lo;
+ 133:u8g2/csrc/u8g2_input_value.c **** 	else
+ 134:u8g2/csrc/u8g2_input_value.c **** 	  local_value++;
+ 135:u8g2/csrc/u8g2_input_value.c **** 	break;
+ 136:u8g2/csrc/u8g2_input_value.c ****       }
+ 137:u8g2/csrc/u8g2_input_value.c ****       else if ( event == U8X8_MSG_GPIO_MENU_PREV || event == U8X8_MSG_GPIO_MENU_DOWN )
+ 215              		.loc 1 137 0 is_stmt 1
+ 216 010e 5228     		cmp	r0, #82
+ 217 0110 01D0     		beq	.L11
+ 218              		.loc 1 137 0 is_stmt 0 discriminator 1
+ 219 0112 5528     		cmp	r0, #85
+ 220 0114 F0D1     		bne	.L12
+ 221              	.L11:
+ 138:u8g2/csrc/u8g2_input_value.c ****       {
+ 139:u8g2/csrc/u8g2_input_value.c **** 	if ( local_value <= lo )
+ 222              		.loc 1 139 0 is_stmt 1
+ 223 0116 069B     		ldr	r3, [sp, #24]
+ 224 0118 9A45     		cmp	r10, r3
+ 225 011a 0DD9     		bls	.L16
+ 140:u8g2/csrc/u8g2_input_value.c **** 	  local_value = hi;
+ 141:u8g2/csrc/u8g2_input_value.c **** 	else
+ 142:u8g2/csrc/u8g2_input_value.c **** 	  local_value--;
+ 226              		.loc 1 142 0
+ 227 011c 0AF1FF3A 		add	r10, r10, #-1
+ 228              	.LVL40:
+ 229 0120 5FFA8AFA 		uxtb	r10, r10
+ 230              	.LVL41:
+ 231 0124 B9E7     		b	.L4
+ 232              	.LVL42:
+ 233              	.L13:
+  78:u8g2/csrc/u8g2_input_value.c ****   if ( pixel_height < u8g2_GetDisplayHeight(u8g2)  )
+ 234              		.loc 1 78 0
+ 235 0126 4FF00008 		mov	r8, #0
+ 236 012a 9BE7     		b	.L2
+ 237              	.LVL43:
+ 238              	.L14:
+  87:u8g2/csrc/u8g2_input_value.c ****   pixel_width = u8g2_GetUTF8Width(u8g2, pre);
+ 239              		.loc 1 87 0
+ 240 012c 0027     		movs	r7, #0
+ 241 012e 4E46     		mov	r6, r9
+ 242 0130 B3E7     		b	.L4
+ 243              	.LVL44:
+ 244              	.L15:
+ 132:u8g2/csrc/u8g2_input_value.c **** 	else
+ 245              		.loc 1 132 0
+ 246 0132 DDF818A0 		ldr	r10, [sp, #24]
+ 247              	.LVL45:
+ 248 0136 B0E7     		b	.L4
+ 249              	.LVL46:
+ 250              	.L16:
+ 140:u8g2/csrc/u8g2_input_value.c **** 	else
+ 251              		.loc 1 140 0
+ 252 0138 DDF814A0 		ldr	r10, [sp, #20]
+ 253              	.LVL47:
+ 254 013c ADE7     		b	.L4
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccDSNWBk.s 			page 8
+
+
+ 255              	.LVL48:
+ 256              	.L19:
+ 122:u8g2/csrc/u8g2_input_value.c **** 	return 1;
+ 257              		.loc 1 122 0
+ 258 013e 079B     		ldr	r3, [sp, #28]
+ 259 0140 83F800A0 		strb	r10, [r3]
+ 123:u8g2/csrc/u8g2_input_value.c ****       }
+ 260              		.loc 1 123 0
+ 261 0144 0125     		movs	r5, #1
+ 262              	.L7:
+ 143:u8g2/csrc/u8g2_input_value.c **** 	break;
+ 144:u8g2/csrc/u8g2_input_value.c ****       }        
+ 145:u8g2/csrc/u8g2_input_value.c ****     }
+ 146:u8g2/csrc/u8g2_input_value.c ****   }
+ 147:u8g2/csrc/u8g2_input_value.c ****   
+ 148:u8g2/csrc/u8g2_input_value.c ****   /* never reached */
+ 149:u8g2/csrc/u8g2_input_value.c ****   //return r;  
+ 150:u8g2/csrc/u8g2_input_value.c **** }
+ 263              		.loc 1 150 0
+ 264 0146 2846     		mov	r0, r5
+ 265              	.LVL49:
+ 266 0148 09B0     		add	sp, sp, #36
+ 267              	.LCFI2:
+ 268              		.cfi_remember_state
+ 269              		.cfi_def_cfa_offset 36
+ 270              		@ sp needed
+ 271 014a BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 272              	.LVL50:
+ 273              	.L8:
+ 274              	.LCFI3:
+ 275              		.cfi_restore_state
+ 131:u8g2/csrc/u8g2_input_value.c **** 	  local_value = lo;
+ 276              		.loc 1 131 0
+ 277 014e 059B     		ldr	r3, [sp, #20]
+ 278 0150 9A45     		cmp	r10, r3
+ 279 0152 EED2     		bcs	.L15
+ 134:u8g2/csrc/u8g2_input_value.c **** 	break;
+ 280              		.loc 1 134 0
+ 281 0154 0AF1010A 		add	r10, r10, #1
+ 282              	.LVL51:
+ 283 0158 5FFA8AFA 		uxtb	r10, r10
+ 284              	.LVL52:
+ 285 015c 9DE7     		b	.L4
+ 286              	.L21:
+ 287 015e 00BF     		.align	2
+ 288              	.L20:
+ 289 0160 00000000 		.word	.LC0
+ 290              		.cfi_endproc
+ 291              	.LFE0:
+ 293              		.section	.rodata.u8g2_UserInterfaceInputValue.str1.4,"aMS",%progbits,1
+ 294              		.align	2
+ 295              	.LC0:
+ 296 0000 3000     		.ascii	"0\000"
+ 297              		.text
+ 298              	.Letext0:
+ 299              		.file 2 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_defau
+ 300              		.file 3 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_stdint.h"
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccDSNWBk.s 			page 9
+
+
+ 301              		.file 4 "u8g2/csrc/u8x8.h"
+ 302              		.file 5 "u8g2/csrc/u8g2.h"
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccDSNWBk.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 u8g2_input_value.c
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccDSNWBk.s:16     .text.u8g2_UserInterfaceInputValue:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccDSNWBk.s:23     .text.u8g2_UserInterfaceInputValue:0000000000000000 u8g2_UserInterfaceInputValue
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccDSNWBk.s:289    .text.u8g2_UserInterfaceInputValue:0000000000000160 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccDSNWBk.s:294    .rodata.u8g2_UserInterfaceInputValue.str1.4:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+u8g2_SetFontDirection
+u8g2_SetFontPosBaseline
+u8x8_GetStringLineCnt
+u8g2_GetUTF8Width
+u8g2_FirstPage
+u8g2_DrawUTF8Lines
+u8g2_DrawUTF8
+u8x8_u8toa
+u8g2_NextPage
+u8x8_GetMenuEvent

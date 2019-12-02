@@ -1,0 +1,1293 @@
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"system.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.Save_UVTime_BKUP,"ax",%progbits
+  16              		.align	1
+  17              		.syntax unified
+  18              		.thumb
+  19              		.thumb_func
+  20              		.fpu softvfp
+  22              	Save_UVTime_BKUP:
+  23              	.LFB73:
+  24              		.file 1 "Src/system.c"
+   1:Src/system.c  **** #include "system.h"
+   2:Src/system.c  **** #include "config.h"
+   3:Src/system.c  **** #include "clock_rtc.h"
+   4:Src/system.c  **** #include "main_screen.h"
+   5:Src/system.c  **** #include "info_screen.h"
+   6:Src/system.c  **** #include <string.h>
+   7:Src/system.c  **** #include <stdio.h>
+   8:Src/system.c  **** #include "menu.h"
+   9:Src/system.c  **** 
+  10:Src/system.c  **** SYS_STRUCT_T sys;
+  11:Src/system.c  **** DEVICE_T dev;
+  12:Src/system.c  **** 
+  13:Src/system.c  **** uint8_t toggle = 0;
+  14:Src/system.c  **** 
+  15:Src/system.c  **** static void Save_UVTime_BKUP(void);
+  16:Src/system.c  **** static void Load_UVTime_BKUP(void);
+  17:Src/system.c  **** static void Load_SysTime(void);
+  18:Src/system.c  **** 
+  19:Src/system.c  **** void System_Init(void)
+  20:Src/system.c  **** {
+  21:Src/system.c  **** 	CFG_Load();
+  22:Src/system.c  **** 	Device_Load_Status();
+  23:Src/system.c  **** 	Load_UVTime_BKUP();
+  24:Src/system.c  **** 	Load_SysTime();
+  25:Src/system.c  **** 	dev.doorLevel = 0;
+  26:Src/system.c  **** 	Set_Backlight(sys_cfg.brightness);
+  27:Src/system.c  **** 	sys_cfg.backlight?BL_On():BL_Off();
+  28:Src/system.c  **** 	main_screen_init();
+  29:Src/system.c  **** 	sys.tick = HAL_GetTick();
+  30:Src/system.c  **** }
+  31:Src/system.c  **** 
+  32:Src/system.c  **** void Device_Save_Status(void)
+  33:Src/system.c  **** {
+  34:Src/system.c  **** 	uint16_t *savedest;
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 2
+
+
+  35:Src/system.c  **** 	savedest = (uint16_t*)&dev.status;
+  36:Src/system.c  **** 	// printf("padding: 0x%.4x\n", *(uint16_t*)(savedest));
+  37:Src/system.c  **** 	// printf("padding: 0x%.4x\n", *(uint16_t*)(savedest+1));
+  38:Src/system.c  **** 	HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR2, *(uint16_t*)(savedest));
+  39:Src/system.c  **** 	HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR3, *(uint16_t*)(savedest+1)); 
+  40:Src/system.c  **** 	//printf("padding: 0x%.8x\n", *(uint32_t*)(savedest));
+  41:Src/system.c  **** }
+  42:Src/system.c  **** 
+  43:Src/system.c  **** void Device_Load_Status(void)
+  44:Src/system.c  **** {
+  45:Src/system.c  **** 	uint32_t tmp;
+  46:Src/system.c  **** 	tmp = (uint32_t)(HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR3) << 16 | HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_
+  47:Src/system.c  **** 	memcpy(&dev.status, &tmp, 4);
+  48:Src/system.c  **** 	// printf("tmp: 0x%.8x\n", tmp);
+  49:Src/system.c  **** 	// printf("L: %d\n", dev.status.lamp);
+  50:Src/system.c  **** 	// printf("Ne: %d\n", dev.status.uv);
+  51:Src/system.c  **** 	// printf("F: %d\n", dev.status.fan);
+  52:Src/system.c  **** 	// printf("S: %d\n", dev.status.socket);
+  53:Src/system.c  **** 	if (HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR6) != DEVICE_HOLDER) 
+  54:Src/system.c  ****     {
+  55:Src/system.c  ****         dev.status.lamp = 0;
+  56:Src/system.c  ****         dev.status.uv = 0;
+  57:Src/system.c  ****         dev.status.fan = 0;
+  58:Src/system.c  ****         dev.status.socket = 0;
+  59:Src/system.c  ****         Device_Save_Status();
+  60:Src/system.c  ****         HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR6, DEVICE_HOLDER);
+  61:Src/system.c  ****     }
+  62:Src/system.c  **** }
+  63:Src/system.c  **** 
+  64:Src/system.c  **** void UV_Init_Time(uint8_t mode)
+  65:Src/system.c  **** {
+  66:Src/system.c  **** 	switch(mode)
+  67:Src/system.c  **** 	{
+  68:Src/system.c  **** 		case 1:			/* AUTO TURN OFF AFTER 15 MINUTES*/
+  69:Src/system.c  **** 			dev.UVFlag = 1;
+  70:Src/system.c  **** 			dev.UVTimeOff = 15*60;
+  71:Src/system.c  **** 			break;
+  72:Src/system.c  **** 		case 2:			/* AUTO TURN OFF AFTER 30 MINUTES*/
+  73:Src/system.c  **** 			dev.UVFlag = 1;
+  74:Src/system.c  **** 			dev.UVTimeOff = 30*60;
+  75:Src/system.c  **** 			break;
+  76:Src/system.c  **** 		case 3:			/* AUTO TURN OFF AFTER 60 MINUTES*/
+  77:Src/system.c  **** 			dev.UVFlag = 1;
+  78:Src/system.c  **** 			dev.UVTimeOff = 60*60;
+  79:Src/system.c  **** 			break;		
+  80:Src/system.c  **** 		case 4:			/* AUTO TURN OFF AFTER 120 MINUTES*/
+  81:Src/system.c  **** 			dev.UVFlag = 1;
+  82:Src/system.c  **** 			dev.UVTimeOff = 2*60*60;
+  83:Src/system.c  **** 			break;		
+  84:Src/system.c  **** 		default: 		/* MANUAL TURN OFF*/
+  85:Src/system.c  **** 			dev.UVFlag = 0;
+  86:Src/system.c  **** 			dev.UVTimeOff = 0;
+  87:Src/system.c  **** 			break;
+  88:Src/system.c  **** 	}
+  89:Src/system.c  **** 	//printf("Set: FlagUV: %d, TimeUVOff: %d\n", dev.UVFlag, dev.UVTimeOff);				
+  90:Src/system.c  **** }
+  91:Src/system.c  **** 
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 3
+
+
+  92:Src/system.c  **** void UV_Clear_Time(void)
+  93:Src/system.c  **** {
+  94:Src/system.c  **** 	dev.UVFlag = 0;
+  95:Src/system.c  **** 	dev.UVTimeOff = 0;
+  96:Src/system.c  **** 	Save_UVTime_BKUP();
+  97:Src/system.c  **** 	//printf("Clear: FlagUV: %d, TimeUVOff: %d\n", dev.UVFlag, dev.UVTimeOff);				
+  98:Src/system.c  **** }
+  99:Src/system.c  **** 
+ 100:Src/system.c  **** 
+ 101:Src/system.c  **** void UV_Check_Time(uint32_t time)
+ 102:Src/system.c  **** {
+ 103:Src/system.c  **** 	if((dev.UVFlag) && (time == 0))
+ 104:Src/system.c  **** 	{
+ 105:Src/system.c  **** 		//dev.UVFlag = 0;
+ 106:Src/system.c  **** 		dev.status.uv = 0;
+ 107:Src/system.c  **** 		//sys.UVTime = sys.UVTime + dev.UVTimeOff;
+ 108:Src/system.c  **** 		UV_Clear_Time();
+ 109:Src/system.c  **** 		Device_Save_Status();
+ 110:Src/system.c  **** 	}
+ 111:Src/system.c  **** 	else
+ 112:Src/system.c  **** 		dev.status.uv = dev.status.uv;
+ 113:Src/system.c  **** }
+ 114:Src/system.c  **** 
+ 115:Src/system.c  **** void System_Manager(void)
+ 116:Src/system.c  **** {
+ 117:Src/system.c  **** 	if(HAL_GetTick() - sys.tick >= 1000) //Every seconds
+ 118:Src/system.c  **** 	{
+ 119:Src/system.c  **** 		if(++toggle > TIME_PAGE*2) toggle = 0;
+ 120:Src/system.c  **** 		if(++sys.SysTime > SYSTEM_TIME_MAX)
+ 121:Src/system.c  **** 			sys.SysTime = SYSTEM_TIME_MAX;
+ 122:Src/system.c  **** 		//printf("System Time: %d s\n", sys.SysTime);
+ 123:Src/system.c  **** 		if(dev.status.fan) 
+ 124:Src/system.c  **** 			sys.FilterTime++;
+ 125:Src/system.c  **** 		//printf("FilterTime: %d s\n", sys.FilterTime);
+ 126:Src/system.c  **** 		if(dev.UVFlag)
+ 127:Src/system.c  **** 		{	
+ 128:Src/system.c  **** 			if(dev.status.uv) sys.UVTime++;
+ 129:Src/system.c  **** 			if(--dev.UVTimeOff <= 0)
+ 130:Src/system.c  **** 				dev.UVTimeOff = 0;
+ 131:Src/system.c  **** 			//printf("UVTime: %d s\n", sys.UVTime);
+ 132:Src/system.c  **** 			Save_UVTime_BKUP();
+ 133:Src/system.c  **** 		}
+ 134:Src/system.c  **** 		sys.tick = HAL_GetTick();
+ 135:Src/system.c  **** 		//printf("FlagUV: %d, TimeUVOff: %d, status: %d\n", dev.UVFlag, dev.UVTimeOff, dev.status.uv);
+ 136:Src/system.c  **** 		Save_SysTime_BKUP();
+ 137:Src/system.c  **** 		// printf("UVTime: %d \n", sys.UVTime);
+ 138:Src/system.c  **** 		// printf("FilterTime: %d \n", sys.FilterTime);
+ 139:Src/system.c  **** 		// printf("SysTime: %d \n", sys.SysTime);
+ 140:Src/system.c  **** 
+ 141:Src/system.c  **** 		/* Test save Time to BKUP */
+ 142:Src/system.c  **** 		// printf("BKtick: %d\n", (uint32_t)(HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR12) << 16 | HAL_RTCEx_BK
+ 143:Src/system.c  **** 		// printf("BKUV: %d\n", (uint32_t)(HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR14) << 16 | HAL_RTCEx_BKUP
+ 144:Src/system.c  **** 		// printf("BKFil: %d\n", (uint32_t)(HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR16) << 16 | HAL_RTCEx_BKU
+ 145:Src/system.c  **** 		// printf("BKSys: %d\n", (uint32_t)(HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR18) << 16 | HAL_RTCEx_BKU
+ 146:Src/system.c  **** 		// printf("_______\n");
+ 147:Src/system.c  **** 		// printf("Ftick: %d \n", sys_cfg.systemTime.tick);
+ 148:Src/system.c  **** 		// printf("FUV: %d \n", sys_cfg.systemTime.UVTime);
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 4
+
+
+ 149:Src/system.c  **** 		// printf("FFil: %d \n", sys_cfg.systemTime.FilterTime);
+ 150:Src/system.c  **** 		// printf("FSys: %d \n", sys_cfg.systemTime.SysTime);
+ 151:Src/system.c  **** 		// printf("_______\n");
+ 152:Src/system.c  **** 	}
+ 153:Src/system.c  **** 	if(menuIdx == 0)
+ 154:Src/system.c  **** 	{
+ 155:Src/system.c  **** 
+ 156:Src/system.c  **** 		UV_Check_Time(dev.UVTimeOff);
+ 157:Src/system.c  **** 		if(sys_cfg.viewPage == 1)
+ 158:Src/system.c  **** 	    {
+ 159:Src/system.c  **** 	        u8g2_ClearBuffer(&u8g2);
+ 160:Src/system.c  **** 	        Main_Screen_Manage();
+ 161:Src/system.c  **** 	    }
+ 162:Src/system.c  **** 	    else if(sys_cfg.viewPage == 2)
+ 163:Src/system.c  **** 	    {
+ 164:Src/system.c  **** 	        u8g2_ClearBuffer(&u8g2);
+ 165:Src/system.c  **** 	        Info_Screen_Manage();
+ 166:Src/system.c  **** 	    }
+ 167:Src/system.c  **** 	    else
+ 168:Src/system.c  **** 	    {
+ 169:Src/system.c  **** 	        if(toggle >= TIME_PAGE)
+ 170:Src/system.c  **** 	        {
+ 171:Src/system.c  **** 	          u8g2_ClearBuffer(&u8g2);
+ 172:Src/system.c  **** 	          Info_Screen_Manage();
+ 173:Src/system.c  **** 	        }
+ 174:Src/system.c  **** 	        else
+ 175:Src/system.c  **** 	        {
+ 176:Src/system.c  **** 	          u8g2_ClearBuffer(&u8g2);
+ 177:Src/system.c  **** 	          Main_Screen_Manage();
+ 178:Src/system.c  **** 	        }
+ 179:Src/system.c  **** 	    }
+ 180:Src/system.c  **** 	}
+ 181:Src/system.c  **** }
+ 182:Src/system.c  **** 
+ 183:Src/system.c  **** static void Save_UVTime_BKUP(void)
+ 184:Src/system.c  **** {
+  25              		.loc 1 184 0
+  26              		.cfi_startproc
+  27              		@ args = 0, pretend = 0, frame = 0
+  28              		@ frame_needed = 0, uses_anonymous_args = 0
+  29 0000 38B5     		push	{r3, r4, r5, lr}
+  30              	.LCFI0:
+  31              		.cfi_def_cfa_offset 16
+  32              		.cfi_offset 3, -16
+  33              		.cfi_offset 4, -12
+  34              		.cfi_offset 5, -8
+  35              		.cfi_offset 14, -4
+  36              	.LVL0:
+ 185:Src/system.c  **** 	uint16_t *savedest;
+ 186:Src/system.c  **** 	savedest = (uint16_t*)&dev.UVTimeOff;
+ 187:Src/system.c  **** 	HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR4, dev.UVFlag);
+  37              		.loc 1 187 0
+  38 0002 064D     		ldr	r5, .L3
+  39 0004 064C     		ldr	r4, .L3+4
+  40 0006 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+  41 0008 0421     		movs	r1, #4
+  42 000a 2046     		mov	r0, r4
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 5
+
+
+  43 000c FFF7FEFF 		bl	HAL_RTCEx_BKUPWrite
+  44              	.LVL1:
+ 188:Src/system.c  **** 	/* Save Time 32bit TimeUVOff, value use 16bit */
+ 189:Src/system.c  **** 	HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR5, *(uint16_t*)(savedest)); 	
+  45              		.loc 1 189 0
+  46 0010 2A89     		ldrh	r2, [r5, #8]
+  47 0012 0521     		movs	r1, #5
+  48 0014 2046     		mov	r0, r4
+  49 0016 FFF7FEFF 		bl	HAL_RTCEx_BKUPWrite
+  50              	.LVL2:
+ 190:Src/system.c  **** 	//HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR6, *(uint16_t*)(savedest + 1)); 
+ 191:Src/system.c  **** 	//printf("padding: 0x%.8x\n", *(uint32_t*)(savedest));
+ 192:Src/system.c  **** }
+  51              		.loc 1 192 0
+  52 001a 38BD     		pop	{r3, r4, r5, pc}
+  53              	.L4:
+  54              		.align	2
+  55              	.L3:
+  56 001c 00000000 		.word	dev
+  57 0020 00000000 		.word	hrtc
+  58              		.cfi_endproc
+  59              	.LFE73:
+  61              		.section	.text.Load_UVTime_BKUP,"ax",%progbits
+  62              		.align	1
+  63              		.syntax unified
+  64              		.thumb
+  65              		.thumb_func
+  66              		.fpu softvfp
+  68              	Load_UVTime_BKUP:
+  69              	.LFB74:
+ 193:Src/system.c  **** 
+ 194:Src/system.c  **** static void Load_UVTime_BKUP(void)
+ 195:Src/system.c  **** {
+  70              		.loc 1 195 0
+  71              		.cfi_startproc
+  72              		@ args = 0, pretend = 0, frame = 0
+  73              		@ frame_needed = 0, uses_anonymous_args = 0
+  74 0000 70B5     		push	{r4, r5, r6, lr}
+  75              	.LCFI1:
+  76              		.cfi_def_cfa_offset 16
+  77              		.cfi_offset 4, -16
+  78              		.cfi_offset 5, -12
+  79              		.cfi_offset 6, -8
+  80              		.cfi_offset 14, -4
+ 196:Src/system.c  **** 	dev.UVFlag = HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR4);
+  81              		.loc 1 196 0
+  82 0002 134C     		ldr	r4, .L8
+  83 0004 0421     		movs	r1, #4
+  84 0006 2046     		mov	r0, r4
+  85 0008 FFF7FEFF 		bl	HAL_RTCEx_BKUPRead
+  86              	.LVL3:
+  87 000c 114E     		ldr	r6, .L8+4
+  88 000e 3070     		strb	r0, [r6]
+ 197:Src/system.c  **** 	dev.UVTimeOff = (uint32_t)(HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR6) << 16 | HAL_RTCEx_BKUPRead(&hrtc
+  89              		.loc 1 197 0
+  90 0010 0621     		movs	r1, #6
+  91 0012 2046     		mov	r0, r4
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 6
+
+
+  92 0014 FFF7FEFF 		bl	HAL_RTCEx_BKUPRead
+  93              	.LVL4:
+  94 0018 0504     		lsls	r5, r0, #16
+  95 001a 0521     		movs	r1, #5
+  96 001c 2046     		mov	r0, r4
+  97 001e FFF7FEFF 		bl	HAL_RTCEx_BKUPRead
+  98              	.LVL5:
+  99 0022 2843     		orrs	r0, r0, r5
+ 100 0024 B060     		str	r0, [r6, #8]
+ 198:Src/system.c  **** 	// printf("UVFlag: %d\n", dev.UVFlag);
+ 199:Src/system.c  **** 	// printf("UVTimeOff: %d\n", dev.UVTimeOff);
+ 200:Src/system.c  **** 	if (HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR1) != RTC_HOLDER) 
+ 101              		.loc 1 200 0
+ 102 0026 0121     		movs	r1, #1
+ 103 0028 2046     		mov	r0, r4
+ 104 002a FFF7FEFF 		bl	HAL_RTCEx_BKUPRead
+ 105              	.LVL6:
+ 106 002e 4AF2A553 		movw	r3, #42405
+ 107 0032 9842     		cmp	r0, r3
+ 108 0034 0AD0     		beq	.L5
+ 201:Src/system.c  ****     {
+ 202:Src/system.c  ****         dev.UVFlag = 0;
+ 109              		.loc 1 202 0
+ 110 0036 0022     		movs	r2, #0
+ 111 0038 3270     		strb	r2, [r6]
+ 203:Src/system.c  ****         dev.UVTimeOff = 0;
+ 112              		.loc 1 203 0
+ 113 003a B260     		str	r2, [r6, #8]
+ 204:Src/system.c  ****         Save_UVTime_BKUP();
+ 114              		.loc 1 204 0
+ 115 003c FFF7FEFF 		bl	Save_UVTime_BKUP
+ 116              	.LVL7:
+ 205:Src/system.c  ****         HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR1, RTC_HOLDER);
+ 117              		.loc 1 205 0
+ 118 0040 4AF2A552 		movw	r2, #42405
+ 119 0044 0121     		movs	r1, #1
+ 120 0046 2046     		mov	r0, r4
+ 121 0048 FFF7FEFF 		bl	HAL_RTCEx_BKUPWrite
+ 122              	.LVL8:
+ 123              	.L5:
+ 206:Src/system.c  ****     }
+ 207:Src/system.c  **** }
+ 124              		.loc 1 207 0
+ 125 004c 70BD     		pop	{r4, r5, r6, pc}
+ 126              	.L9:
+ 127 004e 00BF     		.align	2
+ 128              	.L8:
+ 129 0050 00000000 		.word	hrtc
+ 130 0054 00000000 		.word	dev
+ 131              		.cfi_endproc
+ 132              	.LFE74:
+ 134              		.section	.text.Load_SysTime,"ax",%progbits
+ 135              		.align	1
+ 136              		.syntax unified
+ 137              		.thumb
+ 138              		.thumb_func
+ 139              		.fpu softvfp
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 7
+
+
+ 141              	Load_SysTime:
+ 142              	.LFB76:
+ 208:Src/system.c  **** 
+ 209:Src/system.c  **** void Save_SysTime_BKUP(void)
+ 210:Src/system.c  **** {
+ 211:Src/system.c  **** 	uint32_t tmp = 0U;
+ 212:Src/system.c  **** 	uint16_t i, *savedest;
+ 213:Src/system.c  **** 	savedest = (uint16_t*)&sys;
+ 214:Src/system.c  **** 	for(i = 0; i < sizeof(SYS_STRUCT_T)/2; i++)
+ 215:Src/system.c  **** 	{ 
+ 216:Src/system.c  **** 		// printf("savedest %d :  %d\n", i, *(uint16_t*)(savedest + i));
+ 217:Src/system.c  **** 		tmp = (uint32_t)BKP_BASE; 
+ 218:Src/system.c  **** 		tmp += ((RTC_BKP_DR11 + i)* 4U);
+ 219:Src/system.c  **** 		*(__IO uint32_t *) tmp = (*(uint16_t*)(savedest + i) & BKP_DR1_D);
+ 220:Src/system.c  **** 	}
+ 221:Src/system.c  **** }
+ 222:Src/system.c  **** 
+ 223:Src/system.c  **** static void Load_SysTime(void)
+ 224:Src/system.c  **** {
+ 143              		.loc 1 224 0
+ 144              		.cfi_startproc
+ 145              		@ args = 0, pretend = 0, frame = 0
+ 146              		@ frame_needed = 0, uses_anonymous_args = 0
+ 147 0000 70B5     		push	{r4, r5, r6, lr}
+ 148              	.LCFI2:
+ 149              		.cfi_def_cfa_offset 16
+ 150              		.cfi_offset 4, -16
+ 151              		.cfi_offset 5, -12
+ 152              		.cfi_offset 6, -8
+ 153              		.cfi_offset 14, -4
+ 225:Src/system.c  **** 	sys.tick = (uint32_t)(HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR12) << 16 | HAL_RTCEx_BKUPRead(&hrtc, RT
+ 154              		.loc 1 225 0
+ 155 0002 204C     		ldr	r4, .L13
+ 156 0004 1121     		movs	r1, #17
+ 157 0006 2046     		mov	r0, r4
+ 158 0008 FFF7FEFF 		bl	HAL_RTCEx_BKUPRead
+ 159              	.LVL9:
+ 160 000c 0504     		lsls	r5, r0, #16
+ 161 000e 1021     		movs	r1, #16
+ 162 0010 2046     		mov	r0, r4
+ 163 0012 FFF7FEFF 		bl	HAL_RTCEx_BKUPRead
+ 164              	.LVL10:
+ 165 0016 2843     		orrs	r0, r0, r5
+ 166 0018 1B4D     		ldr	r5, .L13+4
+ 167 001a 2860     		str	r0, [r5]
+ 226:Src/system.c  **** 	sys.UVTime = (uint32_t)(HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR14) << 16 | HAL_RTCEx_BKUPRead(&hrtc, 
+ 168              		.loc 1 226 0
+ 169 001c 1321     		movs	r1, #19
+ 170 001e 2046     		mov	r0, r4
+ 171 0020 FFF7FEFF 		bl	HAL_RTCEx_BKUPRead
+ 172              	.LVL11:
+ 173 0024 0604     		lsls	r6, r0, #16
+ 174 0026 1221     		movs	r1, #18
+ 175 0028 2046     		mov	r0, r4
+ 176 002a FFF7FEFF 		bl	HAL_RTCEx_BKUPRead
+ 177              	.LVL12:
+ 178 002e 3043     		orrs	r0, r0, r6
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 8
+
+
+ 179 0030 6860     		str	r0, [r5, #4]
+ 227:Src/system.c  **** 	sys.FilterTime = (uint32_t)(HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR16) << 16 | HAL_RTCEx_BKUPRead(&hr
+ 180              		.loc 1 227 0
+ 181 0032 1521     		movs	r1, #21
+ 182 0034 2046     		mov	r0, r4
+ 183 0036 FFF7FEFF 		bl	HAL_RTCEx_BKUPRead
+ 184              	.LVL13:
+ 185 003a 0604     		lsls	r6, r0, #16
+ 186 003c 1421     		movs	r1, #20
+ 187 003e 2046     		mov	r0, r4
+ 188 0040 FFF7FEFF 		bl	HAL_RTCEx_BKUPRead
+ 189              	.LVL14:
+ 190 0044 3043     		orrs	r0, r0, r6
+ 191 0046 A860     		str	r0, [r5, #8]
+ 228:Src/system.c  **** 	sys.SysTime = (uint32_t)(HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR18) << 16 | HAL_RTCEx_BKUPRead(&hrtc,
+ 192              		.loc 1 228 0
+ 193 0048 1721     		movs	r1, #23
+ 194 004a 2046     		mov	r0, r4
+ 195 004c FFF7FEFF 		bl	HAL_RTCEx_BKUPRead
+ 196              	.LVL15:
+ 197 0050 0604     		lsls	r6, r0, #16
+ 198 0052 1621     		movs	r1, #22
+ 199 0054 2046     		mov	r0, r4
+ 200 0056 FFF7FEFF 		bl	HAL_RTCEx_BKUPRead
+ 201              	.LVL16:
+ 202 005a 3043     		orrs	r0, r0, r6
+ 203 005c E860     		str	r0, [r5, #12]
+ 229:Src/system.c  **** 	if (HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR19) != TIME_HOLDER) 
+ 204              		.loc 1 229 0
+ 205 005e 1821     		movs	r1, #24
+ 206 0060 2046     		mov	r0, r4
+ 207 0062 FFF7FEFF 		bl	HAL_RTCEx_BKUPRead
+ 208              	.LVL17:
+ 209 0066 4BF6BB33 		movw	r3, #48059
+ 210 006a 9842     		cmp	r0, r3
+ 211 006c 09D0     		beq	.L10
+ 230:Src/system.c  ****     {
+ 231:Src/system.c  ****     	// Read from Flash
+ 232:Src/system.c  ****         sys = sys_cfg.systemTime;
+ 212              		.loc 1 232 0
+ 213 006e 074B     		ldr	r3, .L13+8
+ 214 0070 0FCB     		ldm	r3, {r0, r1, r2, r3}
+ 215 0072 85E80F00 		stm	r5, {r0, r1, r2, r3}
+ 233:Src/system.c  ****         HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR19, TIME_HOLDER);
+ 216              		.loc 1 233 0
+ 217 0076 4BF6BB32 		movw	r2, #48059
+ 218 007a 1821     		movs	r1, #24
+ 219 007c 0148     		ldr	r0, .L13
+ 220 007e FFF7FEFF 		bl	HAL_RTCEx_BKUPWrite
+ 221              	.LVL18:
+ 222              	.L10:
+ 234:Src/system.c  ****     }
+ 235:Src/system.c  **** }...
+ 223              		.loc 1 235 0
+ 224 0082 70BD     		pop	{r4, r5, r6, pc}
+ 225              	.L14:
+ 226              		.align	2
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 9
+
+
+ 227              	.L13:
+ 228 0084 00000000 		.word	hrtc
+ 229 0088 00000000 		.word	sys
+ 230 008c 0C000000 		.word	sys_cfg+12
+ 231              		.cfi_endproc
+ 232              	.LFE76:
+ 234              		.section	.text.Device_Save_Status,"ax",%progbits
+ 235              		.align	1
+ 236              		.global	Device_Save_Status
+ 237              		.syntax unified
+ 238              		.thumb
+ 239              		.thumb_func
+ 240              		.fpu softvfp
+ 242              	Device_Save_Status:
+ 243              	.LFB67:
+  33:Src/system.c  **** {
+ 244              		.loc 1 33 0
+ 245              		.cfi_startproc
+ 246              		@ args = 0, pretend = 0, frame = 0
+ 247              		@ frame_needed = 0, uses_anonymous_args = 0
+ 248 0000 38B5     		push	{r3, r4, r5, lr}
+ 249              	.LCFI3:
+ 250              		.cfi_def_cfa_offset 16
+ 251              		.cfi_offset 3, -16
+ 252              		.cfi_offset 4, -12
+ 253              		.cfi_offset 5, -8
+ 254              		.cfi_offset 14, -4
+ 255              	.LVL19:
+  38:Src/system.c  **** 	HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR2, *(uint16_t*)(savedest));
+ 256              		.loc 1 38 0
+ 257 0002 064D     		ldr	r5, .L17
+ 258 0004 064C     		ldr	r4, .L17+4
+ 259 0006 6A88     		ldrh	r2, [r5, #2]
+ 260 0008 0221     		movs	r1, #2
+ 261 000a 2046     		mov	r0, r4
+ 262 000c FFF7FEFF 		bl	HAL_RTCEx_BKUPWrite
+ 263              	.LVL20:
+  39:Src/system.c  **** 	HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR3, *(uint16_t*)(savedest+1)); 
+ 264              		.loc 1 39 0
+ 265 0010 AA88     		ldrh	r2, [r5, #4]
+ 266 0012 0321     		movs	r1, #3
+ 267 0014 2046     		mov	r0, r4
+ 268 0016 FFF7FEFF 		bl	HAL_RTCEx_BKUPWrite
+ 269              	.LVL21:
+  41:Src/system.c  **** }
+ 270              		.loc 1 41 0
+ 271 001a 38BD     		pop	{r3, r4, r5, pc}
+ 272              	.L18:
+ 273              		.align	2
+ 274              	.L17:
+ 275 001c 00000000 		.word	dev
+ 276 0020 00000000 		.word	hrtc
+ 277              		.cfi_endproc
+ 278              	.LFE67:
+ 280              		.section	.text.Device_Load_Status,"ax",%progbits
+ 281              		.align	1
+ 282              		.global	Device_Load_Status
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 10
+
+
+ 283              		.syntax unified
+ 284              		.thumb
+ 285              		.thumb_func
+ 286              		.fpu softvfp
+ 288              	Device_Load_Status:
+ 289              	.LFB68:
+  44:Src/system.c  **** {
+ 290              		.loc 1 44 0
+ 291              		.cfi_startproc
+ 292              		@ args = 0, pretend = 0, frame = 0
+ 293              		@ frame_needed = 0, uses_anonymous_args = 0
+ 294 0000 38B5     		push	{r3, r4, r5, lr}
+ 295              	.LCFI4:
+ 296              		.cfi_def_cfa_offset 16
+ 297              		.cfi_offset 3, -16
+ 298              		.cfi_offset 4, -12
+ 299              		.cfi_offset 5, -8
+ 300              		.cfi_offset 14, -4
+  46:Src/system.c  **** 	tmp = (uint32_t)(HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR3) << 16 | HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_
+ 301              		.loc 1 46 0
+ 302 0002 124C     		ldr	r4, .L22
+ 303 0004 0321     		movs	r1, #3
+ 304 0006 2046     		mov	r0, r4
+ 305 0008 FFF7FEFF 		bl	HAL_RTCEx_BKUPRead
+ 306              	.LVL22:
+ 307 000c 0504     		lsls	r5, r0, #16
+ 308 000e 0221     		movs	r1, #2
+ 309 0010 2046     		mov	r0, r4
+ 310 0012 FFF7FEFF 		bl	HAL_RTCEx_BKUPRead
+ 311              	.LVL23:
+ 312 0016 2843     		orrs	r0, r0, r5
+ 313              	.LVL24:
+  47:Src/system.c  **** 	memcpy(&dev.status, &tmp, 4);
+ 314              		.loc 1 47 0
+ 315 0018 0D4B     		ldr	r3, .L22+4
+ 316 001a C3F80200 		str	r0, [r3, #2]	@ unaligned
+  53:Src/system.c  **** 	if (HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR6) != DEVICE_HOLDER) 
+ 317              		.loc 1 53 0
+ 318 001e 0621     		movs	r1, #6
+ 319 0020 2046     		mov	r0, r4
+ 320              	.LVL25:
+ 321 0022 FFF7FEFF 		bl	HAL_RTCEx_BKUPRead
+ 322              	.LVL26:
+ 323 0026 4AF6AA23 		movw	r3, #43690
+ 324 002a 9842     		cmp	r0, r3
+ 325 002c 0DD0     		beq	.L19
+  55:Src/system.c  ****         dev.status.lamp = 0;
+ 326              		.loc 1 55 0
+ 327 002e 084B     		ldr	r3, .L22+4
+ 328 0030 0022     		movs	r2, #0
+ 329 0032 9A70     		strb	r2, [r3, #2]
+  56:Src/system.c  ****         dev.status.uv = 0;
+ 330              		.loc 1 56 0
+ 331 0034 DA70     		strb	r2, [r3, #3]
+  57:Src/system.c  ****         dev.status.fan = 0;
+ 332              		.loc 1 57 0
+ 333 0036 1A71     		strb	r2, [r3, #4]
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 11
+
+
+  58:Src/system.c  ****         dev.status.socket = 0;
+ 334              		.loc 1 58 0
+ 335 0038 5A71     		strb	r2, [r3, #5]
+  59:Src/system.c  ****         Device_Save_Status();
+ 336              		.loc 1 59 0
+ 337 003a FFF7FEFF 		bl	Device_Save_Status
+ 338              	.LVL27:
+  60:Src/system.c  ****         HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR6, DEVICE_HOLDER);
+ 339              		.loc 1 60 0
+ 340 003e 4AF6AA22 		movw	r2, #43690
+ 341 0042 0621     		movs	r1, #6
+ 342 0044 2046     		mov	r0, r4
+ 343 0046 FFF7FEFF 		bl	HAL_RTCEx_BKUPWrite
+ 344              	.LVL28:
+ 345              	.L19:
+  62:Src/system.c  **** }
+ 346              		.loc 1 62 0
+ 347 004a 38BD     		pop	{r3, r4, r5, pc}
+ 348              	.L23:
+ 349              		.align	2
+ 350              	.L22:
+ 351 004c 00000000 		.word	hrtc
+ 352 0050 00000000 		.word	dev
+ 353              		.cfi_endproc
+ 354              	.LFE68:
+ 356              		.section	.text.System_Init,"ax",%progbits
+ 357              		.align	1
+ 358              		.global	System_Init
+ 359              		.syntax unified
+ 360              		.thumb
+ 361              		.thumb_func
+ 362              		.fpu softvfp
+ 364              	System_Init:
+ 365              	.LFB66:
+  20:Src/system.c  **** {
+ 366              		.loc 1 20 0
+ 367              		.cfi_startproc
+ 368              		@ args = 0, pretend = 0, frame = 0
+ 369              		@ frame_needed = 0, uses_anonymous_args = 0
+ 370 0000 10B5     		push	{r4, lr}
+ 371              	.LCFI5:
+ 372              		.cfi_def_cfa_offset 8
+ 373              		.cfi_offset 4, -8
+ 374              		.cfi_offset 14, -4
+  21:Src/system.c  **** 	CFG_Load();
+ 375              		.loc 1 21 0
+ 376 0002 FFF7FEFF 		bl	CFG_Load
+ 377              	.LVL29:
+  22:Src/system.c  **** 	Device_Load_Status();
+ 378              		.loc 1 22 0
+ 379 0006 FFF7FEFF 		bl	Device_Load_Status
+ 380              	.LVL30:
+  23:Src/system.c  **** 	Load_UVTime_BKUP();
+ 381              		.loc 1 23 0
+ 382 000a FFF7FEFF 		bl	Load_UVTime_BKUP
+ 383              	.LVL31:
+  24:Src/system.c  **** 	Load_SysTime();
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 12
+
+
+ 384              		.loc 1 24 0
+ 385 000e FFF7FEFF 		bl	Load_SysTime
+ 386              	.LVL32:
+  25:Src/system.c  **** 	dev.doorLevel = 0;
+ 387              		.loc 1 25 0
+ 388 0012 0A4B     		ldr	r3, .L29
+ 389 0014 0022     		movs	r2, #0
+ 390 0016 5A70     		strb	r2, [r3, #1]
+  26:Src/system.c  **** 	Set_Backlight(sys_cfg.brightness);
+ 391              		.loc 1 26 0
+ 392 0018 094C     		ldr	r4, .L29+4
+ 393 001a A078     		ldrb	r0, [r4, #2]	@ zero_extendqisi2
+ 394 001c FFF7FEFF 		bl	Set_Backlight
+ 395              	.LVL33:
+  27:Src/system.c  **** 	sys_cfg.backlight?BL_On():BL_Off();
+ 396              		.loc 1 27 0
+ 397 0020 E378     		ldrb	r3, [r4, #3]	@ zero_extendqisi2
+ 398 0022 43B9     		cbnz	r3, .L28
+  27:Src/system.c  **** 	sys_cfg.backlight?BL_On():BL_Off();
+ 399              		.loc 1 27 0 is_stmt 0 discriminator 2
+ 400 0024 FFF7FEFF 		bl	BL_Off
+ 401              	.LVL34:
+ 402              	.L26:
+  28:Src/system.c  **** 	main_screen_init();
+ 403              		.loc 1 28 0 is_stmt 1
+ 404 0028 FFF7FEFF 		bl	main_screen_init
+ 405              	.LVL35:
+  29:Src/system.c  **** 	sys.tick = HAL_GetTick();
+ 406              		.loc 1 29 0
+ 407 002c FFF7FEFF 		bl	HAL_GetTick
+ 408              	.LVL36:
+ 409 0030 044B     		ldr	r3, .L29+8
+ 410 0032 1860     		str	r0, [r3]
+  30:Src/system.c  **** }
+ 411              		.loc 1 30 0
+ 412 0034 10BD     		pop	{r4, pc}
+ 413              	.L28:
+  27:Src/system.c  **** 	sys_cfg.backlight?BL_On():BL_Off();
+ 414              		.loc 1 27 0 discriminator 1
+ 415 0036 FFF7FEFF 		bl	BL_On
+ 416              	.LVL37:
+ 417 003a F5E7     		b	.L26
+ 418              	.L30:
+ 419              		.align	2
+ 420              	.L29:
+ 421 003c 00000000 		.word	dev
+ 422 0040 00000000 		.word	sys_cfg
+ 423 0044 00000000 		.word	sys
+ 424              		.cfi_endproc
+ 425              	.LFE66:
+ 427              		.section	.text.UV_Init_Time,"ax",%progbits
+ 428              		.align	1
+ 429              		.global	UV_Init_Time
+ 430              		.syntax unified
+ 431              		.thumb
+ 432              		.thumb_func
+ 433              		.fpu softvfp
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 13
+
+
+ 435              	UV_Init_Time:
+ 436              	.LFB69:
+  65:Src/system.c  **** {
+ 437              		.loc 1 65 0
+ 438              		.cfi_startproc
+ 439              		@ args = 0, pretend = 0, frame = 0
+ 440              		@ frame_needed = 0, uses_anonymous_args = 0
+ 441              		@ link register save eliminated.
+ 442              	.LVL38:
+  66:Src/system.c  **** 	switch(mode)
+ 443              		.loc 1 66 0
+ 444 0000 0138     		subs	r0, r0, #1
+ 445              	.LVL39:
+ 446 0002 0328     		cmp	r0, #3
+ 447 0004 1FD8     		bhi	.L32
+ 448 0006 DFE800F0 		tbb	[pc, r0]
+ 449              	.L34:
+ 450 000a 02       		.byte	(.L33-.L34)/2
+ 451 000b 09       		.byte	(.L35-.L34)/2
+ 452 000c 10       		.byte	(.L36-.L34)/2
+ 453 000d 17       		.byte	(.L37-.L34)/2
+ 454              		.p2align 1
+ 455              	.L33:
+  69:Src/system.c  **** 			dev.UVFlag = 1;
+ 456              		.loc 1 69 0
+ 457 000e 104B     		ldr	r3, .L39
+ 458 0010 0122     		movs	r2, #1
+ 459 0012 1A70     		strb	r2, [r3]
+  70:Src/system.c  **** 			dev.UVTimeOff = 15*60;
+ 460              		.loc 1 70 0
+ 461 0014 4FF46172 		mov	r2, #900
+ 462 0018 9A60     		str	r2, [r3, #8]
+  71:Src/system.c  **** 			break;
+ 463              		.loc 1 71 0
+ 464 001a 7047     		bx	lr
+ 465              	.L35:
+  73:Src/system.c  **** 			dev.UVFlag = 1;
+ 466              		.loc 1 73 0
+ 467 001c 0C4B     		ldr	r3, .L39
+ 468 001e 0122     		movs	r2, #1
+ 469 0020 1A70     		strb	r2, [r3]
+  74:Src/system.c  **** 			dev.UVTimeOff = 30*60;
+ 470              		.loc 1 74 0
+ 471 0022 4FF4E162 		mov	r2, #1800
+ 472 0026 9A60     		str	r2, [r3, #8]
+  75:Src/system.c  **** 			break;
+ 473              		.loc 1 75 0
+ 474 0028 7047     		bx	lr
+ 475              	.L36:
+  77:Src/system.c  **** 			dev.UVFlag = 1;
+ 476              		.loc 1 77 0
+ 477 002a 094B     		ldr	r3, .L39
+ 478 002c 0122     		movs	r2, #1
+ 479 002e 1A70     		strb	r2, [r3]
+  78:Src/system.c  **** 			dev.UVTimeOff = 60*60;
+ 480              		.loc 1 78 0
+ 481 0030 4FF46162 		mov	r2, #3600
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 14
+
+
+ 482 0034 9A60     		str	r2, [r3, #8]
+  79:Src/system.c  **** 			break;		
+ 483              		.loc 1 79 0
+ 484 0036 7047     		bx	lr
+ 485              	.L37:
+  81:Src/system.c  **** 			dev.UVFlag = 1;
+ 486              		.loc 1 81 0
+ 487 0038 054B     		ldr	r3, .L39
+ 488 003a 0122     		movs	r2, #1
+ 489 003c 1A70     		strb	r2, [r3]
+  82:Src/system.c  **** 			dev.UVTimeOff = 2*60*60;
+ 490              		.loc 1 82 0
+ 491 003e 4FF4E152 		mov	r2, #7200
+ 492 0042 9A60     		str	r2, [r3, #8]
+  83:Src/system.c  **** 			break;		
+ 493              		.loc 1 83 0
+ 494 0044 7047     		bx	lr
+ 495              	.L32:
+  85:Src/system.c  **** 			dev.UVFlag = 0;
+ 496              		.loc 1 85 0
+ 497 0046 024B     		ldr	r3, .L39
+ 498 0048 0022     		movs	r2, #0
+ 499 004a 1A70     		strb	r2, [r3]
+  86:Src/system.c  **** 			dev.UVTimeOff = 0;
+ 500              		.loc 1 86 0
+ 501 004c 9A60     		str	r2, [r3, #8]
+  90:Src/system.c  **** }
+ 502              		.loc 1 90 0
+ 503 004e 7047     		bx	lr
+ 504              	.L40:
+ 505              		.align	2
+ 506              	.L39:
+ 507 0050 00000000 		.word	dev
+ 508              		.cfi_endproc
+ 509              	.LFE69:
+ 511              		.section	.text.UV_Clear_Time,"ax",%progbits
+ 512              		.align	1
+ 513              		.global	UV_Clear_Time
+ 514              		.syntax unified
+ 515              		.thumb
+ 516              		.thumb_func
+ 517              		.fpu softvfp
+ 519              	UV_Clear_Time:
+ 520              	.LFB70:
+  93:Src/system.c  **** {
+ 521              		.loc 1 93 0
+ 522              		.cfi_startproc
+ 523              		@ args = 0, pretend = 0, frame = 0
+ 524              		@ frame_needed = 0, uses_anonymous_args = 0
+ 525 0000 08B5     		push	{r3, lr}
+ 526              	.LCFI6:
+ 527              		.cfi_def_cfa_offset 8
+ 528              		.cfi_offset 3, -8
+ 529              		.cfi_offset 14, -4
+  94:Src/system.c  **** 	dev.UVFlag = 0;
+ 530              		.loc 1 94 0
+ 531 0002 034B     		ldr	r3, .L43
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 15
+
+
+ 532 0004 0022     		movs	r2, #0
+ 533 0006 1A70     		strb	r2, [r3]
+  95:Src/system.c  **** 	dev.UVTimeOff = 0;
+ 534              		.loc 1 95 0
+ 535 0008 9A60     		str	r2, [r3, #8]
+  96:Src/system.c  **** 	Save_UVTime_BKUP();
+ 536              		.loc 1 96 0
+ 537 000a FFF7FEFF 		bl	Save_UVTime_BKUP
+ 538              	.LVL40:
+  98:Src/system.c  **** }
+ 539              		.loc 1 98 0
+ 540 000e 08BD     		pop	{r3, pc}
+ 541              	.L44:
+ 542              		.align	2
+ 543              	.L43:
+ 544 0010 00000000 		.word	dev
+ 545              		.cfi_endproc
+ 546              	.LFE70:
+ 548              		.section	.text.UV_Check_Time,"ax",%progbits
+ 549              		.align	1
+ 550              		.global	UV_Check_Time
+ 551              		.syntax unified
+ 552              		.thumb
+ 553              		.thumb_func
+ 554              		.fpu softvfp
+ 556              	UV_Check_Time:
+ 557              	.LFB71:
+ 102:Src/system.c  **** {
+ 558              		.loc 1 102 0
+ 559              		.cfi_startproc
+ 560              		@ args = 0, pretend = 0, frame = 0
+ 561              		@ frame_needed = 0, uses_anonymous_args = 0
+ 562              	.LVL41:
+ 563 0000 08B5     		push	{r3, lr}
+ 564              	.LCFI7:
+ 565              		.cfi_def_cfa_offset 8
+ 566              		.cfi_offset 3, -8
+ 567              		.cfi_offset 14, -4
+ 103:Src/system.c  **** 	if((dev.UVFlag) && (time == 0))
+ 568              		.loc 1 103 0
+ 569 0002 064B     		ldr	r3, .L49
+ 570 0004 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 571 0006 03B1     		cbz	r3, .L45
+ 103:Src/system.c  **** 	if((dev.UVFlag) && (time == 0))
+ 572              		.loc 1 103 0 is_stmt 0 discriminator 1
+ 573 0008 00B1     		cbz	r0, .L48
+ 574              	.LVL42:
+ 575              	.L45:
+ 113:Src/system.c  **** }
+ 576              		.loc 1 113 0 is_stmt 1
+ 577 000a 08BD     		pop	{r3, pc}
+ 578              	.LVL43:
+ 579              	.L48:
+ 106:Src/system.c  **** 		dev.status.uv = 0;
+ 580              		.loc 1 106 0
+ 581 000c 034B     		ldr	r3, .L49
+ 582 000e 0022     		movs	r2, #0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 16
+
+
+ 583 0010 DA70     		strb	r2, [r3, #3]
+ 108:Src/system.c  **** 		UV_Clear_Time();
+ 584              		.loc 1 108 0
+ 585 0012 FFF7FEFF 		bl	UV_Clear_Time
+ 586              	.LVL44:
+ 109:Src/system.c  **** 		Device_Save_Status();
+ 587              		.loc 1 109 0
+ 588 0016 FFF7FEFF 		bl	Device_Save_Status
+ 589              	.LVL45:
+ 113:Src/system.c  **** }
+ 590              		.loc 1 113 0
+ 591 001a F6E7     		b	.L45
+ 592              	.L50:
+ 593              		.align	2
+ 594              	.L49:
+ 595 001c 00000000 		.word	dev
+ 596              		.cfi_endproc
+ 597              	.LFE71:
+ 599              		.section	.text.Save_SysTime_BKUP,"ax",%progbits
+ 600              		.align	1
+ 601              		.global	Save_SysTime_BKUP
+ 602              		.syntax unified
+ 603              		.thumb
+ 604              		.thumb_func
+ 605              		.fpu softvfp
+ 607              	Save_SysTime_BKUP:
+ 608              	.LFB75:
+ 210:Src/system.c  **** {
+ 609              		.loc 1 210 0
+ 610              		.cfi_startproc
+ 611              		@ args = 0, pretend = 0, frame = 0
+ 612              		@ frame_needed = 0, uses_anonymous_args = 0
+ 613              		@ link register save eliminated.
+ 614              	.LVL46:
+ 214:Src/system.c  **** 	for(i = 0; i < sizeof(SYS_STRUCT_T)/2; i++)
+ 615              		.loc 1 214 0
+ 616 0000 0022     		movs	r2, #0
+ 617 0002 0CE0     		b	.L52
+ 618              	.LVL47:
+ 619              	.L53:
+ 218:Src/system.c  **** 		tmp += ((RTC_BKP_DR11 + i)* 4U);
+ 620              		.loc 1 218 0 discriminator 3
+ 621 0004 02F11003 		add	r3, r2, #16
+ 622 0008 9B00     		lsls	r3, r3, #2
+ 623 000a 03F18043 		add	r3, r3, #1073741824
+ 624 000e 03F5D843 		add	r3, r3, #27648
+ 625              	.LVL48:
+ 219:Src/system.c  **** 		*(__IO uint32_t *) tmp = (*(uint16_t*)(savedest + i) & BKP_DR1_D);
+ 626              		.loc 1 219 0 discriminator 3
+ 627 0012 0449     		ldr	r1, .L54
+ 628 0014 31F81210 		ldrh	r1, [r1, r2, lsl #1]
+ 629 0018 1960     		str	r1, [r3]
+ 214:Src/system.c  **** 	for(i = 0; i < sizeof(SYS_STRUCT_T)/2; i++)
+ 630              		.loc 1 214 0 discriminator 3
+ 631 001a 0132     		adds	r2, r2, #1
+ 632              	.LVL49:
+ 633 001c 92B2     		uxth	r2, r2
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 17
+
+
+ 634              	.LVL50:
+ 635              	.L52:
+ 214:Src/system.c  **** 	for(i = 0; i < sizeof(SYS_STRUCT_T)/2; i++)
+ 636              		.loc 1 214 0 is_stmt 0 discriminator 1
+ 637 001e 072A     		cmp	r2, #7
+ 638 0020 F0D9     		bls	.L53
+ 221:Src/system.c  **** }
+ 639              		.loc 1 221 0 is_stmt 1
+ 640 0022 7047     		bx	lr
+ 641              	.L55:
+ 642              		.align	2
+ 643              	.L54:
+ 644 0024 00000000 		.word	sys
+ 645              		.cfi_endproc
+ 646              	.LFE75:
+ 648              		.section	.text.System_Manager,"ax",%progbits
+ 649              		.align	1
+ 650              		.global	System_Manager
+ 651              		.syntax unified
+ 652              		.thumb
+ 653              		.thumb_func
+ 654              		.fpu softvfp
+ 656              	System_Manager:
+ 657              	.LFB72:
+ 116:Src/system.c  **** {
+ 658              		.loc 1 116 0
+ 659              		.cfi_startproc
+ 660              		@ args = 0, pretend = 0, frame = 0
+ 661              		@ frame_needed = 0, uses_anonymous_args = 0
+ 662 0000 08B5     		push	{r3, lr}
+ 663              	.LCFI8:
+ 664              		.cfi_def_cfa_offset 8
+ 665              		.cfi_offset 3, -8
+ 666              		.cfi_offset 14, -4
+ 117:Src/system.c  **** 	if(HAL_GetTick() - sys.tick >= 1000) //Every seconds
+ 667              		.loc 1 117 0
+ 668 0002 FFF7FEFF 		bl	HAL_GetTick
+ 669              	.LVL51:
+ 670 0006 324B     		ldr	r3, .L73
+ 671 0008 1B68     		ldr	r3, [r3]
+ 672 000a C01A     		subs	r0, r0, r3
+ 673 000c B0F57A7F 		cmp	r0, #1000
+ 674 0010 33D3     		bcc	.L57
+ 119:Src/system.c  **** 		if(++toggle > TIME_PAGE*2) toggle = 0;
+ 675              		.loc 1 119 0
+ 676 0012 304A     		ldr	r2, .L73+4
+ 677 0014 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 678 0016 0133     		adds	r3, r3, #1
+ 679 0018 DBB2     		uxtb	r3, r3
+ 680 001a 1370     		strb	r3, [r2]
+ 681 001c 1E2B     		cmp	r3, #30
+ 682 001e 02D9     		bls	.L58
+ 119:Src/system.c  **** 		if(++toggle > TIME_PAGE*2) toggle = 0;
+ 683              		.loc 1 119 0 is_stmt 0 discriminator 1
+ 684 0020 1346     		mov	r3, r2
+ 685 0022 0022     		movs	r2, #0
+ 686 0024 1A70     		strb	r2, [r3]
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 18
+
+
+ 687              	.L58:
+ 120:Src/system.c  **** 		if(++sys.SysTime > SYSTEM_TIME_MAX)
+ 688              		.loc 1 120 0 is_stmt 1
+ 689 0026 2A4A     		ldr	r2, .L73
+ 690 0028 D368     		ldr	r3, [r2, #12]
+ 691 002a 0133     		adds	r3, r3, #1
+ 692 002c D360     		str	r3, [r2, #12]
+ 693 002e 2A4A     		ldr	r2, .L73+8
+ 694 0030 9342     		cmp	r3, r2
+ 695 0032 01D9     		bls	.L59
+ 121:Src/system.c  **** 			sys.SysTime = SYSTEM_TIME_MAX;
+ 696              		.loc 1 121 0
+ 697 0034 264B     		ldr	r3, .L73
+ 698 0036 DA60     		str	r2, [r3, #12]
+ 699              	.L59:
+ 123:Src/system.c  **** 		if(dev.status.fan) 
+ 700              		.loc 1 123 0
+ 701 0038 284B     		ldr	r3, .L73+12
+ 702 003a 1B79     		ldrb	r3, [r3, #4]	@ zero_extendqisi2
+ 703 003c 1BB1     		cbz	r3, .L60
+ 124:Src/system.c  **** 			sys.FilterTime++;
+ 704              		.loc 1 124 0
+ 705 003e 244A     		ldr	r2, .L73
+ 706 0040 9368     		ldr	r3, [r2, #8]
+ 707 0042 0133     		adds	r3, r3, #1
+ 708 0044 9360     		str	r3, [r2, #8]
+ 709              	.L60:
+ 126:Src/system.c  **** 		if(dev.UVFlag)
+ 710              		.loc 1 126 0
+ 711 0046 254B     		ldr	r3, .L73+12
+ 712 0048 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 713 004a 83B1     		cbz	r3, .L61
+ 128:Src/system.c  **** 			if(dev.status.uv) sys.UVTime++;
+ 714              		.loc 1 128 0
+ 715 004c 234B     		ldr	r3, .L73+12
+ 716 004e DB78     		ldrb	r3, [r3, #3]	@ zero_extendqisi2
+ 717 0050 1BB1     		cbz	r3, .L62
+ 128:Src/system.c  **** 			if(dev.status.uv) sys.UVTime++;
+ 718              		.loc 1 128 0 is_stmt 0 discriminator 1
+ 719 0052 1F4A     		ldr	r2, .L73
+ 720 0054 5368     		ldr	r3, [r2, #4]
+ 721 0056 0133     		adds	r3, r3, #1
+ 722 0058 5360     		str	r3, [r2, #4]
+ 723              	.L62:
+ 129:Src/system.c  **** 			if(--dev.UVTimeOff <= 0)
+ 724              		.loc 1 129 0 is_stmt 1
+ 725 005a 204A     		ldr	r2, .L73+12
+ 726 005c 9368     		ldr	r3, [r2, #8]
+ 727 005e 013B     		subs	r3, r3, #1
+ 728 0060 9360     		str	r3, [r2, #8]
+ 729 0062 13B9     		cbnz	r3, .L63
+ 130:Src/system.c  **** 				dev.UVTimeOff = 0;
+ 730              		.loc 1 130 0
+ 731 0064 1346     		mov	r3, r2
+ 732 0066 0022     		movs	r2, #0
+ 733 0068 9A60     		str	r2, [r3, #8]
+ 734              	.L63:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 19
+
+
+ 132:Src/system.c  **** 			Save_UVTime_BKUP();
+ 735              		.loc 1 132 0
+ 736 006a FFF7FEFF 		bl	Save_UVTime_BKUP
+ 737              	.LVL52:
+ 738              	.L61:
+ 134:Src/system.c  **** 		sys.tick = HAL_GetTick();
+ 739              		.loc 1 134 0
+ 740 006e FFF7FEFF 		bl	HAL_GetTick
+ 741              	.LVL53:
+ 742 0072 174B     		ldr	r3, .L73
+ 743 0074 1860     		str	r0, [r3]
+ 136:Src/system.c  **** 		Save_SysTime_BKUP();
+ 744              		.loc 1 136 0
+ 745 0076 FFF7FEFF 		bl	Save_SysTime_BKUP
+ 746              	.LVL54:
+ 747              	.L57:
+ 153:Src/system.c  **** 	if(menuIdx == 0)
+ 748              		.loc 1 153 0
+ 749 007a 194B     		ldr	r3, .L73+16
+ 750 007c 1B88     		ldrh	r3, [r3]
+ 751 007e 03B1     		cbz	r3, .L69
+ 752              	.L56:
+ 181:Src/system.c  **** }
+ 753              		.loc 1 181 0
+ 754 0080 08BD     		pop	{r3, pc}
+ 755              	.L69:
+ 156:Src/system.c  **** 		UV_Check_Time(dev.UVTimeOff);
+ 756              		.loc 1 156 0
+ 757 0082 164B     		ldr	r3, .L73+12
+ 758 0084 9868     		ldr	r0, [r3, #8]
+ 759 0086 FFF7FEFF 		bl	UV_Check_Time
+ 760              	.LVL55:
+ 157:Src/system.c  **** 		if(sys_cfg.viewPage == 1)
+ 761              		.loc 1 157 0
+ 762 008a 164B     		ldr	r3, .L73+20
+ 763 008c 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 764 008e 012B     		cmp	r3, #1
+ 765 0090 0BD0     		beq	.L70
+ 162:Src/system.c  **** 	    else if(sys_cfg.viewPage == 2)
+ 766              		.loc 1 162 0
+ 767 0092 022B     		cmp	r3, #2
+ 768 0094 0FD0     		beq	.L71
+ 169:Src/system.c  **** 	        if(toggle >= TIME_PAGE)
+ 769              		.loc 1 169 0
+ 770 0096 0F4B     		ldr	r3, .L73+4
+ 771 0098 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 772 009a 0E2B     		cmp	r3, #14
+ 773 009c 11D8     		bhi	.L72
+ 176:Src/system.c  **** 	          u8g2_ClearBuffer(&u8g2);
+ 774              		.loc 1 176 0
+ 775 009e 1248     		ldr	r0, .L73+24
+ 776 00a0 FFF7FEFF 		bl	u8g2_ClearBuffer
+ 777              	.LVL56:
+ 177:Src/system.c  **** 	          Main_Screen_Manage();
+ 778              		.loc 1 177 0
+ 779 00a4 FFF7FEFF 		bl	Main_Screen_Manage
+ 780              	.LVL57:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 20
+
+
+ 181:Src/system.c  **** }
+ 781              		.loc 1 181 0
+ 782 00a8 EAE7     		b	.L56
+ 783              	.L70:
+ 159:Src/system.c  **** 	        u8g2_ClearBuffer(&u8g2);
+ 784              		.loc 1 159 0
+ 785 00aa 0F48     		ldr	r0, .L73+24
+ 786 00ac FFF7FEFF 		bl	u8g2_ClearBuffer
+ 787              	.LVL58:
+ 160:Src/system.c  **** 	        Main_Screen_Manage();
+ 788              		.loc 1 160 0
+ 789 00b0 FFF7FEFF 		bl	Main_Screen_Manage
+ 790              	.LVL59:
+ 791 00b4 E4E7     		b	.L56
+ 792              	.L71:
+ 164:Src/system.c  **** 	        u8g2_ClearBuffer(&u8g2);
+ 793              		.loc 1 164 0
+ 794 00b6 0C48     		ldr	r0, .L73+24
+ 795 00b8 FFF7FEFF 		bl	u8g2_ClearBuffer
+ 796              	.LVL60:
+ 165:Src/system.c  **** 	        Info_Screen_Manage();
+ 797              		.loc 1 165 0
+ 798 00bc FFF7FEFF 		bl	Info_Screen_Manage
+ 799              	.LVL61:
+ 800 00c0 DEE7     		b	.L56
+ 801              	.L72:
+ 171:Src/system.c  **** 	          u8g2_ClearBuffer(&u8g2);
+ 802              		.loc 1 171 0
+ 803 00c2 0948     		ldr	r0, .L73+24
+ 804 00c4 FFF7FEFF 		bl	u8g2_ClearBuffer
+ 805              	.LVL62:
+ 172:Src/system.c  **** 	          Info_Screen_Manage();
+ 806              		.loc 1 172 0
+ 807 00c8 FFF7FEFF 		bl	Info_Screen_Manage
+ 808              	.LVL63:
+ 809 00cc D8E7     		b	.L56
+ 810              	.L74:
+ 811 00ce 00BF     		.align	2
+ 812              	.L73:
+ 813 00d0 00000000 		.word	sys
+ 814 00d4 00000000 		.word	.LANCHOR0
+ 815 00d8 001EF8BB 		.word	-1141367296
+ 816 00dc 00000000 		.word	dev
+ 817 00e0 00000000 		.word	menuIdx
+ 818 00e4 00000000 		.word	sys_cfg
+ 819 00e8 00000000 		.word	u8g2
+ 820              		.cfi_endproc
+ 821              	.LFE72:
+ 823              		.global	toggle
+ 824              		.comm	dev,12,4
+ 825              		.comm	sys,16,4
+ 826              		.comm	bmp_temp,8,4
+ 827              		.section	.bss.toggle,"aw",%nobits
+ 828              		.set	.LANCHOR0,. + 0
+ 831              	toggle:
+ 832 0000 00       		.space	1
+ 833              		.text
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 21
+
+
+ 834              	.Letext0:
+ 835              		.file 2 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_defau
+ 836              		.file 3 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_stdint.h"
+ 837              		.file 4 "Drivers/CMSIS/Include/core_cm3.h"
+ 838              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h"
+ 839              		.file 6 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
+ 840              		.file 7 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/lock.h"
+ 841              		.file 8 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_types.h"
+ 842              		.file 9 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/
+ 843              		.file 10 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/reent.h"
+ 844              		.file 11 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 845              		.file 12 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc.h"
+ 846              		.file 13 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 847              		.file 14 "u8g2/csrc/u8x8.h"
+ 848              		.file 15 "u8g2/csrc/u8g2.h"
+ 849              		.file 16 "Inc/main.h"
+ 850              		.file 17 "Inc/system.h"
+ 851              		.file 18 "Inc/config.h"
+ 852              		.file 19 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/time.h"
+ 853              		.file 20 "Inc/clock_rtc.h"
+ 854              		.file 21 "Inc/user_bitmap.h"
+ 855              		.file 22 "Inc/main_screen.h"
+ 856              		.file 23 "Inc/info_screen.h"
+ 857              		.file 24 "Inc/menu.h"
+ 858              		.file 25 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc_ex.h"
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 22
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 system.c
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:16     .text.Save_UVTime_BKUP:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:22     .text.Save_UVTime_BKUP:0000000000000000 Save_UVTime_BKUP
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:56     .text.Save_UVTime_BKUP:000000000000001c $d
+                            *COM*:000000000000000c dev
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:62     .text.Load_UVTime_BKUP:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:68     .text.Load_UVTime_BKUP:0000000000000000 Load_UVTime_BKUP
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:129    .text.Load_UVTime_BKUP:0000000000000050 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:135    .text.Load_SysTime:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:141    .text.Load_SysTime:0000000000000000 Load_SysTime
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:228    .text.Load_SysTime:0000000000000084 $d
+                            *COM*:0000000000000010 sys
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:235    .text.Device_Save_Status:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:242    .text.Device_Save_Status:0000000000000000 Device_Save_Status
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:275    .text.Device_Save_Status:000000000000001c $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:281    .text.Device_Load_Status:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:288    .text.Device_Load_Status:0000000000000000 Device_Load_Status
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:351    .text.Device_Load_Status:000000000000004c $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:357    .text.System_Init:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:364    .text.System_Init:0000000000000000 System_Init
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:421    .text.System_Init:000000000000003c $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:428    .text.UV_Init_Time:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:435    .text.UV_Init_Time:0000000000000000 UV_Init_Time
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:450    .text.UV_Init_Time:000000000000000a $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:454    .text.UV_Init_Time:000000000000000e $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:507    .text.UV_Init_Time:0000000000000050 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:512    .text.UV_Clear_Time:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:519    .text.UV_Clear_Time:0000000000000000 UV_Clear_Time
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:544    .text.UV_Clear_Time:0000000000000010 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:549    .text.UV_Check_Time:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:556    .text.UV_Check_Time:0000000000000000 UV_Check_Time
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:595    .text.UV_Check_Time:000000000000001c $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:600    .text.Save_SysTime_BKUP:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:607    .text.Save_SysTime_BKUP:0000000000000000 Save_SysTime_BKUP
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:644    .text.Save_SysTime_BKUP:0000000000000024 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:649    .text.System_Manager:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:656    .text.System_Manager:0000000000000000 System_Manager
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:813    .text.System_Manager:00000000000000d0 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:831    .bss.toggle:0000000000000000 toggle
+                            *COM*:0000000000000008 bmp_temp
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s:832    .bss.toggle:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+HAL_RTCEx_BKUPWrite
+hrtc
+HAL_RTCEx_BKUPRead
+sys_cfg
+CFG_Load
+Set_Backlight
+BL_Off
+main_screen_init
+HAL_GetTick
+BL_On
+u8g2_ClearBuffer
+Main_Screen_Manage
+Info_Screen_Manage
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccxIRbrI.s 			page 23
+
+
+menuIdx
+u8g2

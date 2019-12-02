@@ -1,0 +1,546 @@
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"u8g2_buffer.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.u8g2_send_tile_row,"ax",%progbits
+  16              		.align	1
+  17              		.syntax unified
+  18              		.thumb
+  19              		.thumb_func
+  20              		.fpu softvfp
+  22              	u8g2_send_tile_row:
+  23              	.LFB1:
+  24              		.file 1 "u8g2/csrc/u8g2_buffer.c"
+   1:u8g2/csrc/u8g2_buffer.c **** /* 
+   2:u8g2/csrc/u8g2_buffer.c **** 
+   3:u8g2/csrc/u8g2_buffer.c ****   u8g2_buffer.c 
+   4:u8g2/csrc/u8g2_buffer.c **** 
+   5:u8g2/csrc/u8g2_buffer.c ****   Universal 8bit Graphics Library (https://github.com/olikraus/u8g2/)
+   6:u8g2/csrc/u8g2_buffer.c **** 
+   7:u8g2/csrc/u8g2_buffer.c ****   Copyright (c) 2016, olikraus@gmail.com
+   8:u8g2/csrc/u8g2_buffer.c ****   All rights reserved.
+   9:u8g2/csrc/u8g2_buffer.c **** 
+  10:u8g2/csrc/u8g2_buffer.c ****   Redistribution and use in source and binary forms, with or without modification, 
+  11:u8g2/csrc/u8g2_buffer.c ****   are permitted provided that the following conditions are met:
+  12:u8g2/csrc/u8g2_buffer.c **** 
+  13:u8g2/csrc/u8g2_buffer.c ****   * Redistributions of source code must retain the above copyright notice, this list 
+  14:u8g2/csrc/u8g2_buffer.c ****     of conditions and the following disclaimer.
+  15:u8g2/csrc/u8g2_buffer.c ****     
+  16:u8g2/csrc/u8g2_buffer.c ****   * Redistributions in binary form must reproduce the above copyright notice, this 
+  17:u8g2/csrc/u8g2_buffer.c ****     list of conditions and the following disclaimer in the documentation and/or other 
+  18:u8g2/csrc/u8g2_buffer.c ****     materials provided with the distribution.
+  19:u8g2/csrc/u8g2_buffer.c **** 
+  20:u8g2/csrc/u8g2_buffer.c ****   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+  21:u8g2/csrc/u8g2_buffer.c ****   CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+  22:u8g2/csrc/u8g2_buffer.c ****   INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+  23:u8g2/csrc/u8g2_buffer.c ****   MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+  24:u8g2/csrc/u8g2_buffer.c ****   DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
+  25:u8g2/csrc/u8g2_buffer.c ****   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+  26:u8g2/csrc/u8g2_buffer.c ****   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT 
+  27:u8g2/csrc/u8g2_buffer.c ****   NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+  28:u8g2/csrc/u8g2_buffer.c ****   LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+  29:u8g2/csrc/u8g2_buffer.c ****   CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, 
+  30:u8g2/csrc/u8g2_buffer.c ****   STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+  31:u8g2/csrc/u8g2_buffer.c ****   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+  32:u8g2/csrc/u8g2_buffer.c ****   ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  
+  33:u8g2/csrc/u8g2_buffer.c **** 
+  34:u8g2/csrc/u8g2_buffer.c **** */
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s 			page 2
+
+
+  35:u8g2/csrc/u8g2_buffer.c **** 
+  36:u8g2/csrc/u8g2_buffer.c **** #include "u8g2.h"
+  37:u8g2/csrc/u8g2_buffer.c **** #include <string.h>
+  38:u8g2/csrc/u8g2_buffer.c **** 
+  39:u8g2/csrc/u8g2_buffer.c **** /*============================================*/
+  40:u8g2/csrc/u8g2_buffer.c **** void u8g2_ClearBuffer(u8g2_t *u8g2)
+  41:u8g2/csrc/u8g2_buffer.c **** {
+  42:u8g2/csrc/u8g2_buffer.c ****   size_t cnt;
+  43:u8g2/csrc/u8g2_buffer.c ****   cnt = u8g2_GetU8x8(u8g2)->display_info->tile_width;
+  44:u8g2/csrc/u8g2_buffer.c ****   cnt *= u8g2->tile_buf_height;
+  45:u8g2/csrc/u8g2_buffer.c ****   cnt *= 8;
+  46:u8g2/csrc/u8g2_buffer.c ****   memset(u8g2->tile_buf_ptr, 0, cnt);
+  47:u8g2/csrc/u8g2_buffer.c **** }
+  48:u8g2/csrc/u8g2_buffer.c **** 
+  49:u8g2/csrc/u8g2_buffer.c **** /*============================================*/
+  50:u8g2/csrc/u8g2_buffer.c **** 
+  51:u8g2/csrc/u8g2_buffer.c **** static void u8g2_send_tile_row(u8g2_t *u8g2, uint8_t src_tile_row, uint8_t dest_tile_row)
+  52:u8g2/csrc/u8g2_buffer.c **** {
+  25              		.loc 1 52 0
+  26              		.cfi_startproc
+  27              		@ args = 0, pretend = 0, frame = 0
+  28              		@ frame_needed = 0, uses_anonymous_args = 0
+  29              	.LVL0:
+  30 0000 10B5     		push	{r4, lr}
+  31              	.LCFI0:
+  32              		.cfi_def_cfa_offset 8
+  33              		.cfi_offset 4, -8
+  34              		.cfi_offset 14, -4
+  35 0002 82B0     		sub	sp, sp, #8
+  36              	.LCFI1:
+  37              		.cfi_def_cfa_offset 16
+  53:u8g2/csrc/u8g2_buffer.c ****   uint8_t *ptr;
+  54:u8g2/csrc/u8g2_buffer.c ****   uint16_t offset;
+  55:u8g2/csrc/u8g2_buffer.c ****   uint8_t w;
+  56:u8g2/csrc/u8g2_buffer.c ****   
+  57:u8g2/csrc/u8g2_buffer.c ****   w = u8g2_GetU8x8(u8g2)->display_info->tile_width;
+  38              		.loc 1 57 0
+  39 0004 0368     		ldr	r3, [r0]
+  40 0006 1B7C     		ldrb	r3, [r3, #16]	@ zero_extendqisi2
+  41              	.LVL1:
+  58:u8g2/csrc/u8g2_buffer.c ****   offset = src_tile_row;
+  59:u8g2/csrc/u8g2_buffer.c ****   ptr = u8g2->tile_buf_ptr;
+  42              		.loc 1 59 0
+  43 0008 446B     		ldr	r4, [r0, #52]
+  44              	.LVL2:
+  60:u8g2/csrc/u8g2_buffer.c ****   offset *= w;
+  45              		.loc 1 60 0
+  46 000a 03FB01F1 		mul	r1, r3, r1
+  47              	.LVL3:
+  61:u8g2/csrc/u8g2_buffer.c ****   offset *= 8;
+  48              		.loc 1 61 0
+  49 000e C900     		lsls	r1, r1, #3
+  50              	.LVL4:
+  51 0010 89B2     		uxth	r1, r1
+  52              	.LVL5:
+  62:u8g2/csrc/u8g2_buffer.c ****   ptr += offset;
+  53              		.loc 1 62 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s 			page 3
+
+
+  54 0012 2144     		add	r1, r1, r4
+  55              	.LVL6:
+  63:u8g2/csrc/u8g2_buffer.c ****   u8x8_DrawTile(u8g2_GetU8x8(u8g2), 0, dest_tile_row, w, ptr);
+  56              		.loc 1 63 0
+  57 0014 0091     		str	r1, [sp]
+  58 0016 0021     		movs	r1, #0
+  59              	.LVL7:
+  60 0018 FFF7FEFF 		bl	u8x8_DrawTile
+  61              	.LVL8:
+  64:u8g2/csrc/u8g2_buffer.c **** }
+  62              		.loc 1 64 0
+  63 001c 02B0     		add	sp, sp, #8
+  64              	.LCFI2:
+  65              		.cfi_def_cfa_offset 8
+  66              		@ sp needed
+  67 001e 10BD     		pop	{r4, pc}
+  68              		.cfi_endproc
+  69              	.LFE1:
+  71              		.section	.text.u8g2_send_buffer,"ax",%progbits
+  72              		.align	1
+  73              		.syntax unified
+  74              		.thumb
+  75              		.thumb_func
+  76              		.fpu softvfp
+  78              	u8g2_send_buffer:
+  79              	.LFB2:
+  65:u8g2/csrc/u8g2_buffer.c **** 
+  66:u8g2/csrc/u8g2_buffer.c **** /* 
+  67:u8g2/csrc/u8g2_buffer.c ****   write the buffer to the display RAM. 
+  68:u8g2/csrc/u8g2_buffer.c ****   For most displays, this will make the content visible to the user.
+  69:u8g2/csrc/u8g2_buffer.c ****   Some displays (like the SSD1606) require a u8x8_RefreshDisplay()
+  70:u8g2/csrc/u8g2_buffer.c **** */
+  71:u8g2/csrc/u8g2_buffer.c **** static void u8g2_send_buffer(u8g2_t *u8g2) U8X8_NOINLINE;
+  72:u8g2/csrc/u8g2_buffer.c **** static void u8g2_send_buffer(u8g2_t *u8g2)
+  73:u8g2/csrc/u8g2_buffer.c **** {
+  80              		.loc 1 73 0
+  81              		.cfi_startproc
+  82              		@ args = 0, pretend = 0, frame = 0
+  83              		@ frame_needed = 0, uses_anonymous_args = 0
+  84              	.LVL9:
+  85 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+  86              	.LCFI3:
+  87              		.cfi_def_cfa_offset 24
+  88              		.cfi_offset 4, -24
+  89              		.cfi_offset 5, -20
+  90              		.cfi_offset 6, -16
+  91              		.cfi_offset 7, -12
+  92              		.cfi_offset 8, -8
+  93              		.cfi_offset 14, -4
+  94 0004 0646     		mov	r6, r0
+  95              	.LVL10:
+  74:u8g2/csrc/u8g2_buffer.c ****   uint8_t src_row;
+  75:u8g2/csrc/u8g2_buffer.c ****   uint8_t src_max;
+  76:u8g2/csrc/u8g2_buffer.c ****   uint8_t dest_row;
+  77:u8g2/csrc/u8g2_buffer.c ****   uint8_t dest_max;
+  78:u8g2/csrc/u8g2_buffer.c **** 
+  79:u8g2/csrc/u8g2_buffer.c ****   src_row = 0;
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s 			page 4
+
+
+  80:u8g2/csrc/u8g2_buffer.c ****   src_max = u8g2->tile_buf_height;
+  96              		.loc 1 80 0
+  97 0006 90F83870 		ldrb	r7, [r0, #56]	@ zero_extendqisi2
+  98              	.LVL11:
+  81:u8g2/csrc/u8g2_buffer.c ****   dest_row = u8g2->tile_curr_row;
+  99              		.loc 1 81 0
+ 100 000a 90F83950 		ldrb	r5, [r0, #57]	@ zero_extendqisi2
+ 101              	.LVL12:
+  82:u8g2/csrc/u8g2_buffer.c ****   dest_max = u8g2_GetU8x8(u8g2)->display_info->tile_height;
+ 102              		.loc 1 82 0
+ 103 000e 0368     		ldr	r3, [r0]
+ 104 0010 93F81180 		ldrb	r8, [r3, #17]	@ zero_extendqisi2
+ 105              	.LVL13:
+  79:u8g2/csrc/u8g2_buffer.c ****   src_max = u8g2->tile_buf_height;
+ 106              		.loc 1 79 0
+ 107 0014 0024     		movs	r4, #0
+ 108              	.LVL14:
+ 109              	.L5:
+  83:u8g2/csrc/u8g2_buffer.c ****   
+  84:u8g2/csrc/u8g2_buffer.c ****   do
+  85:u8g2/csrc/u8g2_buffer.c ****   {
+  86:u8g2/csrc/u8g2_buffer.c ****     u8g2_send_tile_row(u8g2, src_row, dest_row);
+ 110              		.loc 1 86 0 discriminator 2
+ 111 0016 2A46     		mov	r2, r5
+ 112 0018 2146     		mov	r1, r4
+ 113 001a 3046     		mov	r0, r6
+ 114 001c FFF7FEFF 		bl	u8g2_send_tile_row
+ 115              	.LVL15:
+  87:u8g2/csrc/u8g2_buffer.c ****     src_row++;
+ 116              		.loc 1 87 0 discriminator 2
+ 117 0020 0134     		adds	r4, r4, #1
+ 118              	.LVL16:
+ 119 0022 E4B2     		uxtb	r4, r4
+ 120              	.LVL17:
+  88:u8g2/csrc/u8g2_buffer.c ****     dest_row++;
+ 121              		.loc 1 88 0 discriminator 2
+ 122 0024 0135     		adds	r5, r5, #1
+ 123              	.LVL18:
+ 124 0026 EDB2     		uxtb	r5, r5
+ 125              	.LVL19:
+  89:u8g2/csrc/u8g2_buffer.c ****   } while( src_row < src_max && dest_row < dest_max );
+ 126              		.loc 1 89 0 discriminator 2
+ 127 0028 A742     		cmp	r7, r4
+ 128 002a 01D9     		bls	.L3
+ 129              		.loc 1 89 0 is_stmt 0 discriminator 1
+ 130 002c A845     		cmp	r8, r5
+ 131 002e F2D8     		bhi	.L5
+ 132              	.L3:
+  90:u8g2/csrc/u8g2_buffer.c **** }
+ 133              		.loc 1 90 0 is_stmt 1
+ 134 0030 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 135              		.cfi_endproc
+ 136              	.LFE2:
+ 138              		.section	.text.u8g2_ClearBuffer,"ax",%progbits
+ 139              		.align	1
+ 140              		.global	u8g2_ClearBuffer
+ 141              		.syntax unified
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s 			page 5
+
+
+ 142              		.thumb
+ 143              		.thumb_func
+ 144              		.fpu softvfp
+ 146              	u8g2_ClearBuffer:
+ 147              	.LFB0:
+  41:u8g2/csrc/u8g2_buffer.c ****   size_t cnt;
+ 148              		.loc 1 41 0
+ 149              		.cfi_startproc
+ 150              		@ args = 0, pretend = 0, frame = 0
+ 151              		@ frame_needed = 0, uses_anonymous_args = 0
+ 152              	.LVL20:
+ 153 0000 08B5     		push	{r3, lr}
+ 154              	.LCFI4:
+ 155              		.cfi_def_cfa_offset 8
+ 156              		.cfi_offset 3, -8
+ 157              		.cfi_offset 14, -4
+  43:u8g2/csrc/u8g2_buffer.c ****   cnt *= u8g2->tile_buf_height;
+ 158              		.loc 1 43 0
+ 159 0002 0368     		ldr	r3, [r0]
+ 160 0004 1A7C     		ldrb	r2, [r3, #16]	@ zero_extendqisi2
+ 161              	.LVL21:
+  44:u8g2/csrc/u8g2_buffer.c ****   cnt *= 8;
+ 162              		.loc 1 44 0
+ 163 0006 90F83830 		ldrb	r3, [r0, #56]	@ zero_extendqisi2
+ 164 000a 02FB03F2 		mul	r2, r2, r3
+ 165              	.LVL22:
+  46:u8g2/csrc/u8g2_buffer.c **** }
+ 166              		.loc 1 46 0
+ 167 000e D200     		lsls	r2, r2, #3
+ 168              	.LVL23:
+ 169 0010 0021     		movs	r1, #0
+ 170 0012 406B     		ldr	r0, [r0, #52]
+ 171              	.LVL24:
+ 172 0014 FFF7FEFF 		bl	memset
+ 173              	.LVL25:
+  47:u8g2/csrc/u8g2_buffer.c **** 
+ 174              		.loc 1 47 0
+ 175 0018 08BD     		pop	{r3, pc}
+ 176              		.cfi_endproc
+ 177              	.LFE0:
+ 179              		.section	.text.u8g2_SendBuffer,"ax",%progbits
+ 180              		.align	1
+ 181              		.global	u8g2_SendBuffer
+ 182              		.syntax unified
+ 183              		.thumb
+ 184              		.thumb_func
+ 185              		.fpu softvfp
+ 187              	u8g2_SendBuffer:
+ 188              	.LFB3:
+  91:u8g2/csrc/u8g2_buffer.c **** 
+  92:u8g2/csrc/u8g2_buffer.c **** /* same as u8g2_send_buffer but also send the DISPLAY_REFRESH message (used by SSD1606) */
+  93:u8g2/csrc/u8g2_buffer.c **** void u8g2_SendBuffer(u8g2_t *u8g2)
+  94:u8g2/csrc/u8g2_buffer.c **** {
+ 189              		.loc 1 94 0
+ 190              		.cfi_startproc
+ 191              		@ args = 0, pretend = 0, frame = 0
+ 192              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s 			page 6
+
+
+ 193              	.LVL26:
+ 194 0000 10B5     		push	{r4, lr}
+ 195              	.LCFI5:
+ 196              		.cfi_def_cfa_offset 8
+ 197              		.cfi_offset 4, -8
+ 198              		.cfi_offset 14, -4
+ 199 0002 0446     		mov	r4, r0
+  95:u8g2/csrc/u8g2_buffer.c ****   u8g2_send_buffer(u8g2);
+ 200              		.loc 1 95 0
+ 201 0004 FFF7FEFF 		bl	u8g2_send_buffer
+ 202              	.LVL27:
+  96:u8g2/csrc/u8g2_buffer.c ****   u8x8_RefreshDisplay( u8g2_GetU8x8(u8g2) );  
+ 203              		.loc 1 96 0
+ 204 0008 2046     		mov	r0, r4
+ 205 000a FFF7FEFF 		bl	u8x8_RefreshDisplay
+ 206              	.LVL28:
+  97:u8g2/csrc/u8g2_buffer.c **** }
+ 207              		.loc 1 97 0
+ 208 000e 10BD     		pop	{r4, pc}
+ 209              		.cfi_endproc
+ 210              	.LFE3:
+ 212              		.section	.text.u8g2_SetBufferCurrTileRow,"ax",%progbits
+ 213              		.align	1
+ 214              		.global	u8g2_SetBufferCurrTileRow
+ 215              		.syntax unified
+ 216              		.thumb
+ 217              		.thumb_func
+ 218              		.fpu softvfp
+ 220              	u8g2_SetBufferCurrTileRow:
+ 221              	.LFB4:
+  98:u8g2/csrc/u8g2_buffer.c **** 
+  99:u8g2/csrc/u8g2_buffer.c **** /*============================================*/
+ 100:u8g2/csrc/u8g2_buffer.c **** void u8g2_SetBufferCurrTileRow(u8g2_t *u8g2, uint8_t row)
+ 101:u8g2/csrc/u8g2_buffer.c **** {
+ 222              		.loc 1 101 0
+ 223              		.cfi_startproc
+ 224              		@ args = 0, pretend = 0, frame = 0
+ 225              		@ frame_needed = 0, uses_anonymous_args = 0
+ 226              	.LVL29:
+ 227 0000 08B5     		push	{r3, lr}
+ 228              	.LCFI6:
+ 229              		.cfi_def_cfa_offset 8
+ 230              		.cfi_offset 3, -8
+ 231              		.cfi_offset 14, -4
+ 102:u8g2/csrc/u8g2_buffer.c ****   u8g2->tile_curr_row = row;
+ 232              		.loc 1 102 0
+ 233 0002 80F83910 		strb	r1, [r0, #57]
+ 103:u8g2/csrc/u8g2_buffer.c ****   u8g2->cb->update(u8g2);
+ 234              		.loc 1 103 0
+ 235 0006 036B     		ldr	r3, [r0, #48]
+ 236 0008 1B68     		ldr	r3, [r3]
+ 237 000a 9847     		blx	r3
+ 238              	.LVL30:
+ 104:u8g2/csrc/u8g2_buffer.c **** }
+ 239              		.loc 1 104 0
+ 240 000c 08BD     		pop	{r3, pc}
+ 241              		.cfi_endproc
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s 			page 7
+
+
+ 242              	.LFE4:
+ 244              		.section	.text.u8g2_FirstPage,"ax",%progbits
+ 245              		.align	1
+ 246              		.global	u8g2_FirstPage
+ 247              		.syntax unified
+ 248              		.thumb
+ 249              		.thumb_func
+ 250              		.fpu softvfp
+ 252              	u8g2_FirstPage:
+ 253              	.LFB5:
+ 105:u8g2/csrc/u8g2_buffer.c **** 
+ 106:u8g2/csrc/u8g2_buffer.c **** void u8g2_FirstPage(u8g2_t *u8g2)
+ 107:u8g2/csrc/u8g2_buffer.c **** {
+ 254              		.loc 1 107 0
+ 255              		.cfi_startproc
+ 256              		@ args = 0, pretend = 0, frame = 0
+ 257              		@ frame_needed = 0, uses_anonymous_args = 0
+ 258              	.LVL31:
+ 259 0000 10B5     		push	{r4, lr}
+ 260              	.LCFI7:
+ 261              		.cfi_def_cfa_offset 8
+ 262              		.cfi_offset 4, -8
+ 263              		.cfi_offset 14, -4
+ 264 0002 0446     		mov	r4, r0
+ 108:u8g2/csrc/u8g2_buffer.c ****   if ( u8g2->is_auto_page_clear )
+ 265              		.loc 1 108 0
+ 266 0004 90F87E30 		ldrb	r3, [r0, #126]	@ zero_extendqisi2
+ 267 0008 23B9     		cbnz	r3, .L16
+ 268              	.LVL32:
+ 269              	.L14:
+ 109:u8g2/csrc/u8g2_buffer.c ****   {
+ 110:u8g2/csrc/u8g2_buffer.c ****     u8g2_ClearBuffer(u8g2);
+ 111:u8g2/csrc/u8g2_buffer.c ****   }
+ 112:u8g2/csrc/u8g2_buffer.c ****   u8g2_SetBufferCurrTileRow(u8g2, 0);
+ 270              		.loc 1 112 0
+ 271 000a 0021     		movs	r1, #0
+ 272 000c 2046     		mov	r0, r4
+ 273 000e FFF7FEFF 		bl	u8g2_SetBufferCurrTileRow
+ 274              	.LVL33:
+ 113:u8g2/csrc/u8g2_buffer.c **** }
+ 275              		.loc 1 113 0
+ 276 0012 10BD     		pop	{r4, pc}
+ 277              	.LVL34:
+ 278              	.L16:
+ 110:u8g2/csrc/u8g2_buffer.c ****   }
+ 279              		.loc 1 110 0
+ 280 0014 FFF7FEFF 		bl	u8g2_ClearBuffer
+ 281              	.LVL35:
+ 282 0018 F7E7     		b	.L14
+ 283              		.cfi_endproc
+ 284              	.LFE5:
+ 286              		.section	.text.u8g2_NextPage,"ax",%progbits
+ 287              		.align	1
+ 288              		.global	u8g2_NextPage
+ 289              		.syntax unified
+ 290              		.thumb
+ 291              		.thumb_func
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s 			page 8
+
+
+ 292              		.fpu softvfp
+ 294              	u8g2_NextPage:
+ 295              	.LFB6:
+ 114:u8g2/csrc/u8g2_buffer.c **** 
+ 115:u8g2/csrc/u8g2_buffer.c **** uint8_t u8g2_NextPage(u8g2_t *u8g2)
+ 116:u8g2/csrc/u8g2_buffer.c **** {
+ 296              		.loc 1 116 0
+ 297              		.cfi_startproc
+ 298              		@ args = 0, pretend = 0, frame = 0
+ 299              		@ frame_needed = 0, uses_anonymous_args = 0
+ 300              	.LVL36:
+ 301 0000 38B5     		push	{r3, r4, r5, lr}
+ 302              	.LCFI8:
+ 303              		.cfi_def_cfa_offset 16
+ 304              		.cfi_offset 3, -16
+ 305              		.cfi_offset 4, -12
+ 306              		.cfi_offset 5, -8
+ 307              		.cfi_offset 14, -4
+ 308 0002 0546     		mov	r5, r0
+ 117:u8g2/csrc/u8g2_buffer.c ****   uint8_t row;
+ 118:u8g2/csrc/u8g2_buffer.c ****   u8g2_send_buffer(u8g2);
+ 309              		.loc 1 118 0
+ 310 0004 FFF7FEFF 		bl	u8g2_send_buffer
+ 311              	.LVL37:
+ 119:u8g2/csrc/u8g2_buffer.c ****   row = u8g2->tile_curr_row;
+ 312              		.loc 1 119 0
+ 313 0008 95F83930 		ldrb	r3, [r5, #57]	@ zero_extendqisi2
+ 314              	.LVL38:
+ 120:u8g2/csrc/u8g2_buffer.c ****   row += u8g2->tile_buf_height;
+ 315              		.loc 1 120 0
+ 316 000c 95F83840 		ldrb	r4, [r5, #56]	@ zero_extendqisi2
+ 317 0010 1C44     		add	r4, r4, r3
+ 318 0012 E4B2     		uxtb	r4, r4
+ 319              	.LVL39:
+ 121:u8g2/csrc/u8g2_buffer.c ****   if ( row >= u8g2_GetU8x8(u8g2)->display_info->tile_height )
+ 320              		.loc 1 121 0
+ 321 0014 2B68     		ldr	r3, [r5]
+ 322 0016 5B7C     		ldrb	r3, [r3, #17]	@ zero_extendqisi2
+ 323 0018 A342     		cmp	r3, r4
+ 324 001a 08D9     		bls	.L22
+ 122:u8g2/csrc/u8g2_buffer.c ****   {
+ 123:u8g2/csrc/u8g2_buffer.c ****     u8x8_RefreshDisplay( u8g2_GetU8x8(u8g2) );
+ 124:u8g2/csrc/u8g2_buffer.c ****     return 0;
+ 125:u8g2/csrc/u8g2_buffer.c ****   }
+ 126:u8g2/csrc/u8g2_buffer.c ****   if ( u8g2->is_auto_page_clear )
+ 325              		.loc 1 126 0
+ 326 001c 95F87E30 		ldrb	r3, [r5, #126]	@ zero_extendqisi2
+ 327 0020 53B9     		cbnz	r3, .L23
+ 328              	.L20:
+ 127:u8g2/csrc/u8g2_buffer.c ****   {
+ 128:u8g2/csrc/u8g2_buffer.c ****     u8g2_ClearBuffer(u8g2);
+ 129:u8g2/csrc/u8g2_buffer.c ****   }
+ 130:u8g2/csrc/u8g2_buffer.c ****   u8g2_SetBufferCurrTileRow(u8g2, row);
+ 329              		.loc 1 130 0
+ 330 0022 2146     		mov	r1, r4
+ 331 0024 2846     		mov	r0, r5
+ 332 0026 FFF7FEFF 		bl	u8g2_SetBufferCurrTileRow
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s 			page 9
+
+
+ 333              	.LVL40:
+ 131:u8g2/csrc/u8g2_buffer.c ****   return 1;
+ 334              		.loc 1 131 0
+ 335 002a 0120     		movs	r0, #1
+ 336              	.L19:
+ 132:u8g2/csrc/u8g2_buffer.c **** }
+ 337              		.loc 1 132 0
+ 338 002c 38BD     		pop	{r3, r4, r5, pc}
+ 339              	.LVL41:
+ 340              	.L22:
+ 123:u8g2/csrc/u8g2_buffer.c ****     return 0;
+ 341              		.loc 1 123 0
+ 342 002e 2846     		mov	r0, r5
+ 343 0030 FFF7FEFF 		bl	u8x8_RefreshDisplay
+ 344              	.LVL42:
+ 124:u8g2/csrc/u8g2_buffer.c ****   }
+ 345              		.loc 1 124 0
+ 346 0034 0020     		movs	r0, #0
+ 347 0036 F9E7     		b	.L19
+ 348              	.L23:
+ 128:u8g2/csrc/u8g2_buffer.c ****   }
+ 349              		.loc 1 128 0
+ 350 0038 2846     		mov	r0, r5
+ 351 003a FFF7FEFF 		bl	u8g2_ClearBuffer
+ 352              	.LVL43:
+ 353 003e F0E7     		b	.L20
+ 354              		.cfi_endproc
+ 355              	.LFE6:
+ 357              		.text
+ 358              	.Letext0:
+ 359              		.file 2 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_defau
+ 360              		.file 3 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_stdint.h"
+ 361              		.file 4 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/
+ 362              		.file 5 "u8g2/csrc/u8x8.h"
+ 363              		.file 6 "u8g2/csrc/u8g2.h"
+ 364              		.file 7 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/lock.h"
+ 365              		.file 8 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_types.h"
+ 366              		.file 9 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/reent.h"
+ 367              		.file 10 "<built-in>"
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 u8g2_buffer.c
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s:16     .text.u8g2_send_tile_row:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s:22     .text.u8g2_send_tile_row:0000000000000000 u8g2_send_tile_row
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s:72     .text.u8g2_send_buffer:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s:78     .text.u8g2_send_buffer:0000000000000000 u8g2_send_buffer
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s:139    .text.u8g2_ClearBuffer:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s:146    .text.u8g2_ClearBuffer:0000000000000000 u8g2_ClearBuffer
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s:180    .text.u8g2_SendBuffer:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s:187    .text.u8g2_SendBuffer:0000000000000000 u8g2_SendBuffer
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s:213    .text.u8g2_SetBufferCurrTileRow:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s:220    .text.u8g2_SetBufferCurrTileRow:0000000000000000 u8g2_SetBufferCurrTileRow
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s:245    .text.u8g2_FirstPage:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s:252    .text.u8g2_FirstPage:0000000000000000 u8g2_FirstPage
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s:287    .text.u8g2_NextPage:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccyHGdmh.s:294    .text.u8g2_NextPage:0000000000000000 u8g2_NextPage
+
+UNDEFINED SYMBOLS
+u8x8_DrawTile
+memset
+u8x8_RefreshDisplay

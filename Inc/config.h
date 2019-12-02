@@ -4,7 +4,7 @@
 #include "main.h"
 #include "system.h"
 
-#define PAGE_SIZE			(0x400) /* 1 Kbyte*/
+#define PAGE_SIZE			(0x800) /* 2 Kbyte*/
 #define FLASH_SIZE			(0x20000) /* 128 Kbytes */
 #define CONFIG_AREA_SIZE	4096
 #define CONFIG_AREA_START	((uint32_t)((0x8000000 + FLASH_SIZE) - PAGE_SIZE*(CONFIG_AREA_SIZE/PAGE_SIZE)))

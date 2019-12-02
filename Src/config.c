@@ -4,11 +4,11 @@
 
 CFG_STRUCT sys_cfg;
 
-#define ADDR_FLASH_PAGE_120 	((uint32_t)0x0801E000)
-#define ADDR_FLASH_PAGE_127		((uint32_t)0x0801FC00)
+#define ADDR_FLASH_PAGE_188 	((uint32_t)0x0805E000)
+#define ADDR_FLASH_PAGE_189		((uint32_t)0x0805E800)
 
-#define FLASH_USER_START_ADDR   ADDR_FLASH_PAGE_120   /* Start @ of user Flash area */
-#define FLASH_USER_END_ADDR     ADDR_FLASH_PAGE_127 + FLASH_PAGE_SIZE   /* End @ of user Flash area */
+#define FLASH_USER_START_ADDR   ADDR_FLASH_PAGE_188   /* Start @ of user Flash area */
+#define FLASH_USER_END_ADDR     ADDR_FLASH_PAGE_189 + FLASH_PAGE_SIZE   /* End @ of user Flash area */
 
 #define DATA_32                 ((uint32_t)0x12345678)
 

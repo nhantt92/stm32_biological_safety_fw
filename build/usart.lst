@@ -1,0 +1,640 @@
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"usart.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.MX_USART1_UART_Init,"ax",%progbits
+  16              		.align	1
+  17              		.global	MX_USART1_UART_Init
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  21              		.fpu softvfp
+  23              	MX_USART1_UART_Init:
+  24              	.LFB66:
+  25              		.file 1 "Src/usart.c"
+   1:Src/usart.c   **** /**
+   2:Src/usart.c   ****   ******************************************************************************
+   3:Src/usart.c   ****   * File Name          : USART.c
+   4:Src/usart.c   ****   * Description        : This file provides code for the configuration
+   5:Src/usart.c   ****   *                      of the USART instances.
+   6:Src/usart.c   ****   ******************************************************************************
+   7:Src/usart.c   ****   * @attention
+   8:Src/usart.c   ****   *
+   9:Src/usart.c   ****   * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  10:Src/usart.c   ****   * All rights reserved.</center></h2>
+  11:Src/usart.c   ****   *
+  12:Src/usart.c   ****   * This software component is licensed by ST under Ultimate Liberty license
+  13:Src/usart.c   ****   * SLA0044, the "License"; You may not use this file except in compliance with
+  14:Src/usart.c   ****   * the License. You may obtain a copy of the License at:
+  15:Src/usart.c   ****   *                             www.st.com/SLA0044
+  16:Src/usart.c   ****   *
+  17:Src/usart.c   ****   ******************************************************************************
+  18:Src/usart.c   ****   */
+  19:Src/usart.c   **** 
+  20:Src/usart.c   **** /* Includes ------------------------------------------------------------------*/
+  21:Src/usart.c   **** #include "usart.h"
+  22:Src/usart.c   **** 
+  23:Src/usart.c   **** /* USER CODE BEGIN 0 */
+  24:Src/usart.c   **** 
+  25:Src/usart.c   **** /* USER CODE END 0 */
+  26:Src/usart.c   **** 
+  27:Src/usart.c   **** UART_HandleTypeDef huart1;
+  28:Src/usart.c   **** UART_HandleTypeDef huart2;
+  29:Src/usart.c   **** 
+  30:Src/usart.c   **** /* USART1 init function */
+  31:Src/usart.c   **** 
+  32:Src/usart.c   **** void MX_USART1_UART_Init(void)
+  33:Src/usart.c   **** {
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s 			page 2
+
+
+  26              		.loc 1 33 0
+  27              		.cfi_startproc
+  28              		@ args = 0, pretend = 0, frame = 0
+  29              		@ frame_needed = 0, uses_anonymous_args = 0
+  30 0000 08B5     		push	{r3, lr}
+  31              	.LCFI0:
+  32              		.cfi_def_cfa_offset 8
+  33              		.cfi_offset 3, -8
+  34              		.cfi_offset 14, -4
+  34:Src/usart.c   **** 
+  35:Src/usart.c   ****   huart1.Instance = USART1;
+  35              		.loc 1 35 0
+  36 0002 0A48     		ldr	r0, .L5
+  37 0004 0A4B     		ldr	r3, .L5+4
+  38 0006 0360     		str	r3, [r0]
+  36:Src/usart.c   ****   huart1.Init.BaudRate = 115200;
+  39              		.loc 1 36 0
+  40 0008 4FF4E133 		mov	r3, #115200
+  41 000c 4360     		str	r3, [r0, #4]
+  37:Src/usart.c   ****   huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  42              		.loc 1 37 0
+  43 000e 0023     		movs	r3, #0
+  44 0010 8360     		str	r3, [r0, #8]
+  38:Src/usart.c   ****   huart1.Init.StopBits = UART_STOPBITS_1;
+  45              		.loc 1 38 0
+  46 0012 C360     		str	r3, [r0, #12]
+  39:Src/usart.c   ****   huart1.Init.Parity = UART_PARITY_NONE;
+  47              		.loc 1 39 0
+  48 0014 0361     		str	r3, [r0, #16]
+  40:Src/usart.c   ****   huart1.Init.Mode = UART_MODE_TX_RX;
+  49              		.loc 1 40 0
+  50 0016 0C22     		movs	r2, #12
+  51 0018 4261     		str	r2, [r0, #20]
+  41:Src/usart.c   ****   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  52              		.loc 1 41 0
+  53 001a 8361     		str	r3, [r0, #24]
+  42:Src/usart.c   ****   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  54              		.loc 1 42 0
+  55 001c C361     		str	r3, [r0, #28]
+  43:Src/usart.c   ****   if (HAL_UART_Init(&huart1) != HAL_OK)
+  56              		.loc 1 43 0
+  57 001e FFF7FEFF 		bl	HAL_UART_Init
+  58              	.LVL0:
+  59 0022 00B9     		cbnz	r0, .L4
+  60              	.L1:
+  44:Src/usart.c   ****   {
+  45:Src/usart.c   ****     Error_Handler();
+  46:Src/usart.c   ****   }
+  47:Src/usart.c   **** 
+  48:Src/usart.c   **** }
+  61              		.loc 1 48 0
+  62 0024 08BD     		pop	{r3, pc}
+  63              	.L4:
+  45:Src/usart.c   ****   }
+  64              		.loc 1 45 0
+  65 0026 FFF7FEFF 		bl	Error_Handler
+  66              	.LVL1:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s 			page 3
+
+
+  67              		.loc 1 48 0
+  68 002a FBE7     		b	.L1
+  69              	.L6:
+  70              		.align	2
+  71              	.L5:
+  72 002c 00000000 		.word	huart1
+  73 0030 00380140 		.word	1073821696
+  74              		.cfi_endproc
+  75              	.LFE66:
+  77              		.section	.text.MX_USART2_UART_Init,"ax",%progbits
+  78              		.align	1
+  79              		.global	MX_USART2_UART_Init
+  80              		.syntax unified
+  81              		.thumb
+  82              		.thumb_func
+  83              		.fpu softvfp
+  85              	MX_USART2_UART_Init:
+  86              	.LFB67:
+  49:Src/usart.c   **** /* USART2 init function */
+  50:Src/usart.c   **** 
+  51:Src/usart.c   **** void MX_USART2_UART_Init(void)
+  52:Src/usart.c   **** {
+  87              		.loc 1 52 0
+  88              		.cfi_startproc
+  89              		@ args = 0, pretend = 0, frame = 0
+  90              		@ frame_needed = 0, uses_anonymous_args = 0
+  91 0000 08B5     		push	{r3, lr}
+  92              	.LCFI1:
+  93              		.cfi_def_cfa_offset 8
+  94              		.cfi_offset 3, -8
+  95              		.cfi_offset 14, -4
+  53:Src/usart.c   **** 
+  54:Src/usart.c   ****   huart2.Instance = USART2;
+  96              		.loc 1 54 0
+  97 0002 0A48     		ldr	r0, .L11
+  98 0004 0A4B     		ldr	r3, .L11+4
+  99 0006 0360     		str	r3, [r0]
+  55:Src/usart.c   ****   huart2.Init.BaudRate = 115200;
+ 100              		.loc 1 55 0
+ 101 0008 4FF4E133 		mov	r3, #115200
+ 102 000c 4360     		str	r3, [r0, #4]
+  56:Src/usart.c   ****   huart2.Init.WordLength = UART_WORDLENGTH_8B;
+ 103              		.loc 1 56 0
+ 104 000e 0023     		movs	r3, #0
+ 105 0010 8360     		str	r3, [r0, #8]
+  57:Src/usart.c   ****   huart2.Init.StopBits = UART_STOPBITS_1;
+ 106              		.loc 1 57 0
+ 107 0012 C360     		str	r3, [r0, #12]
+  58:Src/usart.c   ****   huart2.Init.Parity = UART_PARITY_NONE;
+ 108              		.loc 1 58 0
+ 109 0014 0361     		str	r3, [r0, #16]
+  59:Src/usart.c   ****   huart2.Init.Mode = UART_MODE_TX_RX;
+ 110              		.loc 1 59 0
+ 111 0016 0C22     		movs	r2, #12
+ 112 0018 4261     		str	r2, [r0, #20]
+  60:Src/usart.c   ****   huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 113              		.loc 1 60 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s 			page 4
+
+
+ 114 001a 8361     		str	r3, [r0, #24]
+  61:Src/usart.c   ****   huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+ 115              		.loc 1 61 0
+ 116 001c C361     		str	r3, [r0, #28]
+  62:Src/usart.c   ****   if (HAL_UART_Init(&huart2) != HAL_OK)
+ 117              		.loc 1 62 0
+ 118 001e FFF7FEFF 		bl	HAL_UART_Init
+ 119              	.LVL2:
+ 120 0022 00B9     		cbnz	r0, .L10
+ 121              	.L7:
+  63:Src/usart.c   ****   {
+  64:Src/usart.c   ****     Error_Handler();
+  65:Src/usart.c   ****   }
+  66:Src/usart.c   **** 
+  67:Src/usart.c   **** }
+ 122              		.loc 1 67 0
+ 123 0024 08BD     		pop	{r3, pc}
+ 124              	.L10:
+  64:Src/usart.c   ****   }
+ 125              		.loc 1 64 0
+ 126 0026 FFF7FEFF 		bl	Error_Handler
+ 127              	.LVL3:
+ 128              		.loc 1 67 0
+ 129 002a FBE7     		b	.L7
+ 130              	.L12:
+ 131              		.align	2
+ 132              	.L11:
+ 133 002c 00000000 		.word	huart2
+ 134 0030 00440040 		.word	1073759232
+ 135              		.cfi_endproc
+ 136              	.LFE67:
+ 138              		.section	.text.HAL_UART_MspInit,"ax",%progbits
+ 139              		.align	1
+ 140              		.global	HAL_UART_MspInit
+ 141              		.syntax unified
+ 142              		.thumb
+ 143              		.thumb_func
+ 144              		.fpu softvfp
+ 146              	HAL_UART_MspInit:
+ 147              	.LFB68:
+  68:Src/usart.c   **** 
+  69:Src/usart.c   **** void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
+  70:Src/usart.c   **** {
+ 148              		.loc 1 70 0
+ 149              		.cfi_startproc
+ 150              		@ args = 0, pretend = 0, frame = 32
+ 151              		@ frame_needed = 0, uses_anonymous_args = 0
+ 152              	.LVL4:
+ 153 0000 10B5     		push	{r4, lr}
+ 154              	.LCFI2:
+ 155              		.cfi_def_cfa_offset 8
+ 156              		.cfi_offset 4, -8
+ 157              		.cfi_offset 14, -4
+ 158 0002 88B0     		sub	sp, sp, #32
+ 159              	.LCFI3:
+ 160              		.cfi_def_cfa_offset 40
+  71:Src/usart.c   **** 
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s 			page 5
+
+
+  72:Src/usart.c   ****   GPIO_InitTypeDef GPIO_InitStruct = {0};
+ 161              		.loc 1 72 0
+ 162 0004 0023     		movs	r3, #0
+ 163 0006 0493     		str	r3, [sp, #16]
+ 164 0008 0593     		str	r3, [sp, #20]
+ 165 000a 0693     		str	r3, [sp, #24]
+ 166 000c 0793     		str	r3, [sp, #28]
+  73:Src/usart.c   ****   if(uartHandle->Instance==USART1)
+ 167              		.loc 1 73 0
+ 168 000e 0368     		ldr	r3, [r0]
+ 169 0010 2C4A     		ldr	r2, .L19
+ 170 0012 9342     		cmp	r3, r2
+ 171 0014 04D0     		beq	.L17
+  74:Src/usart.c   ****   {
+  75:Src/usart.c   ****   /* USER CODE BEGIN USART1_MspInit 0 */
+  76:Src/usart.c   **** 
+  77:Src/usart.c   ****   /* USER CODE END USART1_MspInit 0 */
+  78:Src/usart.c   ****     /* USART1 clock enable */
+  79:Src/usart.c   ****     __HAL_RCC_USART1_CLK_ENABLE();
+  80:Src/usart.c   ****   
+  81:Src/usart.c   ****     __HAL_RCC_GPIOA_CLK_ENABLE();
+  82:Src/usart.c   ****     /**USART1 GPIO Configuration    
+  83:Src/usart.c   ****     PA9     ------> USART1_TX
+  84:Src/usart.c   ****     PA10     ------> USART1_RX 
+  85:Src/usart.c   ****     */
+  86:Src/usart.c   ****     GPIO_InitStruct.Pin = GPIO_PIN_9;
+  87:Src/usart.c   ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  88:Src/usart.c   ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  89:Src/usart.c   ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  90:Src/usart.c   **** 
+  91:Src/usart.c   ****     GPIO_InitStruct.Pin = GPIO_PIN_10;
+  92:Src/usart.c   ****     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  93:Src/usart.c   ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+  94:Src/usart.c   ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  95:Src/usart.c   **** 
+  96:Src/usart.c   ****   /* USER CODE BEGIN USART1_MspInit 1 */
+  97:Src/usart.c   **** 
+  98:Src/usart.c   ****   /* USER CODE END USART1_MspInit 1 */
+  99:Src/usart.c   ****   }
+ 100:Src/usart.c   ****   else if(uartHandle->Instance==USART2)
+ 172              		.loc 1 100 0
+ 173 0016 2C4A     		ldr	r2, .L19+4
+ 174 0018 9342     		cmp	r3, r2
+ 175 001a 2BD0     		beq	.L18
+ 176              	.LVL5:
+ 177              	.L13:
+ 101:Src/usart.c   ****   {
+ 102:Src/usart.c   ****   /* USER CODE BEGIN USART2_MspInit 0 */
+ 103:Src/usart.c   **** 
+ 104:Src/usart.c   ****   /* USER CODE END USART2_MspInit 0 */
+ 105:Src/usart.c   ****     /* USART2 clock enable */
+ 106:Src/usart.c   ****     __HAL_RCC_USART2_CLK_ENABLE();
+ 107:Src/usart.c   ****   
+ 108:Src/usart.c   ****     __HAL_RCC_GPIOA_CLK_ENABLE();
+ 109:Src/usart.c   ****     /**USART2 GPIO Configuration    
+ 110:Src/usart.c   ****     PA2     ------> USART2_TX
+ 111:Src/usart.c   ****     PA3     ------> USART2_RX 
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s 			page 6
+
+
+ 112:Src/usart.c   ****     */
+ 113:Src/usart.c   ****     GPIO_InitStruct.Pin = GPIO_PIN_2;
+ 114:Src/usart.c   ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 115:Src/usart.c   ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+ 116:Src/usart.c   ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 117:Src/usart.c   **** 
+ 118:Src/usart.c   ****     GPIO_InitStruct.Pin = GPIO_PIN_3;
+ 119:Src/usart.c   ****     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+ 120:Src/usart.c   ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 121:Src/usart.c   ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 122:Src/usart.c   **** 
+ 123:Src/usart.c   ****   /* USER CODE BEGIN USART2_MspInit 1 */
+ 124:Src/usart.c   **** 
+ 125:Src/usart.c   ****   /* USER CODE END USART2_MspInit 1 */
+ 126:Src/usart.c   ****   }
+ 127:Src/usart.c   **** }
+ 178              		.loc 1 127 0
+ 179 001c 08B0     		add	sp, sp, #32
+ 180              	.LCFI4:
+ 181              		.cfi_remember_state
+ 182              		.cfi_def_cfa_offset 8
+ 183              		@ sp needed
+ 184 001e 10BD     		pop	{r4, pc}
+ 185              	.LVL6:
+ 186              	.L17:
+ 187              	.LCFI5:
+ 188              		.cfi_restore_state
+ 189              	.LBB2:
+  79:Src/usart.c   ****   
+ 190              		.loc 1 79 0
+ 191 0020 2A4B     		ldr	r3, .L19+8
+ 192 0022 9A69     		ldr	r2, [r3, #24]
+ 193 0024 42F48042 		orr	r2, r2, #16384
+ 194 0028 9A61     		str	r2, [r3, #24]
+ 195 002a 9A69     		ldr	r2, [r3, #24]
+ 196 002c 02F48042 		and	r2, r2, #16384
+ 197 0030 0092     		str	r2, [sp]
+ 198 0032 009A     		ldr	r2, [sp]
+ 199              	.LBE2:
+ 200              	.LBB3:
+  81:Src/usart.c   ****     /**USART1 GPIO Configuration    
+ 201              		.loc 1 81 0
+ 202 0034 9A69     		ldr	r2, [r3, #24]
+ 203 0036 42F00402 		orr	r2, r2, #4
+ 204 003a 9A61     		str	r2, [r3, #24]
+ 205 003c 9B69     		ldr	r3, [r3, #24]
+ 206 003e 03F00403 		and	r3, r3, #4
+ 207 0042 0193     		str	r3, [sp, #4]
+ 208 0044 019B     		ldr	r3, [sp, #4]
+ 209              	.LBE3:
+  86:Src/usart.c   ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 210              		.loc 1 86 0
+ 211 0046 4FF40073 		mov	r3, #512
+ 212 004a 0493     		str	r3, [sp, #16]
+  87:Src/usart.c   ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+ 213              		.loc 1 87 0
+ 214 004c 0223     		movs	r3, #2
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s 			page 7
+
+
+ 215 004e 0593     		str	r3, [sp, #20]
+  88:Src/usart.c   ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 216              		.loc 1 88 0
+ 217 0050 0323     		movs	r3, #3
+ 218 0052 0793     		str	r3, [sp, #28]
+  89:Src/usart.c   **** 
+ 219              		.loc 1 89 0
+ 220 0054 1E4C     		ldr	r4, .L19+12
+ 221 0056 04A9     		add	r1, sp, #16
+ 222 0058 2046     		mov	r0, r4
+ 223              	.LVL7:
+ 224 005a FFF7FEFF 		bl	HAL_GPIO_Init
+ 225              	.LVL8:
+  91:Src/usart.c   ****     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+ 226              		.loc 1 91 0
+ 227 005e 4FF48063 		mov	r3, #1024
+ 228 0062 0493     		str	r3, [sp, #16]
+  92:Src/usart.c   ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 229              		.loc 1 92 0
+ 230 0064 0023     		movs	r3, #0
+ 231 0066 0593     		str	r3, [sp, #20]
+  93:Src/usart.c   ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 232              		.loc 1 93 0
+ 233 0068 0693     		str	r3, [sp, #24]
+  94:Src/usart.c   **** 
+ 234              		.loc 1 94 0
+ 235 006a 04A9     		add	r1, sp, #16
+ 236 006c 2046     		mov	r0, r4
+ 237 006e FFF7FEFF 		bl	HAL_GPIO_Init
+ 238              	.LVL9:
+ 239 0072 D3E7     		b	.L13
+ 240              	.LVL10:
+ 241              	.L18:
+ 242              	.LBB4:
+ 106:Src/usart.c   ****   
+ 243              		.loc 1 106 0
+ 244 0074 154B     		ldr	r3, .L19+8
+ 245 0076 DA69     		ldr	r2, [r3, #28]
+ 246 0078 42F40032 		orr	r2, r2, #131072
+ 247 007c DA61     		str	r2, [r3, #28]
+ 248 007e DA69     		ldr	r2, [r3, #28]
+ 249 0080 02F40032 		and	r2, r2, #131072
+ 250 0084 0292     		str	r2, [sp, #8]
+ 251 0086 029A     		ldr	r2, [sp, #8]
+ 252              	.LBE4:
+ 253              	.LBB5:
+ 108:Src/usart.c   ****     /**USART2 GPIO Configuration    
+ 254              		.loc 1 108 0
+ 255 0088 9A69     		ldr	r2, [r3, #24]
+ 256 008a 42F00402 		orr	r2, r2, #4
+ 257 008e 9A61     		str	r2, [r3, #24]
+ 258 0090 9B69     		ldr	r3, [r3, #24]
+ 259 0092 03F00403 		and	r3, r3, #4
+ 260 0096 0393     		str	r3, [sp, #12]
+ 261 0098 039B     		ldr	r3, [sp, #12]
+ 262              	.LBE5:
+ 113:Src/usart.c   ****     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s 			page 8
+
+
+ 263              		.loc 1 113 0
+ 264 009a 0423     		movs	r3, #4
+ 265 009c 0493     		str	r3, [sp, #16]
+ 114:Src/usart.c   ****     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+ 266              		.loc 1 114 0
+ 267 009e 0223     		movs	r3, #2
+ 268 00a0 0593     		str	r3, [sp, #20]
+ 115:Src/usart.c   ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 269              		.loc 1 115 0
+ 270 00a2 0323     		movs	r3, #3
+ 271 00a4 0793     		str	r3, [sp, #28]
+ 116:Src/usart.c   **** 
+ 272              		.loc 1 116 0
+ 273 00a6 0A4C     		ldr	r4, .L19+12
+ 274 00a8 04A9     		add	r1, sp, #16
+ 275 00aa 2046     		mov	r0, r4
+ 276              	.LVL11:
+ 277 00ac FFF7FEFF 		bl	HAL_GPIO_Init
+ 278              	.LVL12:
+ 118:Src/usart.c   ****     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+ 279              		.loc 1 118 0
+ 280 00b0 0823     		movs	r3, #8
+ 281 00b2 0493     		str	r3, [sp, #16]
+ 119:Src/usart.c   ****     GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 282              		.loc 1 119 0
+ 283 00b4 0023     		movs	r3, #0
+ 284 00b6 0593     		str	r3, [sp, #20]
+ 120:Src/usart.c   ****     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 285              		.loc 1 120 0
+ 286 00b8 0693     		str	r3, [sp, #24]
+ 121:Src/usart.c   **** 
+ 287              		.loc 1 121 0
+ 288 00ba 04A9     		add	r1, sp, #16
+ 289 00bc 2046     		mov	r0, r4
+ 290 00be FFF7FEFF 		bl	HAL_GPIO_Init
+ 291              	.LVL13:
+ 292              		.loc 1 127 0
+ 293 00c2 ABE7     		b	.L13
+ 294              	.L20:
+ 295              		.align	2
+ 296              	.L19:
+ 297 00c4 00380140 		.word	1073821696
+ 298 00c8 00440040 		.word	1073759232
+ 299 00cc 00100240 		.word	1073876992
+ 300 00d0 00080140 		.word	1073809408
+ 301              		.cfi_endproc
+ 302              	.LFE68:
+ 304              		.section	.text.HAL_UART_MspDeInit,"ax",%progbits
+ 305              		.align	1
+ 306              		.global	HAL_UART_MspDeInit
+ 307              		.syntax unified
+ 308              		.thumb
+ 309              		.thumb_func
+ 310              		.fpu softvfp
+ 312              	HAL_UART_MspDeInit:
+ 313              	.LFB69:
+ 128:Src/usart.c   **** 
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s 			page 9
+
+
+ 129:Src/usart.c   **** void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
+ 130:Src/usart.c   **** {
+ 314              		.loc 1 130 0
+ 315              		.cfi_startproc
+ 316              		@ args = 0, pretend = 0, frame = 0
+ 317              		@ frame_needed = 0, uses_anonymous_args = 0
+ 318              	.LVL14:
+ 319 0000 08B5     		push	{r3, lr}
+ 320              	.LCFI6:
+ 321              		.cfi_def_cfa_offset 8
+ 322              		.cfi_offset 3, -8
+ 323              		.cfi_offset 14, -4
+ 131:Src/usart.c   **** 
+ 132:Src/usart.c   ****   if(uartHandle->Instance==USART1)
+ 324              		.loc 1 132 0
+ 325 0002 0368     		ldr	r3, [r0]
+ 326 0004 0E4A     		ldr	r2, .L27
+ 327 0006 9342     		cmp	r3, r2
+ 328 0008 03D0     		beq	.L25
+ 133:Src/usart.c   ****   {
+ 134:Src/usart.c   ****   /* USER CODE BEGIN USART1_MspDeInit 0 */
+ 135:Src/usart.c   **** 
+ 136:Src/usart.c   ****   /* USER CODE END USART1_MspDeInit 0 */
+ 137:Src/usart.c   ****     /* Peripheral clock disable */
+ 138:Src/usart.c   ****     __HAL_RCC_USART1_CLK_DISABLE();
+ 139:Src/usart.c   ****   
+ 140:Src/usart.c   ****     /**USART1 GPIO Configuration    
+ 141:Src/usart.c   ****     PA9     ------> USART1_TX
+ 142:Src/usart.c   ****     PA10     ------> USART1_RX 
+ 143:Src/usart.c   ****     */
+ 144:Src/usart.c   ****     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9|GPIO_PIN_10);
+ 145:Src/usart.c   **** 
+ 146:Src/usart.c   ****   /* USER CODE BEGIN USART1_MspDeInit 1 */
+ 147:Src/usart.c   **** 
+ 148:Src/usart.c   ****   /* USER CODE END USART1_MspDeInit 1 */
+ 149:Src/usart.c   ****   }
+ 150:Src/usart.c   ****   else if(uartHandle->Instance==USART2)
+ 329              		.loc 1 150 0
+ 330 000a 0E4A     		ldr	r2, .L27+4
+ 331 000c 9342     		cmp	r3, r2
+ 332 000e 0CD0     		beq	.L26
+ 333              	.LVL15:
+ 334              	.L21:
+ 151:Src/usart.c   ****   {
+ 152:Src/usart.c   ****   /* USER CODE BEGIN USART2_MspDeInit 0 */
+ 153:Src/usart.c   **** 
+ 154:Src/usart.c   ****   /* USER CODE END USART2_MspDeInit 0 */
+ 155:Src/usart.c   ****     /* Peripheral clock disable */
+ 156:Src/usart.c   ****     __HAL_RCC_USART2_CLK_DISABLE();
+ 157:Src/usart.c   ****   
+ 158:Src/usart.c   ****     /**USART2 GPIO Configuration    
+ 159:Src/usart.c   ****     PA2     ------> USART2_TX
+ 160:Src/usart.c   ****     PA3     ------> USART2_RX 
+ 161:Src/usart.c   ****     */
+ 162:Src/usart.c   ****     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_2|GPIO_PIN_3);
+ 163:Src/usart.c   **** 
+ 164:Src/usart.c   ****   /* USER CODE BEGIN USART2_MspDeInit 1 */
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s 			page 10
+
+
+ 165:Src/usart.c   **** 
+ 166:Src/usart.c   ****   /* USER CODE END USART2_MspDeInit 1 */
+ 167:Src/usart.c   ****   }
+ 168:Src/usart.c   **** } 
+ 335              		.loc 1 168 0
+ 336 0010 08BD     		pop	{r3, pc}
+ 337              	.LVL16:
+ 338              	.L25:
+ 138:Src/usart.c   ****   
+ 339              		.loc 1 138 0
+ 340 0012 02F55842 		add	r2, r2, #55296
+ 341 0016 9369     		ldr	r3, [r2, #24]
+ 342 0018 23F48043 		bic	r3, r3, #16384
+ 343 001c 9361     		str	r3, [r2, #24]
+ 144:Src/usart.c   **** 
+ 344              		.loc 1 144 0
+ 345 001e 4FF4C061 		mov	r1, #1536
+ 346 0022 0948     		ldr	r0, .L27+8
+ 347              	.LVL17:
+ 348 0024 FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 349              	.LVL18:
+ 350 0028 F2E7     		b	.L21
+ 351              	.LVL19:
+ 352              	.L26:
+ 156:Src/usart.c   ****   
+ 353              		.loc 1 156 0
+ 354 002a 02F5E632 		add	r2, r2, #117760
+ 355 002e D369     		ldr	r3, [r2, #28]
+ 356 0030 23F40033 		bic	r3, r3, #131072
+ 357 0034 D361     		str	r3, [r2, #28]
+ 162:Src/usart.c   **** 
+ 358              		.loc 1 162 0
+ 359 0036 0C21     		movs	r1, #12
+ 360 0038 0348     		ldr	r0, .L27+8
+ 361              	.LVL20:
+ 362 003a FFF7FEFF 		bl	HAL_GPIO_DeInit
+ 363              	.LVL21:
+ 364              		.loc 1 168 0
+ 365 003e E7E7     		b	.L21
+ 366              	.L28:
+ 367              		.align	2
+ 368              	.L27:
+ 369 0040 00380140 		.word	1073821696
+ 370 0044 00440040 		.word	1073759232
+ 371 0048 00080140 		.word	1073809408
+ 372              		.cfi_endproc
+ 373              	.LFE69:
+ 375              		.comm	huart2,64,4
+ 376              		.comm	huart1,64,4
+ 377              		.text
+ 378              	.Letext0:
+ 379              		.file 2 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_defau
+ 380              		.file 3 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_stdint.h"
+ 381              		.file 4 "Drivers/CMSIS/Include/core_cm3.h"
+ 382              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h"
+ 383              		.file 6 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
+ 384              		.file 7 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/lock.h"
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s 			page 11
+
+
+ 385              		.file 8 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_types.h"
+ 386              		.file 9 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/
+ 387              		.file 10 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/reent.h"
+ 388              		.file 11 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_def.h"
+ 389              		.file 12 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ 390              		.file 13 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_dma.h"
+ 391              		.file 14 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h"
+ 392              		.file 15 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 393              		.file 16 "u8g2/csrc/u8x8.h"
+ 394              		.file 17 "u8g2/csrc/u8g2.h"
+ 395              		.file 18 "Inc/main.h"
+ 396              		.file 19 "Inc/usart.h"
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s 			page 12
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 usart.c
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s:16     .text.MX_USART1_UART_Init:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s:23     .text.MX_USART1_UART_Init:0000000000000000 MX_USART1_UART_Init
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s:72     .text.MX_USART1_UART_Init:000000000000002c $d
+                            *COM*:0000000000000040 huart1
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s:78     .text.MX_USART2_UART_Init:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s:85     .text.MX_USART2_UART_Init:0000000000000000 MX_USART2_UART_Init
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s:133    .text.MX_USART2_UART_Init:000000000000002c $d
+                            *COM*:0000000000000040 huart2
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s:139    .text.HAL_UART_MspInit:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s:146    .text.HAL_UART_MspInit:0000000000000000 HAL_UART_MspInit
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s:297    .text.HAL_UART_MspInit:00000000000000c4 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s:305    .text.HAL_UART_MspDeInit:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s:312    .text.HAL_UART_MspDeInit:0000000000000000 HAL_UART_MspDeInit
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccHoK58n.s:369    .text.HAL_UART_MspDeInit:0000000000000040 $d
+
+UNDEFINED SYMBOLS
+HAL_UART_Init
+Error_Handler
+HAL_GPIO_Init
+HAL_GPIO_DeInit

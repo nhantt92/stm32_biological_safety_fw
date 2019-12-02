@@ -1,0 +1,837 @@
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 1
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"key.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.KeyInit,"ax",%progbits
+  16              		.align	1
+  17              		.global	KeyInit
+  18              		.syntax unified
+  19              		.thumb
+  20              		.thumb_func
+  21              		.fpu softvfp
+  23              	KeyInit:
+  24              	.LFB66:
+  25              		.file 1 "Src/key.c"
+   1:Src/key.c     **** #include "key.h"
+   2:Src/key.c     **** #include "u8g2.h"
+   3:Src/key.c     **** #include "main_screen.h"
+   4:Src/key.c     **** #include "buzzer.h"
+   5:Src/key.c     **** #include "system.h"
+   6:Src/key.c     **** #include "config.h"
+   7:Src/key.c     **** 
+   8:Src/key.c     **** KEY_STRUCT key;
+   9:Src/key.c     **** extern uint8_t toggle;
+  10:Src/key.c     **** 
+  11:Src/key.c     **** void KeyInit(void)
+  12:Src/key.c     **** {
+  26              		.loc 1 12 0
+  27              		.cfi_startproc
+  28              		@ args = 0, pretend = 0, frame = 24
+  29              		@ frame_needed = 0, uses_anonymous_args = 0
+  30 0000 10B5     		push	{r4, lr}
+  31              	.LCFI0:
+  32              		.cfi_def_cfa_offset 8
+  33              		.cfi_offset 4, -8
+  34              		.cfi_offset 14, -4
+  35 0002 86B0     		sub	sp, sp, #24
+  36              	.LCFI1:
+  37              		.cfi_def_cfa_offset 32
+  13:Src/key.c     **** 	GPIO_InitTypeDef GPIO_InitStruct = {0};
+  38              		.loc 1 13 0
+  39 0004 0024     		movs	r4, #0
+  40 0006 0394     		str	r4, [sp, #12]
+  41 0008 0494     		str	r4, [sp, #16]
+  42 000a 0594     		str	r4, [sp, #20]
+  43              	.LBB2:
+  14:Src/key.c     **** 
+  15:Src/key.c     **** 	__HAL_RCC_GPIOC_CLK_ENABLE();
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s 			page 2
+
+
+  44              		.loc 1 15 0
+  45 000c 144B     		ldr	r3, .L5
+  46 000e 9A69     		ldr	r2, [r3, #24]
+  47 0010 42F01002 		orr	r2, r2, #16
+  48 0014 9A61     		str	r2, [r3, #24]
+  49 0016 9B69     		ldr	r3, [r3, #24]
+  50 0018 03F01003 		and	r3, r3, #16
+  51 001c 0193     		str	r3, [sp, #4]
+  52 001e 019B     		ldr	r3, [sp, #4]
+  53              	.LBE2:
+  16:Src/key.c     **** 
+  17:Src/key.c     **** 	GPIO_InitStruct.Pin = GPIO_PIN_13 | GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12;
+  54              		.loc 1 17 0
+  55 0020 4FF47053 		mov	r3, #15360
+  56 0024 0293     		str	r3, [sp, #8]
+  18:Src/key.c     **** 	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  19:Src/key.c     **** 	GPIO_InitStruct.Pull = GPIO_PULLUP;
+  57              		.loc 1 19 0
+  58 0026 0123     		movs	r3, #1
+  59 0028 0493     		str	r3, [sp, #16]
+  20:Src/key.c     **** 	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  60              		.loc 1 20 0
+  61 002a 02A9     		add	r1, sp, #8
+  62 002c 0D48     		ldr	r0, .L5+4
+  63 002e FFF7FEFF 		bl	HAL_GPIO_Init
+  64              	.LVL0:
+  21:Src/key.c     **** 	for (key.name = 0; key.name < NUM_KEY; key.name++)
+  65              		.loc 1 21 0
+  66 0032 0D4B     		ldr	r3, .L5+8
+  67 0034 1C70     		strb	r4, [r3]
+  68 0036 09E0     		b	.L2
+  69              	.L3:
+  22:Src/key.c     **** 	{
+  23:Src/key.c     **** 		key.ext[key.name].press = key.ext[key.name].pressed = KEY_RELEASE;
+  70              		.loc 1 23 0 discriminator 3
+  71 0038 0B48     		ldr	r0, .L5+8
+  72 003a 00EB8302 		add	r2, r0, r3, lsl #2
+  73 003e 0021     		movs	r1, #0
+  74 0040 5170     		strb	r1, [r2, #1]
+  75 0042 9170     		strb	r1, [r2, #2]
+  24:Src/key.c     **** 		key.ext[key.name].waitRelease = 0;
+  76              		.loc 1 24 0 discriminator 3
+  77 0044 D170     		strb	r1, [r2, #3]
+  25:Src/key.c     **** 		key.ext[key.name].cnt = 0;
+  78              		.loc 1 25 0 discriminator 3
+  79 0046 1171     		strb	r1, [r2, #4]
+  21:Src/key.c     **** 	{
+  80              		.loc 1 21 0 discriminator 3
+  81 0048 0133     		adds	r3, r3, #1
+  82 004a 0370     		strb	r3, [r0]
+  83              	.L2:
+  21:Src/key.c     **** 	{
+  84              		.loc 1 21 0 is_stmt 0 discriminator 1
+  85 004c 064B     		ldr	r3, .L5+8
+  86 004e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  87 0050 032B     		cmp	r3, #3
+  88 0052 F1D9     		bls	.L3
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s 			page 3
+
+
+  26:Src/key.c     **** 	}
+  27:Src/key.c     **** 	key.tick = HAL_GetTick();
+  89              		.loc 1 27 0 is_stmt 1
+  90 0054 FFF7FEFF 		bl	HAL_GetTick
+  91              	.LVL1:
+  92 0058 034B     		ldr	r3, .L5+8
+  93 005a 5861     		str	r0, [r3, #20]
+  28:Src/key.c     **** }
+  94              		.loc 1 28 0
+  95 005c 06B0     		add	sp, sp, #24
+  96              	.LCFI2:
+  97              		.cfi_def_cfa_offset 8
+  98              		@ sp needed
+  99 005e 10BD     		pop	{r4, pc}
+ 100              	.L6:
+ 101              		.align	2
+ 102              	.L5:
+ 103 0060 00100240 		.word	1073876992
+ 104 0064 00100140 		.word	1073811456
+ 105 0068 00000000 		.word	key
+ 106              		.cfi_endproc
+ 107              	.LFE66:
+ 109              		.section	.text.KeyGet,"ax",%progbits
+ 110              		.align	1
+ 111              		.global	KeyGet
+ 112              		.syntax unified
+ 113              		.thumb
+ 114              		.thumb_func
+ 115              		.fpu softvfp
+ 117              	KeyGet:
+ 118              	.LFB67:
+  29:Src/key.c     **** 
+  30:Src/key.c     **** void KeyGet(uint8_t port_id)
+  31:Src/key.c     **** {
+ 119              		.loc 1 31 0
+ 120              		.cfi_startproc
+ 121              		@ args = 0, pretend = 0, frame = 0
+ 122              		@ frame_needed = 0, uses_anonymous_args = 0
+ 123              	.LVL2:
+ 124 0000 10B5     		push	{r4, lr}
+ 125              	.LCFI3:
+ 126              		.cfi_def_cfa_offset 8
+ 127              		.cfi_offset 4, -8
+ 128              		.cfi_offset 14, -4
+ 129 0002 0446     		mov	r4, r0
+  32:Src/key.c     **** 	switch (port_id)
+ 130              		.loc 1 32 0
+ 131 0004 0328     		cmp	r0, #3
+ 132 0006 0ED8     		bhi	.L8
+ 133 0008 DFE800F0 		tbb	[pc, r0]
+ 134              	.L10:
+ 135 000c 02       		.byte	(.L9-.L10)/2
+ 136 000d 24       		.byte	(.L11-.L10)/2
+ 137 000e 36       		.byte	(.L12-.L10)/2
+ 138 000f 48       		.byte	(.L13-.L10)/2
+ 139              		.p2align 1
+ 140              	.L9:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s 			page 4
+
+
+  33:Src/key.c     **** 	{
+  34:Src/key.c     **** 	case 0:
+  35:Src/key.c     **** 		if (NEON_In() == !NEON_PIN)
+ 141              		.loc 1 35 0
+ 142 0010 4FF48061 		mov	r1, #1024
+ 143 0014 3048     		ldr	r0, .L22
+ 144              	.LVL3:
+ 145 0016 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 146              	.LVL4:
+ 147 001a A8B9     		cbnz	r0, .L14
+  36:Src/key.c     **** 			key.ext[port_id].press = KEY_PRESS;
+ 148              		.loc 1 36 0
+ 149 001c 2F4B     		ldr	r3, .L22+4
+ 150 001e 03EB8403 		add	r3, r3, r4, lsl #2
+ 151 0022 0122     		movs	r2, #1
+ 152 0024 9A70     		strb	r2, [r3, #2]
+ 153              	.L8:
+  37:Src/key.c     **** 		else
+  38:Src/key.c     **** 			key.ext[port_id].press = KEY_RELEASE;
+  39:Src/key.c     **** 		break;
+  40:Src/key.c     **** 	case 1:
+  41:Src/key.c     **** 		if (UV_In() == !UV_PIN)
+  42:Src/key.c     **** 			key.ext[port_id].press = KEY_PRESS;
+  43:Src/key.c     **** 		else
+  44:Src/key.c     **** 			key.ext[port_id].press = KEY_RELEASE;
+  45:Src/key.c     **** 		break;
+  46:Src/key.c     **** 	case 2:
+  47:Src/key.c     **** 		if (FAN_In() == !FAN_PIN)
+  48:Src/key.c     **** 			key.ext[port_id].press = KEY_PRESS;
+  49:Src/key.c     **** 		else
+  50:Src/key.c     **** 			key.ext[port_id].press = KEY_RELEASE;
+  51:Src/key.c     **** 		break;
+  52:Src/key.c     **** 	case 3:
+  53:Src/key.c     **** 		if (SOCKET_In() == !SOCKET_PIN)
+  54:Src/key.c     **** 			key.ext[port_id].press = KEY_PRESS;
+  55:Src/key.c     **** 		else
+  56:Src/key.c     **** 			key.ext[port_id].press = KEY_RELEASE;
+  57:Src/key.c     **** 		break;
+  58:Src/key.c     **** 	default:
+  59:Src/key.c     **** 		break;
+  60:Src/key.c     **** 	}
+  61:Src/key.c     **** 	if (key.ext[port_id].press != key.ext[port_id].pressed)
+ 154              		.loc 1 61 0
+ 155 0026 2D4B     		ldr	r3, .L22+4
+ 156 0028 03EB8403 		add	r3, r3, r4, lsl #2
+ 157 002c 9A78     		ldrb	r2, [r3, #2]	@ zero_extendqisi2
+ 158 002e 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 159 0030 9A42     		cmp	r2, r3
+ 160 0032 4AD0     		beq	.L18
+  62:Src/key.c     **** 	{
+  63:Src/key.c     **** 		++(key.ext[port_id].cnt);
+ 161              		.loc 1 63 0
+ 162 0034 294A     		ldr	r2, .L22+4
+ 163 0036 02EB8402 		add	r2, r2, r4, lsl #2
+ 164 003a 1379     		ldrb	r3, [r2, #4]	@ zero_extendqisi2
+ 165 003c 0133     		adds	r3, r3, #1
+ 166 003e DBB2     		uxtb	r3, r3
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s 			page 5
+
+
+ 167 0040 1371     		strb	r3, [r2, #4]
+  64:Src/key.c     **** 		if (key.ext[port_id].cnt == NUM_OF_SAMPLE_KEY)
+ 168              		.loc 1 64 0
+ 169 0042 052B     		cmp	r3, #5
+ 170 0044 3CD0     		beq	.L21
+ 171              	.L7:
+  65:Src/key.c     **** 		{
+  66:Src/key.c     **** 			key.ext[port_id].pressed = key.ext[port_id].press;
+  67:Src/key.c     **** 			key.ext[port_id].cnt = 0;
+  68:Src/key.c     **** 		}
+  69:Src/key.c     **** 	}
+  70:Src/key.c     **** 	else
+  71:Src/key.c     **** 	{
+  72:Src/key.c     **** 		key.ext[port_id].cnt = 0;
+  73:Src/key.c     **** 	}
+  74:Src/key.c     **** }
+ 172              		.loc 1 74 0
+ 173 0046 10BD     		pop	{r4, pc}
+ 174              	.L14:
+  38:Src/key.c     **** 		break;
+ 175              		.loc 1 38 0
+ 176 0048 244B     		ldr	r3, .L22+4
+ 177 004a 03EB8403 		add	r3, r3, r4, lsl #2
+ 178 004e 0022     		movs	r2, #0
+ 179 0050 9A70     		strb	r2, [r3, #2]
+ 180 0052 E8E7     		b	.L8
+ 181              	.LVL5:
+ 182              	.L11:
+  41:Src/key.c     **** 			key.ext[port_id].press = KEY_PRESS;
+ 183              		.loc 1 41 0
+ 184 0054 4FF40061 		mov	r1, #2048
+ 185 0058 1F48     		ldr	r0, .L22
+ 186              	.LVL6:
+ 187 005a FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 188              	.LVL7:
+ 189 005e 28B9     		cbnz	r0, .L15
+  42:Src/key.c     **** 		else
+ 190              		.loc 1 42 0
+ 191 0060 1E4B     		ldr	r3, .L22+4
+ 192 0062 03EB8403 		add	r3, r3, r4, lsl #2
+ 193 0066 0122     		movs	r2, #1
+ 194 0068 9A70     		strb	r2, [r3, #2]
+ 195 006a DCE7     		b	.L8
+ 196              	.L15:
+  44:Src/key.c     **** 		break;
+ 197              		.loc 1 44 0
+ 198 006c 1B4B     		ldr	r3, .L22+4
+ 199 006e 03EB8403 		add	r3, r3, r4, lsl #2
+ 200 0072 0022     		movs	r2, #0
+ 201 0074 9A70     		strb	r2, [r3, #2]
+ 202 0076 D6E7     		b	.L8
+ 203              	.LVL8:
+ 204              	.L12:
+  47:Src/key.c     **** 			key.ext[port_id].press = KEY_PRESS;
+ 205              		.loc 1 47 0
+ 206 0078 4FF48051 		mov	r1, #4096
+ 207 007c 1648     		ldr	r0, .L22
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s 			page 6
+
+
+ 208              	.LVL9:
+ 209 007e FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 210              	.LVL10:
+ 211 0082 28B9     		cbnz	r0, .L16
+  48:Src/key.c     **** 		else
+ 212              		.loc 1 48 0
+ 213 0084 154B     		ldr	r3, .L22+4
+ 214 0086 03EB8403 		add	r3, r3, r4, lsl #2
+ 215 008a 0122     		movs	r2, #1
+ 216 008c 9A70     		strb	r2, [r3, #2]
+ 217 008e CAE7     		b	.L8
+ 218              	.L16:
+  50:Src/key.c     **** 		break;
+ 219              		.loc 1 50 0
+ 220 0090 124B     		ldr	r3, .L22+4
+ 221 0092 03EB8403 		add	r3, r3, r4, lsl #2
+ 222 0096 0022     		movs	r2, #0
+ 223 0098 9A70     		strb	r2, [r3, #2]
+ 224 009a C4E7     		b	.L8
+ 225              	.LVL11:
+ 226              	.L13:
+  53:Src/key.c     **** 			key.ext[port_id].press = KEY_PRESS;
+ 227              		.loc 1 53 0
+ 228 009c 4FF40051 		mov	r1, #8192
+ 229 00a0 0D48     		ldr	r0, .L22
+ 230              	.LVL12:
+ 231 00a2 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 232              	.LVL13:
+ 233 00a6 28B9     		cbnz	r0, .L17
+  54:Src/key.c     **** 		else
+ 234              		.loc 1 54 0
+ 235 00a8 0C4B     		ldr	r3, .L22+4
+ 236 00aa 03EB8403 		add	r3, r3, r4, lsl #2
+ 237 00ae 0122     		movs	r2, #1
+ 238 00b0 9A70     		strb	r2, [r3, #2]
+ 239 00b2 B8E7     		b	.L8
+ 240              	.L17:
+  56:Src/key.c     **** 		break;
+ 241              		.loc 1 56 0
+ 242 00b4 094B     		ldr	r3, .L22+4
+ 243 00b6 03EB8403 		add	r3, r3, r4, lsl #2
+ 244 00ba 0022     		movs	r2, #0
+ 245 00bc 9A70     		strb	r2, [r3, #2]
+ 246 00be B2E7     		b	.L8
+ 247              	.L21:
+  66:Src/key.c     **** 			key.ext[port_id].cnt = 0;
+ 248              		.loc 1 66 0
+ 249 00c0 9378     		ldrb	r3, [r2, #2]	@ zero_extendqisi2
+ 250 00c2 5370     		strb	r3, [r2, #1]
+  67:Src/key.c     **** 		}
+ 251              		.loc 1 67 0
+ 252 00c4 0023     		movs	r3, #0
+ 253 00c6 1371     		strb	r3, [r2, #4]
+ 254 00c8 BDE7     		b	.L7
+ 255              	.L18:
+  72:Src/key.c     **** 	}
+ 256              		.loc 1 72 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s 			page 7
+
+
+ 257 00ca 044B     		ldr	r3, .L22+4
+ 258 00cc 03EB8404 		add	r4, r3, r4, lsl #2
+ 259 00d0 0023     		movs	r3, #0
+ 260 00d2 2371     		strb	r3, [r4, #4]
+ 261              		.loc 1 74 0
+ 262 00d4 B7E7     		b	.L7
+ 263              	.L23:
+ 264 00d6 00BF     		.align	2
+ 265              	.L22:
+ 266 00d8 00100140 		.word	1073811456
+ 267 00dc 00000000 		.word	key
+ 268              		.cfi_endproc
+ 269              	.LFE67:
+ 271              		.section	.text.KeyProcess,"ax",%progbits
+ 272              		.align	1
+ 273              		.global	KeyProcess
+ 274              		.syntax unified
+ 275              		.thumb
+ 276              		.thumb_func
+ 277              		.fpu softvfp
+ 279              	KeyProcess:
+ 280              	.LFB68:
+  75:Src/key.c     **** 
+  76:Src/key.c     **** BUTTON_ID KeyProcess(void)
+  77:Src/key.c     **** {
+ 281              		.loc 1 77 0
+ 282              		.cfi_startproc
+ 283              		@ args = 0, pretend = 0, frame = 0
+ 284              		@ frame_needed = 0, uses_anonymous_args = 0
+ 285 0000 10B5     		push	{r4, lr}
+ 286              	.LCFI4:
+ 287              		.cfi_def_cfa_offset 8
+ 288              		.cfi_offset 4, -8
+ 289              		.cfi_offset 14, -4
+ 290              	.LVL14:
+  78:Src/key.c     **** 	uint8_t currentState = NONE;
+  79:Src/key.c     **** 	for (key.name = 0; key.name < NUM_KEY; key.name++)
+ 291              		.loc 1 79 0
+ 292 0002 0024     		movs	r4, #0
+ 293 0004 1D4B     		ldr	r3, .L39
+ 294 0006 1C70     		strb	r4, [r3]
+ 295 0008 1CE0     		b	.L25
+ 296              	.LVL15:
+ 297              	.L38:
+  80:Src/key.c     **** 	{
+  81:Src/key.c     **** 		KeyGet(key.name);
+  82:Src/key.c     **** 		if (key.ext[key.name].pressed == KEY_PRESS)
+  83:Src/key.c     **** 		{
+  84:Src/key.c     **** 			if (key.ext[key.name].waitRelease == 0)
+ 298              		.loc 1 84 0
+ 299 000a 1C49     		ldr	r1, .L39
+ 300 000c 01EB8301 		add	r1, r1, r3, lsl #2
+ 301 0010 C978     		ldrb	r1, [r1, #3]	@ zero_extendqisi2
+ 302 0012 71B9     		cbnz	r1, .L27
+  85:Src/key.c     **** 			{
+  86:Src/key.c     **** 				switch (key.name)
+ 303              		.loc 1 86 0
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s 			page 8
+
+
+ 304 0014 032B     		cmp	r3, #3
+ 305 0016 09D8     		bhi	.L28
+ 306 0018 DFE803F0 		tbb	[pc, r3]
+ 307              	.L30:
+ 308 001c 02       		.byte	(.L29-.L30)/2
+ 309 001d 0A       		.byte	(.L35-.L30)/2
+ 310 001e 04       		.byte	(.L31-.L30)/2
+ 311 001f 06       		.byte	(.L32-.L30)/2
+ 312              		.p2align 1
+ 313              	.L29:
+  87:Src/key.c     **** 				{
+  88:Src/key.c     **** 				case KEY_NEON:
+  89:Src/key.c     **** 					currentState = NEON;
+ 314              		.loc 1 89 0
+ 315 0020 1446     		mov	r4, r2
+ 316              	.LVL16:
+ 317 0022 06E0     		b	.L27
+ 318              	.LVL17:
+ 319              	.L31:
+  90:Src/key.c     **** 					break;
+  91:Src/key.c     **** 				case KEY_UV:
+  92:Src/key.c     **** 					currentState = UV;
+  93:Src/key.c     **** 					break;
+  94:Src/key.c     **** 				case KEY_FAN:
+  95:Src/key.c     **** 					currentState = FAN;
+ 320              		.loc 1 95 0
+ 321 0024 0324     		movs	r4, #3
+  96:Src/key.c     **** 					break;
+ 322              		.loc 1 96 0
+ 323 0026 04E0     		b	.L27
+ 324              	.LVL18:
+ 325              	.L32:
+  97:Src/key.c     **** 				case KEY_SOCKET:
+  98:Src/key.c     **** 					currentState = SOCKET;
+ 326              		.loc 1 98 0
+ 327 0028 0424     		movs	r4, #4
+  99:Src/key.c     **** 					break;
+ 328              		.loc 1 99 0
+ 329 002a 02E0     		b	.L27
+ 330              	.LVL19:
+ 331              	.L28:
+ 100:Src/key.c     **** 				default:
+ 101:Src/key.c     **** 					currentState = NONE;
+ 332              		.loc 1 101 0
+ 333 002c 0C46     		mov	r4, r1
+ 102:Src/key.c     **** 					break;
+ 334              		.loc 1 102 0
+ 335 002e 00E0     		b	.L27
+ 336              	.LVL20:
+ 337              	.L35:
+  92:Src/key.c     **** 					break;
+ 338              		.loc 1 92 0
+ 339 0030 0224     		movs	r4, #2
+ 340              	.LVL21:
+ 341              	.L27:
+ 103:Src/key.c     **** 				}
+ 104:Src/key.c     **** 			}
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s 			page 9
+
+
+ 105:Src/key.c     **** 			key.ext[key.name].waitRelease = 1;
+ 342              		.loc 1 105 0
+ 343 0032 124A     		ldr	r2, .L39
+ 344 0034 02EB8302 		add	r2, r2, r3, lsl #2
+ 345 0038 0121     		movs	r1, #1
+ 346 003a D170     		strb	r1, [r2, #3]
+ 347 003c 0FE0     		b	.L26
+ 348              	.L33:
+  79:Src/key.c     **** 	{
+ 349              		.loc 1 79 0 discriminator 2
+ 350 003e 0133     		adds	r3, r3, #1
+ 351 0040 0E4A     		ldr	r2, .L39
+ 352 0042 1370     		strb	r3, [r2]
+ 353              	.LVL22:
+ 354              	.L25:
+  79:Src/key.c     **** 	{
+ 355              		.loc 1 79 0 is_stmt 0 discriminator 1
+ 356 0044 0D4B     		ldr	r3, .L39
+ 357 0046 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 358 0048 0328     		cmp	r0, #3
+ 359 004a 14D8     		bhi	.L37
+  81:Src/key.c     **** 		if (key.ext[key.name].pressed == KEY_PRESS)
+ 360              		.loc 1 81 0 is_stmt 1
+ 361 004c FFF7FEFF 		bl	KeyGet
+ 362              	.LVL23:
+  82:Src/key.c     **** 		{
+ 363              		.loc 1 82 0
+ 364 0050 0A4A     		ldr	r2, .L39
+ 365 0052 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 366 0054 02EB8302 		add	r2, r2, r3, lsl #2
+ 367 0058 5278     		ldrb	r2, [r2, #1]	@ zero_extendqisi2
+ 368 005a 012A     		cmp	r2, #1
+ 369 005c D5D0     		beq	.L38
+ 370              	.L26:
+ 106:Src/key.c     **** 		}
+ 107:Src/key.c     **** 		if (key.ext[key.name].pressed == KEY_RELEASE)
+ 371              		.loc 1 107 0
+ 372 005e 074A     		ldr	r2, .L39
+ 373 0060 02EB8302 		add	r2, r2, r3, lsl #2
+ 374 0064 5278     		ldrb	r2, [r2, #1]	@ zero_extendqisi2
+ 375 0066 002A     		cmp	r2, #0
+ 376 0068 E9D1     		bne	.L33
+ 108:Src/key.c     **** 		{
+ 109:Src/key.c     **** 			key.ext[key.name].waitRelease = 0;
+ 377              		.loc 1 109 0
+ 378 006a 044A     		ldr	r2, .L39
+ 379 006c 02EB8302 		add	r2, r2, r3, lsl #2
+ 380 0070 0021     		movs	r1, #0
+ 381 0072 D170     		strb	r1, [r2, #3]
+ 382 0074 E3E7     		b	.L33
+ 383              	.L37:
+ 110:Src/key.c     **** 		}
+ 111:Src/key.c     **** 	}
+ 112:Src/key.c     **** 	return currentState;
+ 113:Src/key.c     **** }
+ 384              		.loc 1 113 0
+ 385 0076 2046     		mov	r0, r4
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s 			page 10
+
+
+ 386 0078 10BD     		pop	{r4, pc}
+ 387              	.LVL24:
+ 388              	.L40:
+ 389 007a 00BF     		.align	2
+ 390              	.L39:
+ 391 007c 00000000 		.word	key
+ 392              		.cfi_endproc
+ 393              	.LFE68:
+ 395              		.section	.text.KeyManage,"ax",%progbits
+ 396              		.align	1
+ 397              		.global	KeyManage
+ 398              		.syntax unified
+ 399              		.thumb
+ 400              		.thumb_func
+ 401              		.fpu softvfp
+ 403              	KeyManage:
+ 404              	.LFB69:
+ 114:Src/key.c     **** 
+ 115:Src/key.c     **** uint8_t key_press;
+ 116:Src/key.c     **** 
+ 117:Src/key.c     **** void KeyManage(void)
+ 118:Src/key.c     **** {
+ 405              		.loc 1 118 0
+ 406              		.cfi_startproc
+ 407              		@ args = 0, pretend = 0, frame = 0
+ 408              		@ frame_needed = 0, uses_anonymous_args = 0
+ 409 0000 08B5     		push	{r3, lr}
+ 410              	.LCFI5:
+ 411              		.cfi_def_cfa_offset 8
+ 412              		.cfi_offset 3, -8
+ 413              		.cfi_offset 14, -4
+ 119:Src/key.c     **** 	if (HAL_GetTick() - key.tick >= 5)
+ 414              		.loc 1 119 0
+ 415 0002 FFF7FEFF 		bl	HAL_GetTick
+ 416              	.LVL25:
+ 417 0006 294B     		ldr	r3, .L53
+ 418 0008 5B69     		ldr	r3, [r3, #20]
+ 419 000a C01A     		subs	r0, r0, r3
+ 420 000c 0428     		cmp	r0, #4
+ 421 000e 00D8     		bhi	.L52
+ 422              	.L41:
+ 120:Src/key.c     **** 	{
+ 121:Src/key.c     **** 		switch (KeyProcess())
+ 122:Src/key.c     **** 		{
+ 123:Src/key.c     **** 		case NEON:
+ 124:Src/key.c     **** 			toggle = 0;
+ 125:Src/key.c     **** 			dev.status.lamp = !dev.status.lamp;
+ 126:Src/key.c     **** 			Device_Save_Status();
+ 127:Src/key.c     **** 			buzzer_short_beep();
+ 128:Src/key.c     **** 			break;
+ 129:Src/key.c     **** 		case UV:
+ 130:Src/key.c     **** 			toggle = 0;
+ 131:Src/key.c     **** 			dev.status.uv = !dev.status.uv;
+ 132:Src/key.c     **** 			dev.status.uv?UV_Init_Time(sys_cfg.uvMode):UV_Clear_Time();
+ 133:Src/key.c     **** 			Device_Save_Status();
+ 134:Src/key.c     **** 			buzzer_short_beep();
+ 135:Src/key.c     **** 			break;
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s 			page 11
+
+
+ 136:Src/key.c     **** 		case FAN:
+ 137:Src/key.c     **** 			toggle = 0;
+ 138:Src/key.c     **** 			dev.status.fan = !dev.status.fan;
+ 139:Src/key.c     **** 			Device_Save_Status();
+ 140:Src/key.c     **** 			buzzer_short_beep();
+ 141:Src/key.c     **** 			break;
+ 142:Src/key.c     **** 		case SOCKET:
+ 143:Src/key.c     **** 			toggle = 0;
+ 144:Src/key.c     **** 			dev.status.socket = !dev.status.socket;
+ 145:Src/key.c     **** 			Device_Save_Status();
+ 146:Src/key.c     **** 			buzzer_short_beep();
+ 147:Src/key.c     **** 			break;
+ 148:Src/key.c     **** 		default:
+ 149:Src/key.c     **** 			break;
+ 150:Src/key.c     **** 		}
+ 151:Src/key.c     **** 		key.tick = HAL_GetTick();
+ 152:Src/key.c     **** 	}
+ 153:Src/key.c     **** }...
+ 423              		.loc 1 153 0
+ 424 0010 08BD     		pop	{r3, pc}
+ 425              	.L52:
+ 121:Src/key.c     **** 		switch (KeyProcess())
+ 426              		.loc 1 121 0
+ 427 0012 FFF7FEFF 		bl	KeyProcess
+ 428              	.LVL26:
+ 429 0016 0138     		subs	r0, r0, #1
+ 430 0018 0328     		cmp	r0, #3
+ 431 001a 10D8     		bhi	.L43
+ 432 001c DFE800F0 		tbb	[pc, r0]
+ 433              	.L45:
+ 434 0020 02       		.byte	(.L44-.L45)/2
+ 435 0021 14       		.byte	(.L46-.L45)/2
+ 436 0022 2A       		.byte	(.L47-.L45)/2
+ 437 0023 38       		.byte	(.L48-.L45)/2
+ 438              		.p2align 1
+ 439              	.L44:
+ 124:Src/key.c     **** 			toggle = 0;
+ 440              		.loc 1 124 0
+ 441 0024 224B     		ldr	r3, .L53+4
+ 442 0026 0022     		movs	r2, #0
+ 443 0028 1A70     		strb	r2, [r3]
+ 125:Src/key.c     **** 			dev.status.lamp = !dev.status.lamp;
+ 444              		.loc 1 125 0
+ 445 002a 224A     		ldr	r2, .L53+8
+ 446 002c 9378     		ldrb	r3, [r2, #2]	@ zero_extendqisi2
+ 447 002e B3FA83F3 		clz	r3, r3
+ 448 0032 5B09     		lsrs	r3, r3, #5
+ 449 0034 9370     		strb	r3, [r2, #2]
+ 126:Src/key.c     **** 			Device_Save_Status();
+ 450              		.loc 1 126 0
+ 451 0036 FFF7FEFF 		bl	Device_Save_Status
+ 452              	.LVL27:
+ 127:Src/key.c     **** 			buzzer_short_beep();
+ 453              		.loc 1 127 0
+ 454 003a FFF7FEFF 		bl	buzzer_short_beep
+ 455              	.LVL28:
+ 456              	.L43:
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s 			page 12
+
+
+ 151:Src/key.c     **** 		key.tick = HAL_GetTick();
+ 457              		.loc 1 151 0
+ 458 003e FFF7FEFF 		bl	HAL_GetTick
+ 459              	.LVL29:
+ 460 0042 1A4B     		ldr	r3, .L53
+ 461 0044 5861     		str	r0, [r3, #20]
+ 462              		.loc 1 153 0
+ 463 0046 E3E7     		b	.L41
+ 464              	.L46:
+ 130:Src/key.c     **** 			toggle = 0;
+ 465              		.loc 1 130 0
+ 466 0048 194B     		ldr	r3, .L53+4
+ 467 004a 0022     		movs	r2, #0
+ 468 004c 1A70     		strb	r2, [r3]
+ 131:Src/key.c     **** 			dev.status.uv = !dev.status.uv;
+ 469              		.loc 1 131 0
+ 470 004e 194A     		ldr	r2, .L53+8
+ 471 0050 D378     		ldrb	r3, [r2, #3]	@ zero_extendqisi2
+ 472 0052 B3FA83F3 		clz	r3, r3
+ 473 0056 5B09     		lsrs	r3, r3, #5
+ 474 0058 D370     		strb	r3, [r2, #3]
+ 132:Src/key.c     **** 			dev.status.uv?UV_Init_Time(sys_cfg.uvMode):UV_Clear_Time();
+ 475              		.loc 1 132 0
+ 476 005a 43B1     		cbz	r3, .L49
+ 132:Src/key.c     **** 			dev.status.uv?UV_Init_Time(sys_cfg.uvMode):UV_Clear_Time();
+ 477              		.loc 1 132 0 is_stmt 0 discriminator 1
+ 478 005c 164B     		ldr	r3, .L53+12
+ 479 005e 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 480 0060 FFF7FEFF 		bl	UV_Init_Time
+ 481              	.LVL30:
+ 482              	.L50:
+ 133:Src/key.c     **** 			Device_Save_Status();
+ 483              		.loc 1 133 0 is_stmt 1
+ 484 0064 FFF7FEFF 		bl	Device_Save_Status
+ 485              	.LVL31:
+ 134:Src/key.c     **** 			buzzer_short_beep();
+ 486              		.loc 1 134 0
+ 487 0068 FFF7FEFF 		bl	buzzer_short_beep
+ 488              	.LVL32:
+ 135:Src/key.c     **** 			break;
+ 489              		.loc 1 135 0
+ 490 006c E7E7     		b	.L43
+ 491              	.L49:
+ 132:Src/key.c     **** 			dev.status.uv?UV_Init_Time(sys_cfg.uvMode):UV_Clear_Time();
+ 492              		.loc 1 132 0 discriminator 2
+ 493 006e FFF7FEFF 		bl	UV_Clear_Time
+ 494              	.LVL33:
+ 495 0072 F7E7     		b	.L50
+ 496              	.L47:
+ 137:Src/key.c     **** 			toggle = 0;
+ 497              		.loc 1 137 0
+ 498 0074 0E4B     		ldr	r3, .L53+4
+ 499 0076 0022     		movs	r2, #0
+ 500 0078 1A70     		strb	r2, [r3]
+ 138:Src/key.c     **** 			dev.status.fan = !dev.status.fan;
+ 501              		.loc 1 138 0
+ 502 007a 0E4A     		ldr	r2, .L53+8
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s 			page 13
+
+
+ 503 007c 1379     		ldrb	r3, [r2, #4]	@ zero_extendqisi2
+ 504 007e B3FA83F3 		clz	r3, r3
+ 505 0082 5B09     		lsrs	r3, r3, #5
+ 506 0084 1371     		strb	r3, [r2, #4]
+ 139:Src/key.c     **** 			Device_Save_Status();
+ 507              		.loc 1 139 0
+ 508 0086 FFF7FEFF 		bl	Device_Save_Status
+ 509              	.LVL34:
+ 140:Src/key.c     **** 			buzzer_short_beep();
+ 510              		.loc 1 140 0
+ 511 008a FFF7FEFF 		bl	buzzer_short_beep
+ 512              	.LVL35:
+ 141:Src/key.c     **** 			break;
+ 513              		.loc 1 141 0
+ 514 008e D6E7     		b	.L43
+ 515              	.L48:
+ 143:Src/key.c     **** 			toggle = 0;
+ 516              		.loc 1 143 0
+ 517 0090 074B     		ldr	r3, .L53+4
+ 518 0092 0022     		movs	r2, #0
+ 519 0094 1A70     		strb	r2, [r3]
+ 144:Src/key.c     **** 			dev.status.socket = !dev.status.socket;
+ 520              		.loc 1 144 0
+ 521 0096 074A     		ldr	r2, .L53+8
+ 522 0098 5379     		ldrb	r3, [r2, #5]	@ zero_extendqisi2
+ 523 009a B3FA83F3 		clz	r3, r3
+ 524 009e 5B09     		lsrs	r3, r3, #5
+ 525 00a0 5371     		strb	r3, [r2, #5]
+ 145:Src/key.c     **** 			Device_Save_Status();
+ 526              		.loc 1 145 0
+ 527 00a2 FFF7FEFF 		bl	Device_Save_Status
+ 528              	.LVL36:
+ 146:Src/key.c     **** 			buzzer_short_beep();
+ 529              		.loc 1 146 0
+ 530 00a6 FFF7FEFF 		bl	buzzer_short_beep
+ 531              	.LVL37:
+ 147:Src/key.c     **** 			break;
+ 532              		.loc 1 147 0
+ 533 00aa C8E7     		b	.L43
+ 534              	.L54:
+ 535              		.align	2
+ 536              	.L53:
+ 537 00ac 00000000 		.word	key
+ 538 00b0 00000000 		.word	toggle
+ 539 00b4 00000000 		.word	dev
+ 540 00b8 00000000 		.word	sys_cfg
+ 541              		.cfi_endproc
+ 542              	.LFE69:
+ 544              		.comm	key_press,1,1
+ 545              		.comm	key,24,4
+ 546              		.comm	bmp_temp,8,4
+ 547              		.text
+ 548              	.Letext0:
+ 549              		.file 2 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/machine/_defau
+ 550              		.file 3 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_stdint.h"
+ 551              		.file 4 "Drivers/CMSIS/Include/core_cm3.h"
+ 552              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/system_stm32f1xx.h"
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s 			page 14
+
+
+ 553              		.file 6 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xe.h"
+ 554              		.file 7 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/lock.h"
+ 555              		.file 8 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/_types.h"
+ 556              		.file 9 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/lib/gcc/arm-none-eabi/7.2.1/include/
+ 557              		.file 10 "/usr/local/gcc_arm/gcc-arm-none-eabi-7-2017-q4-major/arm-none-eabi/include/sys/reent.h"
+ 558              		.file 11 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h"
+ 559              		.file 12 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ 560              		.file 13 "u8g2/csrc/u8x8.h"
+ 561              		.file 14 "u8g2/csrc/u8g2.h"
+ 562              		.file 15 "Inc/main.h"
+ 563              		.file 16 "Inc/key.h"
+ 564              		.file 17 "Inc/user_bitmap.h"
+ 565              		.file 18 "Inc/main_screen.h"
+ 566              		.file 19 "Inc/buzzer.h"
+ 567              		.file 20 "Inc/system.h"
+ 568              		.file 21 "Inc/config.h"
+ARM GAS  /var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 key.c
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s:16     .text.KeyInit:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s:23     .text.KeyInit:0000000000000000 KeyInit
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s:103    .text.KeyInit:0000000000000060 $d
+                            *COM*:0000000000000018 key
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s:110    .text.KeyGet:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s:117    .text.KeyGet:0000000000000000 KeyGet
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s:135    .text.KeyGet:000000000000000c $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s:139    .text.KeyGet:0000000000000010 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s:266    .text.KeyGet:00000000000000d8 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s:272    .text.KeyProcess:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s:279    .text.KeyProcess:0000000000000000 KeyProcess
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s:308    .text.KeyProcess:000000000000001c $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s:312    .text.KeyProcess:0000000000000020 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s:391    .text.KeyProcess:000000000000007c $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s:396    .text.KeyManage:0000000000000000 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s:403    .text.KeyManage:0000000000000000 KeyManage
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s:434    .text.KeyManage:0000000000000020 $d
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s:438    .text.KeyManage:0000000000000024 $t
+/var/folders/rk/zpr83dd14lx588t7kb0yv2b40000gn/T//ccMlXiEa.s:537    .text.KeyManage:00000000000000ac $d
+                            *COM*:0000000000000001 key_press
+                            *COM*:0000000000000008 bmp_temp
+
+UNDEFINED SYMBOLS
+HAL_GPIO_Init
+HAL_GetTick
+HAL_GPIO_ReadPin
+Device_Save_Status
+buzzer_short_beep
+UV_Init_Time
+UV_Clear_Time
+toggle
+dev
+sys_cfg

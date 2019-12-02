@@ -48,8 +48,8 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   MX_IWDG_Init();
-  // MX_USART1_UART_Init();
-  // MX_USART2_UART_Init();
+  MX_USART1_UART_Init();
+  MX_USART2_UART_Init();
   sm5852_1.i2cHandle.Instance = I2C1;
   sm5852_2.i2cHandle.Instance = I2C2;
   SM5852_Init(&sm5852_1);
@@ -89,7 +89,7 @@ int main(void)
     //   tick = HAL_GetTick();
     // }
     /* Init meansure Time exec program */
-    //uint32_t time = HAL_GetTick();
+    uint32_t time = HAL_GetTick();
     System_Manager();
     SM5852_Manager(&sm5852_1);
     SM5852_Manager(&sm5852_2);
